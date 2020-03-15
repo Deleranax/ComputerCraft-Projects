@@ -228,17 +228,17 @@ function draw(monitor)
 			dy = math.floor(val[3] + (val[5]*dvalue))
 			filledRect(monitor, val[2], val[3], val[4], dy, val[6])
 		elseif val[1] == "Label" then
-			monitor.setCursorPos(val[2], val[3])
 			monitor.setBackgroundColor(val[5])
 			monitor.setTextColor(val[4])
 			for i, val2 in ipairs(val[6]) do
-			monitor.setCursorPos(val[2],y+i-1)
+				monitor.setCursorPos(val[2],y+i-1)
 				monitor.write(val2)
 			end
 		elseif val[1] == "Container" then
 			rect(monitor, val[2], val[3], val[4], val[5], val[6], val[7])
 			if val[8] ~= nil then
 				x = val[2] + math.ceil((val[4]/2) - (val[8]:len()/2))
+				monitor.setCursorPos(x, val[3])
 				monitor.setBackgroundColor(oldbcolor)
 				monitor.setTextColor(val[6])
 				monitor.write(val[8])
