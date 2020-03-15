@@ -1,7 +1,7 @@
 ------------
 -- Simple message script for ComputerCraft
--- (LDoc)
 -- @module MessageAPI
+-- @release https://pastebin.com/umGH65FP
 -- @author Deleranax
 
 ts = peripheral.wrap("timeSensor_1")

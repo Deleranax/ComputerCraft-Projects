@@ -1,9 +1,8 @@
 ------------
 -- Secure Hashing Algorithm 256 for ComputerCraft
--- (LDoc)
 -- @module HashAPI
+-- @release https://pastebin.com/ezdWXsJT
 -- @author GravityScore
--- @warning Not by Deleranax
 
 
  

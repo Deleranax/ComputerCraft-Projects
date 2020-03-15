@@ -1,10 +1,10 @@
 ------------
 -- Secure Communication Protocol API for ComputerCraft
--- (LDoc)
+-- @see HashAPI
 -- @module Secure-Communication-Protocol
+-- @release https://pastebin.com/5wZVe9wZ
 -- @alias scp
 -- @author Deleranax
--- @warning Require HashAPI
 
 if not os.loadAPI("HashAPI") then
 	error("HashAPI is required.")
@@ -32,7 +32,7 @@ end
 
 --- Enable/Disable verbose
 -- @tparam bool mode 
--- @warning Require MessageAPI
+-- @see MessageAPI
 
 function setConsole(mode)
 	console = mode

@@ -1,7 +1,7 @@
 ------------
 -- Simple monitor GUI API for ComputerCraft
--- (LDoc)
 -- @module MonitorAPI
+-- @release https://pastebin.com/D325xpYJ
 -- @author Deleranax
 
 local objects = {n=0}
