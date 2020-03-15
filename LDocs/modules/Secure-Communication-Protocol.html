@@ -1,0 +1,362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Lua Projects documentation</title>
+    <link rel="stylesheet" href="../ldoc_pale.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Lua Projects</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/MonitorAPI.html">MonitorAPI</a></li>
+  <li><a href="../modules/MessageAPI.html">MessageAPI</a></li>
+  <li><a href="../modules/MonitorAPI.html">MonitorAPI</a></li>
+  <li><strong>Secure-Communication-Protocol</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>Secure-Communication-Protocol</code></h1>
+<p>Secure Communication Protocol API for ComputerCraft
+ (LDoc)</p>
+<p>
+
+</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Author</strong>: Deleranax</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#setPass">setPass (p)</a></td>
+	<td class="summary">Change password</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setConsole">setConsole (mode)</a></td>
+	<td class="summary">Enable/Disable verbose</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setHostId">setHostId (nb)</a></td>
+	<td class="summary">Set Host ID</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#send">send ([id])</a></td>
+	<td class="summary">Send message through SCP communication</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#receive">receive ([timeout=nil])</a></td>
+	<td class="summary">Receive message through</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addTrusted">addTrusted (id, p)</a></td>
+	<td class="summary">Add trusted ID</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#initHost">initHost (name, pass)</a></td>
+	<td class="summary">Initialize a server</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#close">close ()</a></td>
+	<td class="summary">Close connections</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#initClient">initClient (hostId, p)</a></td>
+	<td class="summary">Initialize a client connection</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#hostLookUp">hostLookUp (hname)</a></td>
+	<td class="summary">Search a server by host name</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "setPass"></a>
+    <strong>setPass (p)</strong>
+    </dt>
+    <dd>
+    Change password
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         New password
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setConsole"></a>
+    <strong>setConsole (mode)</strong>
+    </dt>
+    <dd>
+    Enable/Disable verbose
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mode</span>
+            <span class="types"><span class="type">bool</span></span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setHostId"></a>
+    <strong>setHostId (nb)</strong>
+    </dt>
+    <dd>
+    Set Host ID
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">nb</span>
+            <span class="types"><span class="type">number</span></span>
+         ID of the host
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "send"></a>
+    <strong>send ([id])</strong>
+    </dt>
+    <dd>
+    Send message through SCP communication
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">number</span></span>
+         ID of the receiver (Server Only)
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        Status (receive, timed out)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "receive"></a>
+    <strong>receive ([timeout=nil])</strong>
+    </dt>
+    <dd>
+    Receive message through
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">timeout</span>
+            <span class="types"><span class="type">number</span></span>
+         Maximum waiting time
+         (<em>default</em> nil)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">nil</span> or <a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        Return the message or nil if nothing has been received (or if the format/password is invalid)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "addTrusted"></a>
+    <strong>addTrusted (id, p)</strong>
+    </dt>
+    <dd>
+    Add trusted ID
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+            <span class="types"><span class="type">number</span></span>
+         ID of the computer
+        </li>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Password
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "initHost"></a>
+    <strong>initHost (name, pass)</strong>
+    </dt>
+    <dd>
+    Initialize a server
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Host name
+        </li>
+        <li><span class="parameter">pass</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Password
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "close"></a>
+    <strong>close ()</strong>
+    </dt>
+    <dd>
+    Close connections
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "initClient"></a>
+    <strong>initClient (hostId, p)</strong>
+    </dt>
+    <dd>
+    Initialize a client connection
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">hostId</span>
+            <span class="types"><span class="type">number</span></span>
+         ID of the host
+        </li>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Password
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "hostLookUp"></a>
+    <strong>hostLookUp (hname)</strong>
+    </dt>
+    <dd>
+    Search a server by host name
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">hname</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Host name
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">nil</span> or <span class="type">number</span></span>
+        Number of the host (nil if unreachable)
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2020-03-15 15:09:38 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
