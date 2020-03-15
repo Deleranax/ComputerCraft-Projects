@@ -105,8 +105,8 @@ end
 
 local function filledRect(monitor, x, y, dx, dy, color)
 	monitor.setTextColor(color)
-	for y, y+dy-1 do
-		for x, x+dx-1 do
+	for y=y, y+dy-1 do
+		for x=x, x+dx-1 do
 			monitor.setCursorPos(x,y)
 			monitor.write(" ")
 		end
