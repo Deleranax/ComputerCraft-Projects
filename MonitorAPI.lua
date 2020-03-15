@@ -219,9 +219,7 @@ function draw(monitor)
 			end
 		elseif val[1] == "ProgressBar" then
 			filledRect(monitor, val[2],val[3],val[4],val[5], val[7])
-			print(dvalue)
 			local dvalue = val[8]/val[9]
-			print(dx)
 			local dx = math.floor(val[2] + (val[4]*dvalue))
 			filledRect(monitor, val[2], val[3], dx, val[5], val[6])
 		elseif val[1] == "VerticalProgressBar" then
