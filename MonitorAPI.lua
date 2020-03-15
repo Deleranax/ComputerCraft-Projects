@@ -144,15 +144,15 @@ function draw(monitor)
 				monitor.write(val2)
 			end
 		elseif val[1] == "ProgressBar" then
-			filledRect(val[2],val[3],val[4],val[5], val[7])
+			filledRect(monitor, val[2],val[3],val[4],val[5], val[7])
 			dvalue = val[8]/val[9]
 			dx = math.floor(val[2] + (val[4]*dvalue))
-			filledRect(val[2], val[3], dx, val[5], val[6])
+			filledRect(monitor, val[2], val[3], dx, val[5], val[6])
 		elseif val[1] == "VerticalProgressBar" then
-			filledRect(val[2],val[3],val[4],val[5], val[7])
+			filledRect(monitor, val[2],val[3],val[4],val[5], val[7])
 			dvalue = val[8]/val[9]
 			dy = math.floor(val[3] + (val[5]*dvalue))
-			filledRect(val[2], val[3], val[4], dy, val[6])
+			filledRect(monitor, val[2], val[3], val[4], dy, val[6])
 		end
 	end
 end
