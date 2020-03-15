@@ -227,7 +227,7 @@ function draw(monitor)
 			dvalue = val[8]/val[9]
 			dy = math.floor(val[3] + (val[5]*dvalue))
 			filledRect(monitor, val[2], val[3], val[4], dy, val[6])
-		elseif val[1] == Label then
+		elseif val[1] == "Label" then
 			monitor.setCursorPos(val[2], val[3])
 			monitor.setBackgroundColor(val[5])
 			monitor.setTextColor(val[4])
@@ -237,11 +237,11 @@ function draw(monitor)
 			end
 		elseif val[1] == "Container" then
 			rect(monitor, val[2], val[3], val[4], val[5], val[6], val[7])
-			if val[7] ~= nil then
-				x = val[2] + math.ceil((val[4]/2) - (val[7]:len()/2))
+			if val[8] ~= nil then
+				x = val[2] + math.ceil((val[4]/2) - (val[8]:len()/2))
 				monitor.setBackgroundColor(oldbcolor)
 				monitor.setTextColor(val[6])
-				monitor.write(val[7])
+				monitor.write(val[8])
 			end
 		end
 	end
