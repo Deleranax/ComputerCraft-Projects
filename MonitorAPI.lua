@@ -41,7 +41,7 @@ function addProgressBar(x, y, width, length, color, bcolor, value, maxValue, ver
 	vertical = vertical or false
 	bcolor = bcolor or colors.black
 	for i, val in ipairs({x, y, width, length, color, bcolor, value, maxValue}) do if val == nil then error("Arg#"..i.." is not optional.") end end
-	if value>maxValue then error("value can't be greater than maxValue")
+	if value>maxValue then error("value can't be greater than maxValue") end
 	if not vertical then
 		table.insert(objects, {"ProgressBar", x, y, width, length, color, bcolor, value, maxValue})
 	else
@@ -113,7 +113,7 @@ function modifyProgressBar(id, color, bcolor, value, maxValue)
 	local bcolor = bcolor or pb[7]
 	local value = value or pb[8]
 	local maxValue = maxValue or pb[9]
-	if value>maxValue then error("value can't be greater than maxValue")
+	if value>maxValue then error("value can't be greater than maxValue") end
 	objects[id] = {pb[1], pb[2], pb[3], pb[4], pb[5], color, bcolor, value, maxValue}
 end
 
@@ -127,7 +127,7 @@ function setProgressBarValues(id, value, maxValue)
 	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("Invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
 	local value = value or pb[8]
 	local maxValue = maxValue or pb[9]
-	if value>maxValue then error("value can't be greater than maxValue")
+	if value>maxValue then error("value can't be greater than maxValue") end
 	objects[id] = {pb[1], pb[2], pb[3], pb[4], pb[5], pb[6], pb[7], value, maxValue}
 end
 
@@ -235,7 +235,7 @@ function draw(monitor)
 			monitor.setCursorPos(val[2],y+i-1)
 				monitor.write(val2)
 			end
-		elseif val[1] == "Container"
+		elseif val[1] == "Container" then
 			rect(monitor, val[2], val[3], val[4], val[5], val[6], val[7])
 			if val[7] ~= nil then
 				x = val[2] + math.ceil((val[4]/2) - (val[7]:len()/2))
