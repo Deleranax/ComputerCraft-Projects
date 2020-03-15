@@ -231,7 +231,7 @@ function draw(monitor)
 			monitor.setBackgroundColor(val[5])
 			monitor.setTextColor(val[4])
 			for i, val2 in ipairs(val[6]) do
-				monitor.setCursorPos(val[2],y+i-1)
+				monitor.setCursorPos(val[2],val[3]+i-1)
 				monitor.write(val2)
 			end
 		elseif val[1] == "Container" then
