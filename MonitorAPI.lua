@@ -220,12 +220,12 @@ function draw(monitor)
 		elseif val[1] == "ProgressBar" then
 			filledRect(monitor, val[2],val[3],val[4],val[5], val[7])
 			local dvalue = val[8]/val[9]
-			local dx = math.floor(val[2] + (val[4]*dvalue))
+			local dx = math.floor(val[4]*dvalue)
 			filledRect(monitor, val[2], val[3], dx, val[5], val[6])
 		elseif val[1] == "VerticalProgressBar" then
 			filledRect(monitor, val[2],val[3],val[4],val[5], val[7])
 			local dvalue = val[8]/val[9]
-			local dy = math.floor(val[3] + (val[5]*dvalue))
+			local dy = math.floor(val[5]*dvalue)
 			filledRect(monitor, val[2], val[3], val[4], dy, val[6])
 		elseif val[1] == "Label" then
 			monitor.setBackgroundColor(val[5])
