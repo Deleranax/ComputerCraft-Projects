@@ -3,8 +3,10 @@
 -- (LDoc)
 -- @module HashAPI
 -- @author GravityScore
--- Not by Deleranax
---  
+-- @warning Not by Deleranax
+
+
+ 
 --  Adaptation of the Secure Hashing Algorithm (SHA-244/256)
 --  Found Here: http://lua-users.org/wiki/SecureHashAlgorithm
 --  
@@ -190,9 +192,9 @@ local function digestblock(msg, i, H)
 	H[8] = band(H[8] + h)
 end
 
---- Hash un string
+--- Hash a string
 -- @tparam string msg String to hash.
--- treturn string Hash
+-- @treturn string Hash
 
 function sha256(msg)
 	msg = preproc(msg, #msg)
