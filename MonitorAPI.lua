@@ -118,7 +118,7 @@ local function rect(monitor, x, y, dx, dy, color1, color2)
 	for y=cy, cdy do
 		for x=cx, cdx do
 			monitor.setCursorPos(x,y)
-			if x == cx or y == cy or x = cdx or y = cdy then
+			if x == cx or y == cy or x == cdx or y == cdy then
 				monitor.setBackgroundColor(color1)
 			else
 				monitor.setBackgroundColor(color2)
