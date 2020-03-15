@@ -31,7 +31,7 @@ end
 -- @tparam number width Progress bar max width
 -- @tparam number length Progress bar max length
 -- @tparam color color Progress bar color
--- @tparam[opt=black] color bcolor Background color
+-- @tparam[opt=gray] color bcolor Background color
 -- @tparam number value Current value
 -- @tparam number maxValue Max value
 -- @tparam[opt=false] bool vertical Make this bar vertical
@@ -39,7 +39,7 @@ end
 
 function addProgressBar(x, y, width, length, color, bcolor, value, maxValue, vertical)
 	vertical = vertical or false
-	bcolor = bcolor or colors.black
+	bcolor = bcolor or colors.gray
 	for i, val in ipairs({x, y, width, length, color, bcolor, value, maxValue}) do if val == nil then error("Arg#"..i.." is not optional.") end end
 	if value>maxValue then error("value can't be greater than maxValue") end
 	if not vertical then
@@ -211,21 +211,23 @@ function draw(monitor)
 		if val[1] == "Button" then
 			monitor.setTextColor(val[7])
 			filledRect(monitor, val[2],val[3],val[4],val[5], val[6])
-			y = val[3] + math.ceil((val[5]/2) - (table.getn(val[9])/2))
+			local y = val[3] + math.ceil((val[5]/2) - (table.getn(val[9])/2))
 			for i, val2 in ipairs(val[9]) do
-				x = val[2] + math.ceil((val[4]/2) - (val2:len()/2))
+				local x = val[2] + math.ceil((val[4]/2) - (val2:len()/2))
 				monitor.setCursorPos(x,y+i-1)
 				monitor.write(val2)
 			end
 		elseif val[1] == "ProgressBar" then
 			filledRect(monitor, val[2],val[3],val[4],val[5], val[7])
-			dvalue = val[8]/val[9]
-			dx = math.floor(val[2] + (val[4]*dvalue))
+			print(dvalue)
+			local dvalue = val[8]/val[9]
+			print(dx)
+			local dx = math.floor(val[2] + (val[4]*dvalue))
 			filledRect(monitor, val[2], val[3], dx, val[5], val[6])
 		elseif val[1] == "VerticalProgressBar" then
 			filledRect(monitor, val[2],val[3],val[4],val[5], val[7])
-			dvalue = val[8]/val[9]
-			dy = math.floor(val[3] + (val[5]*dvalue))
+			local dvalue = val[8]/val[9]
+			local dy = math.floor(val[3] + (val[5]*dvalue))
 			filledRect(monitor, val[2], val[3], val[4], dy, val[6])
 		elseif val[1] == "Label" then
 			monitor.setBackgroundColor(val[5])
@@ -237,11 +239,12 @@ function draw(monitor)
 		elseif val[1] == "Container" then
 			rect(monitor, val[2], val[3], val[4], val[5], val[6], val[7])
 			if val[8] ~= nil then
-				x = val[2] + math.ceil((val[4]/2) - (val[8]:len()/2))
+				local text = " "..val[8].." "
+				local x = val[2] + math.ceil((val[4]/2) - (text:len()/2))
 				monitor.setCursorPos(x, val[3])
 				monitor.setBackgroundColor(oldbcolor)
 				monitor.setTextColor(val[6])
-				monitor.write(val[8])
+				monitor.write(text)
 			end
 		end
 	end
