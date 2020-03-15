@@ -138,9 +138,9 @@ function draw(monitor)
 			monitor.setTextColor(val[7])
 			filledRect(monitor, val[2],val[3],val[4],val[5], val[6])
 			y = val[3] + math.ceil((val[5]/2) - (table.getn(val[9])/2))
-			for __, val2 in ipairs(val[9]) do
+			for i, val2 in ipairs(val[9]) do
 				x = val[2] + math.ceil((val[4]/2) - (val2:len()/2))
-				monitor.setCursorPos(x,y)
+				monitor.setCursorPos(x,y+i-1)
 				monitor.write(val2)
 			end
 		elseif val[1] == "ProgressBar" then
