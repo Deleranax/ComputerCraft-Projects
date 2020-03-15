@@ -6,7 +6,7 @@
 
 local objects = {n=0}
 
---- Reset Workspace
+--- Reset Workspace (delete all objects)
 
 function reset()
 	objects = {n=0}
