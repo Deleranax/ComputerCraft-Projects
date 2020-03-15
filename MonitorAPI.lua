@@ -260,7 +260,7 @@ function mainLoop(monitor)
 		if val[1] == "Button" then
 			if x >= val[2] and y >= val[3] then
 				if x <= val[2] + val[4]-1 and y <= val[3] + val[5]-1 then
-					pcall(val[8])
+					val[8]()
 				end
 			end
 		end
