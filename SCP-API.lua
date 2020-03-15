@@ -31,7 +31,7 @@ function setPass(p)
 end
 
 --- Enable/Disable verbose
--- @tparam bool mode 
+-- @tparam bool mode Mode
 -- @see MessageAPI
 
 function setConsole(mode)
