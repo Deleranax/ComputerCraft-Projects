@@ -1,7 +1,7 @@
 ------------
 -- Secure Hashing Algorithm 256 for ComputerCraft
 -- (LDoc)
--- @module MonitorAPI
+-- @module HashAPI
 -- @author GravityScore
 -- Not by Deleranax
 --  

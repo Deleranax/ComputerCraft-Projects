@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Lua Projects documentation</title>
+    <link rel="stylesheet" href="../ldoc_pale.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Lua Projects</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><a href="../modules/HashAPI.html">HashAPI</a></li>
+  <li><strong>MessageAPI</strong></li>
+  <li><a href="../modules/MonitorAPI.html">MonitorAPI</a></li>
+  <li><a href="../modules/Secure-Communication-Protocol.html">Secure-Communication-Protocol</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>MessageAPI</code></h1>
+<p>Simple message script for ComputerCraft
+ (LDoc)</p>
+<p>
+
+</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Author</strong>: Deleranax</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#setTitle">setTitle (title)</a></td>
+	<td class="summary">Define a title</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#init">init ()</a></td>
+	<td class="summary">Initialize GUI</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#popup">popup (message[, mode=m])</a></td>
+	<td class="summary">Draw a message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#console">console (string[, mode="m"])</a></td>
+	<td class="summary">Draw a message in console</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#log">log (log)</a></td>
+	<td class="summary">Log message in file</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#loggedConsole">loggedConsole (string[, mode="m"])</a></td>
+	<td class="summary">Draw a message in console and log it</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "setTitle"></a>
+    <strong>setTitle (title)</strong>
+    </dt>
+    <dd>
+    Define a title
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">title</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Title
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "init"></a>
+    <strong>init ()</strong>
+    </dt>
+    <dd>
+    Initialize GUI
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "popup"></a>
+    <strong>popup (message[, mode=m])</strong>
+    </dt>
+    <dd>
+    Draw a message
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">message</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+
+
+        </li>
+        <li><span class="parameter">mode</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Mode of the message (can be 'm', 'a' or 'e')
+         (<em>default</em> m)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "console"></a>
+    <strong>console (string[, mode="m"])</strong>
+    </dt>
+    <dd>
+    Draw a message in console
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">string</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Message
+        </li>
+        <li><span class="parameter">mode</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Mode of the message (can be "m" for message, "a" for advert, "e" for error)
+         (<em>default</em> "m")
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "log"></a>
+    <strong>log (log)</strong>
+    </dt>
+    <dd>
+    Log message in file
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">log</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Message
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "loggedConsole"></a>
+    <strong>loggedConsole (string[, mode="m"])</strong>
+    </dt>
+    <dd>
+    Draw a message in console and log it
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">string</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Message
+        </li>
+        <li><span class="parameter">mode</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Mode of the message (can be "m" for message, "a" for advert, "e" for error)
+         (<em>default</em> "m")
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2020-03-15 15:17:14 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
