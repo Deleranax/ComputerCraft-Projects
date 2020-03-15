@@ -109,8 +109,8 @@ end
 -- @tparam[opt=Old value] number maxValue Max value
 
 function setValues(id, value, maxValue)
-	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("Invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
 	local pb = objects[id]
+	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("Invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
 	value = value or pb[8]
 	maxValue = maxValue or pb[9]
 	objects[id] = {pb[1], pb[2], pb[3], pb[4], pb[5], pb[6], pb[7], value, maxValue}
