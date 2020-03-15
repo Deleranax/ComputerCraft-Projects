@@ -137,7 +137,7 @@ end
 
 function setLabelText(id, ...)
 	local l = objects[id]
-	if l == nil or (l[1] ~= "Label" then error("Invalid object: got "..l[1].." expected Label") end
+	if l == nil or l[1] ~= "Label" then error("Invalid object: got "..l[1].." expected Label") end
 	objects[id] = {l[1], l[2], l[3], l[4], l[5], arg}
 end
 
