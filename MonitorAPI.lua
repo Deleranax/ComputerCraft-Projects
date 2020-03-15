@@ -104,7 +104,7 @@ function modifyProgressBar(id, x, y, width, length, color, bcolor, value, maxVal
 end
 
 local function filledRect(monitor, cx, cy, dx, dy, color)
-	monitor.setTextColor(color)
+	monitor.setBackgroundColor(color)
 	for y=cy, (cy+dy-1) do
 		for x=cx, (cx+dx-1) do
 			monitor.setCursorPos(x,y)
