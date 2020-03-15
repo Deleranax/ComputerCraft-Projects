@@ -63,12 +63,24 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#addButton">addButton (x, y, width, height, bcolor, fcolor, f, ...)</a></td>
-	<td class="summary">Ajouter un bouton</td>
+	<td class="name" nowrap><a href="#reset">reset ()</a></td>
+	<td class="summary">Reset Workspace</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#modifyButton">modifyButton (id[, x=Old Value][, y=Old Value][, width=Old Value][, height=Old Value][, bcolor=Old Value][, fcolor=Old Value][, f=Old Value][, ...=Old Value])</a></td>
-	<td class="summary">Modifier un bouton</td>
+	<td class="name" nowrap><a href="#addButton">addButton (x, y, width, length, bcolor, fcolor, f, ...)</a></td>
+	<td class="summary">Add a button</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#addProgressBar">addProgressBar (x, y, width, length, color[, bcolor=black], value, maxValue[, vertical=false])</a></td>
+	<td class="summary">Add a progress bar</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#modifyButton">modifyButton (id[, x=Old value][, y=Old value][, width=Old value][, length=Old value][, bcolor=Old value][, fcolor=Old value][, f=Old value][, ...=Old value])</a></td>
+	<td class="summary">Modify button</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#modifyProgressBar">modifyProgressBar (id[, x=Old value][, y=Old value][, width=Old value][, length=Old value][, color=Old value][, bcolor=Old Value][, value=Old value][, maxValue=Old value])</a></td>
+	<td class="summary">Modify progress bar</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#draw">draw (monitor)</a></td>
@@ -88,11 +100,25 @@
 
     <dl class="function">
     <dt>
-    <a name = "addButton"></a>
-    <strong>addButton (x, y, width, height, bcolor, fcolor, f, ...)</strong>
+    <a name = "reset"></a>
+    <strong>reset ()</strong>
     </dt>
     <dd>
-    Ajouter un bouton
+    Reset Workspace
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "addButton"></a>
+    <strong>addButton (x, y, width, length, bcolor, fcolor, f, ...)</strong>
+    </dt>
+    <dd>
+    Add a button
 
 
     <h3>Parameters:</h3>
@@ -109,9 +135,9 @@
             <span class="types"><span class="type">number</span></span>
          Width of the button
         </li>
-        <li><span class="parameter">height</span>
+        <li><span class="parameter">length</span>
             <span class="types"><span class="type">number</span></span>
-         Height of the button
+         Length of the button
         </li>
         <li><span class="parameter">bcolor</span>
             <span class="types"><span class="type">color</span></span>
@@ -143,57 +169,112 @@
 
 </dd>
     <dt>
-    <a name = "modifyButton"></a>
-    <strong>modifyButton (id[, x=Old Value][, y=Old Value][, width=Old Value][, height=Old Value][, bcolor=Old Value][, fcolor=Old Value][, f=Old Value][, ...=Old Value])</strong>
+    <a name = "addProgressBar"></a>
+    <strong>addProgressBar (x, y, width, length, color[, bcolor=black], value, maxValue[, vertical=false])</strong>
     </dt>
     <dd>
-    Modifier un bouton
+    Add a progress bar
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">number</span></span>
+         Abscissa of the button
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">number</span></span>
+         Ordinate of the button
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">number</span></span>
+         Width of the button
+        </li>
+        <li><span class="parameter">length</span>
+            <span class="types"><span class="type">number</span></span>
+         Length of the button
+        </li>
+        <li><span class="parameter">color</span>
+            <span class="types"><span class="type">color</span></span>
+         Color of the progress bar
+        </li>
+        <li><span class="parameter">bcolor</span>
+            <span class="types"><span class="type">color</span></span>
+         Color of the background
+         (<em>default</em> black)
+        </li>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+         Current value
+        </li>
+        <li><span class="parameter">maxValue</span>
+            <span class="types"><span class="type">number</span></span>
+         Max value
+        </li>
+        <li><span class="parameter">vertical</span>
+            <span class="types"><span class="type">bool</span></span>
+         Make this bar vertical
+         (<em>default</em> false)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "modifyButton"></a>
+    <strong>modifyButton (id[, x=Old value][, y=Old value][, width=Old value][, length=Old value][, bcolor=Old value][, fcolor=Old value][, f=Old value][, ...=Old value])</strong>
+    </dt>
+    <dd>
+    Modify button
 
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">id</span>
-         ID de l'objet
+         Object ID
         </li>
         <li><span class="parameter">x</span>
             <span class="types"><span class="type">number</span></span>
          Abscissa of the button
-         (<em>default</em> Old Value)
+         (<em>default</em> Old value)
         </li>
         <li><span class="parameter">y</span>
             <span class="types"><span class="type">number</span></span>
          Ordinate of the button
-         (<em>default</em> Old Value)
+         (<em>default</em> Old value)
         </li>
         <li><span class="parameter">width</span>
             <span class="types"><span class="type">number</span></span>
          Width of the button
-         (<em>default</em> Old Value)
+         (<em>default</em> Old value)
         </li>
-        <li><span class="parameter">height</span>
+        <li><span class="parameter">length</span>
             <span class="types"><span class="type">number</span></span>
-         Height of the button
-         (<em>default</em> Old Value)
+         Length of the button
+         (<em>default</em> Old value)
         </li>
         <li><span class="parameter">bcolor</span>
             <span class="types"><span class="type">color</span></span>
          Color of the button (background)
-         (<em>default</em> Old Value)
+         (<em>default</em> Old value)
         </li>
         <li><span class="parameter">fcolor</span>
             <span class="types"><span class="type">color</span></span>
          Color of the button (text)
-         (<em>default</em> Old Value)
+         (<em>default</em> Old value)
         </li>
         <li><span class="parameter">f</span>
             <span class="types"><span class="type">func</span></span>
          Command of the button
-         (<em>default</em> Old Value)
+         (<em>default</em> Old value)
         </li>
         <li><span class="parameter">...</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          Label of the button
-         (<em>default</em> Old Value)
+         (<em>default</em> Old value)
         </li>
     </ul>
 
@@ -203,6 +284,66 @@
            <span class="types"><span class="type">number</span></span>
         id ID of the button
     </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "modifyProgressBar"></a>
+    <strong>modifyProgressBar (id[, x=Old value][, y=Old value][, width=Old value][, length=Old value][, color=Old value][, bcolor=Old Value][, value=Old value][, maxValue=Old value])</strong>
+    </dt>
+    <dd>
+    Modify progress bar
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">id</span>
+         Object ID
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">number</span></span>
+         Abscissa of the button
+         (<em>default</em> Old value)
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">number</span></span>
+         Ordinate of the button
+         (<em>default</em> Old value)
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">number</span></span>
+         Width of the button
+         (<em>default</em> Old value)
+        </li>
+        <li><span class="parameter">length</span>
+            <span class="types"><span class="type">number</span></span>
+         Length of the button
+         (<em>default</em> Old value)
+        </li>
+        <li><span class="parameter">color</span>
+            <span class="types"><span class="type">color</span></span>
+         Color of the progress bar
+         (<em>default</em> Old value)
+        </li>
+        <li><span class="parameter">bcolor</span>
+            <span class="types"><span class="type">color</span></span>
+         Color of the background
+         (<em>default</em> Old Value)
+        </li>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
+         Current value
+         (<em>default</em> Old value)
+        </li>
+        <li><span class="parameter">maxValue</span>
+            <span class="types"><span class="type">number</span></span>
+         Max value
+         (<em>default</em> Old value)
+        </li>
+    </ul>
+
 
 
 
@@ -257,7 +398,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2020-03-15 15:56:46 </i>
+<i style="float:right;">Last updated 2020-03-15 17:31:11 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
