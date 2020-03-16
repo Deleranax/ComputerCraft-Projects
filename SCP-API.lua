@@ -10,6 +10,10 @@ if not os.loadAPI("HashAPI") then
 	error("HashAPI is required.")
 end
 
+if not os.loadAPI("MessageAPI") then
+	error("MessageAPI is required.")
+end
+
 local function checkModem()
 	mod = false
 	for _, side in pairs(rs.getSides()) do
@@ -37,9 +41,6 @@ end
 function setConsole(mode)
 	console = mode
 	if console then
-		if not os.loadAPI("MessageAPI") then
-			error("MessageAPI is required.")
-		end
 		MessageAPI.setTitle("SCP")
 	end
 end
@@ -110,7 +111,7 @@ function receive(timeout)
 		return nil
 	else
 		message = textutils.unserialize(message)
-		log("Receive packet from ID"..sender, "m")
+		MessageAPI.log("Receive packet from ID"..sender)
 		for i, val in pairs(trustedComputers) do
 			if HashAPI.sha256(os.getComputerID()..""..val[2]..""..val[1]) == message[1] then
 				if message[2][1] == "PING" and host then
