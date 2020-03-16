@@ -32,7 +32,10 @@
 
 <h2>Contents</h2>
 <ul>
-<li><a href="#Functions">Functions</a></li>
+<li><a href="#Declaring">Declaring</a></li>
+<li><a href="#Modifying">Modifying</a></li>
+<li><a href="#Deleting">Deleting</a></li>
+<li><a href="#Drawing">Drawing</a></li>
 </ul>
 
 
@@ -56,11 +59,12 @@
     <h3>Info:</h3>
     <ul>
         <li><strong>Release</strong>: https://pastebin.com/D325xpYJ</li>
+        <li><strong>License</strong>: MIT</li>
         <li><strong>Author</strong>: Deleranax</li>
     </ul>
 
 
-<h2><a href="#Functions">Functions</a></h2>
+<h2><a href="#Declaring">Declaring</a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#addButton">addButton (x, y, width, length, bcolor, fcolor, f, ...)</a></td>
@@ -78,26 +82,32 @@
 	<td class="name" nowrap><a href="#addContainer">addContainer (x, y, width, length, color[, bcolor][, label])</a></td>
 	<td class="summary">Add a container</td>
 	</tr>
+</table>
+<h2><a href="#Modifying">Modifying</a></h2>
+<table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#modifyButton">modifyButton (id[, bcolor=Old value][, fcolor=Old value][, f=Old value][, ...=Old value])</a></td>
-	<td class="summary">Modify button</td>
+	<td class="name" nowrap><a href="#modifyButton">modifyButton (id[, bcolor][, fcolor][, f][, ...])</a></td>
+	<td class="summary">Modify button ; make arguments nil to keep old values</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#modifyProgressBar">modifyProgressBar (id[, color=Old value][, bcolor=Old Value][, value=Old value][, maxValue=Old value])</a></td>
-	<td class="summary">Modify progress bar</td>
+	<td class="name" nowrap><a href="#modifyProgressBar">modifyProgressBar (id[, color][, bcolor][, value][, maxValue])</a></td>
+	<td class="summary">Modify progress bar ; make arguments nil to keep old values</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#setProgressBarValues">setProgressBarValues (id[, value=Old value][, maxValue=Old value])</a></td>
-	<td class="summary">Set values of progress bar</td>
+	<td class="name" nowrap><a href="#setProgressBarValues">setProgressBarValues (id[, value][, maxValue])</a></td>
+	<td class="summary">Set values of progress bar ; make arguments nil to keep old values</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#setLabelText">setLabelText (id, ...)</a></td>
 	<td class="summary">Set text of label</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#modifyContainer">modifyContainer (id[, color=Old value][, bcolor=Old value][, label=Old value])</a></td>
-	<td class="summary">Modify container</td>
+	<td class="name" nowrap><a href="#modifyContainer">modifyContainer (id[, color][, bcolor][, label])</a></td>
+	<td class="summary">Modify container ; make arguments nil to keep old values</td>
 	</tr>
+</table>
+<h2><a href="#Deleting">Deleting</a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#reset">reset ()</a></td>
 	<td class="summary">Reset Workspace (delete all objects)</td>
@@ -106,6 +116,9 @@
 	<td class="name" nowrap><a href="#delete">delete (id)</a></td>
 	<td class="summary">Delete object</td>
 	</tr>
+</table>
+<h2><a href="#Drawing">Drawing</a></h2>
+<table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#draw">draw (monitor)</a></td>
 	<td class="summary">Draw the registered objects</td>
@@ -120,7 +133,7 @@
 <br/>
 
 
-    <h2><a name="Functions"></a>Functions</h2>
+    <h2><a name="Declaring"></a>Declaring</h2>
 
     <dl class="function">
     <dt>
@@ -332,12 +345,16 @@
 
 
 </dd>
+</dl>
+    <h2><a name="Modifying"></a>Modifying</h2>
+
+    <dl class="function">
     <dt>
     <a name = "modifyButton"></a>
-    <strong>modifyButton (id[, bcolor=Old value][, fcolor=Old value][, f=Old value][, ...=Old value])</strong>
+    <strong>modifyButton (id[, bcolor][, fcolor][, f][, ...])</strong>
     </dt>
     <dd>
-    Modify button
+    Modify button ; make arguments nil to keep old values
 
 
     <h3>Parameters:</h3>
@@ -348,22 +365,22 @@
         <li><span class="parameter">bcolor</span>
             <span class="types"><span class="type">color</span></span>
          Background color
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">fcolor</span>
             <span class="types"><span class="type">color</span></span>
          Text color
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">f</span>
             <span class="types"><span class="type">func</span></span>
          Button command
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">...</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          Button label
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -374,10 +391,10 @@
 </dd>
     <dt>
     <a name = "modifyProgressBar"></a>
-    <strong>modifyProgressBar (id[, color=Old value][, bcolor=Old Value][, value=Old value][, maxValue=Old value])</strong>
+    <strong>modifyProgressBar (id[, color][, bcolor][, value][, maxValue])</strong>
     </dt>
     <dd>
-    Modify progress bar
+    Modify progress bar ; make arguments nil to keep old values
 
 
     <h3>Parameters:</h3>
@@ -388,22 +405,22 @@
         <li><span class="parameter">color</span>
             <span class="types"><span class="type">color</span></span>
          Color of the progress bar
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">bcolor</span>
             <span class="types"><span class="type">color</span></span>
          Color of the background
-         (<em>default</em> Old Value)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">value</span>
             <span class="types"><span class="type">number</span></span>
          Current value
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">maxValue</span>
             <span class="types"><span class="type">number</span></span>
          Max value
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -414,10 +431,10 @@
 </dd>
     <dt>
     <a name = "setProgressBarValues"></a>
-    <strong>setProgressBarValues (id[, value=Old value][, maxValue=Old value])</strong>
+    <strong>setProgressBarValues (id[, value][, maxValue])</strong>
     </dt>
     <dd>
-    Set values of progress bar
+    Set values of progress bar ; make arguments nil to keep old values
 
 
     <h3>Parameters:</h3>
@@ -428,12 +445,12 @@
         <li><span class="parameter">value</span>
             <span class="types"><span class="type">number</span></span>
          Current value
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">maxValue</span>
             <span class="types"><span class="type">number</span></span>
          Max value
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -468,10 +485,10 @@
 </dd>
     <dt>
     <a name = "modifyContainer"></a>
-    <strong>modifyContainer (id[, color=Old value][, bcolor=Old value][, label=Old value])</strong>
+    <strong>modifyContainer (id[, color][, bcolor][, label])</strong>
     </dt>
     <dd>
-    Modify container
+    Modify container ; make arguments nil to keep old values
 
 
     <h3>Parameters:</h3>
@@ -482,17 +499,17 @@
         <li><span class="parameter">color</span>
             <span class="types"><span class="type">color</span></span>
          Border color
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">bcolor</span>
             <span class="types"><span class="type">color</span></span>
          Background color
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
         <li><span class="parameter">label</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          Container title
-         (<em>default</em> Old value)
+         (<em>optional</em>)
         </li>
     </ul>
 
@@ -501,6 +518,10 @@
 
 
 </dd>
+</dl>
+    <h2><a name="Deleting"></a>Deleting</h2>
+
+    <dl class="function">
     <dt>
     <a name = "reset"></a>
     <strong>reset ()</strong>
@@ -535,6 +556,10 @@
 
 
 </dd>
+</dl>
+    <h2><a name="Drawing"></a>Drawing</h2>
+
+    <dl class="function">
     <dt>
     <a name = "draw"></a>
     <strong>draw (monitor)</strong>
@@ -584,7 +609,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2020-03-15 20:22:33 </i>
+<i style="float:right;">Last updated 2020-03-16 11:53:17 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

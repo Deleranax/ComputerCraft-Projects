@@ -1,5 +1,6 @@
-------------
+----------------------
 -- Simple message script for ComputerCraft
+-- @license MIT
 -- @module MessageAPI
 -- @release https://pastebin.com/umGH65FP
 -- @author Deleranax

@@ -1,4 +1,4 @@
-------------
+----------------------
 -- Secure Hashing Algorithm 256 for ComputerCraft
 -- @module HashAPI
 -- @release https://pastebin.com/ezdWXsJT

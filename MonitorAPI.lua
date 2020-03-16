@@ -1,14 +1,16 @@
-------------
+----------------------
 -- Simple monitor GUI API for ComputerCraft
+-- @license MIT
 -- @module MonitorAPI
 -- @release https://pastebin.com/D325xpYJ
 -- @author Deleranax
 
 local objects = {n=0}
 
--- @section Declaring objects
+-- @section Declaring
 
 --- Add a button
+-- @within Declaring
 -- @tparam number x Button abscissa
 -- @tparam number y Button ordinate
 -- @tparam number width Button width
@@ -26,6 +28,7 @@ function addButton(x, y, width, length, bcolor, fcolor, f, ...)
 end
 
 --- Add a progress bar
+-- @within Declaring
 -- @tparam number x Progress bar abscissa
 -- @tparam number y Progress bar ordinate
 -- @tparam number width Progress bar max width
@@ -51,6 +54,7 @@ function addProgressBar(x, y, width, length, color, bcolor, value, maxValue, ver
 end
 
 --- Add a label
+-- @within Declaring
 -- @tparam number x Label abscissa
 -- @tparam number y Label ordinate
 -- @tparam color color Text color
@@ -65,6 +69,7 @@ function addLabel(x, y, color, bcolor, ...)
 end
 
 --- Add a container
+-- @within Declaring
 -- @tparam number x Progress bar abscissa
 -- @tparam number y Progress bar ordinate
 -- @tparam number width Progress bar max width
@@ -80,14 +85,15 @@ function addContainer(x, y, width, length, color, bcolor, label)
 	return table.getn(objects)
 end
 
--- @section Modifying objects
+-- @section Modifying
 
---- Modify button
+--- Modify button ; make arguments nil to keep old values
+-- @within Modifying
 -- @param id Object ID
--- @tparam[opt=Old value] color bcolor Background color
--- @tparam[opt=Old value] color fcolor Text color
--- @tparam[opt=Old value] func f Button command
--- @tparam[opt=Old value] string ... Button label
+-- @tparam[opt] color bcolor Background color
+-- @tparam[opt] color fcolor Text color
+-- @tparam[opt] func f Button command
+-- @tparam[opt] string ... Button label
 
 function modifyButton(id, bcolor, fcolor, f, ...)
 	local button = objects[id]
@@ -99,12 +105,13 @@ function modifyButton(id, bcolor, fcolor, f, ...)
 	objects[id] = {button[1], button[2], button[3], button[4], button[5], width, length, bcolor, fcolor, f, text}
 end
 
---- Modify progress bar
+--- Modify progress bar ; make arguments nil to keep old values
+-- @within Modifying
 -- @param id Object ID
--- @tparam[opt=Old value] color color Color of the progress bar
--- @tparam[opt=Old Value] color bcolor Color of the background
--- @tparam[opt=Old value] number value Current value
--- @tparam[opt=Old value] number maxValue Max value
+-- @tparam[opt] color color Color of the progress bar
+-- @tparam[opt] color bcolor Color of the background
+-- @tparam[opt] number value Current value
+-- @tparam[opt] number maxValue Max value
 
 function modifyProgressBar(id, color, bcolor, value, maxValue)
 	local pb = objects[id]
@@ -117,10 +124,11 @@ function modifyProgressBar(id, color, bcolor, value, maxValue)
 	objects[id] = {pb[1], pb[2], pb[3], pb[4], pb[5], color, bcolor, value, maxValue}
 end
 
---- Set values of progress bar
+--- Set values of progress bar ; make arguments nil to keep old values
+-- @within Modifying
 -- @param id Object ID
--- @tparam[opt=Old value] number value Current value
--- @tparam[opt=Old value] number maxValue Max value
+-- @tparam[opt] number value Current value
+-- @tparam[opt] number maxValue Max value
 
 function setProgressBarValues(id, value, maxValue)
 	local pb = objects[id]
@@ -132,6 +140,7 @@ function setProgressBarValues(id, value, maxValue)
 end
 
 --- Set text of label
+-- @within Modifying
 -- @param id Object ID
 -- @tparam string ... Label text
 
@@ -141,11 +150,12 @@ function setLabelText(id, ...)
 	objects[id] = {l[1], l[2], l[3], l[4], l[5], arg}
 end
 
---- Modify container
+--- Modify container ; make arguments nil to keep old values
+-- @within Modifying
 -- @param id Object ID
--- @tparam[opt=Old value] color color Border color
--- @tparam[opt=Old value] color bcolor Background color
--- @tparam[opt=Old value] string label Container title
+-- @tparam[opt] color color Border color
+-- @tparam[opt] color bcolor Background color
+-- @tparam[opt] string label Container title
 
 function modifyContainer(id, color, bcolor, label)
 	local c = objects[id]
@@ -156,15 +166,17 @@ function modifyContainer(id, color, bcolor, label)
 	objects[id] = {l[1], l[2], l[3], l[4], l[5], color, bcolor, label}
 end
 
--- @section Deleting objects
+-- @section Deleting
 
 --- Reset Workspace (delete all objects)
+-- @within Deleting
 
 function reset()
 	objects = {n=0}
 end
 
 --- Delete object
+-- @within Deleting
 -- @param id Object ID
 
 function delete(id)
@@ -197,9 +209,10 @@ local function rect(monitor, x, y, dx, dy, color1, color2)
 	end
 end
 
--- @section Drawing objects
+-- @section Drawing
 
 --- Draw the registered objects
+-- @within Drawing
 -- @tparam peripheral monitor Monitor on which draw
 
 function draw(monitor)
@@ -253,6 +266,7 @@ function draw(monitor)
 end
 
 --- Main loop (pull events and draw)
+-- @within Drawing
 -- @tparam peripheral monitor Monitor on which draw
 
 function mainLoop(monitor)

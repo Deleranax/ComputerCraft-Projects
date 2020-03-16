@@ -1,6 +1,6 @@
-------------
+----------------------
 -- Secure Communication Protocol API for ComputerCraft
--- @see HashAPI
+-- @license MIT
 -- @module Secure-Communication-Protocol
 -- @release https://pastebin.com/5wZVe9wZ
 -- @alias scp
