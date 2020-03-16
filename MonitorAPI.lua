@@ -22,7 +22,7 @@ local objects = {n=0}
 -- @treturn number id Object ID
 
 function addButton(x, y, width, length, bcolor, fcolor, f, ...)
-	for i, val in ipairs({x, y, width, length, bcolor, fcolor, f, arg}) do if val == nil then error("Arg#"..i.." is not optional.") end end
+	for i, val in ipairs({x, y, width, length, bcolor, fcolor, f, arg}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
 	table.insert(objects, {"Button", x, y, width, length, bcolor, fcolor, f, arg})
 	return table.getn(objects)
 end
@@ -43,7 +43,7 @@ end
 function addProgressBar(x, y, width, length, color, bcolor, value, maxValue, vertical)
 	vertical = vertical or false
 	bcolor = bcolor or colors.gray
-	for i, val in ipairs({x, y, width, length, color, bcolor, value, maxValue}) do if val == nil then error("Arg#"..i.." is not optional.") end end
+	for i, val in ipairs({x, y, width, length, color, bcolor, value, maxValue}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
 	if value>maxValue then error("value can't be greater than maxValue") end
 	if not vertical then
 		table.insert(objects, {"ProgressBar", x, y, width, length, color, bcolor, value, maxValue})
@@ -63,7 +63,7 @@ end
 
 function addLabel(x, y, color, bcolor, ...)
 	bcolor = bcolor or colors.black
-	for i, val in ipairs({x, y, color, bcolor, arg}) do if val == nil then error("Arg#"..i.." is not optional.") end end
+	for i, val in ipairs({x, y, color, bcolor, arg}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
 	table.insert(objects, {"Label", x, y, color, bcolor, arg})
 	return table.getn(objects)
 end
@@ -80,7 +80,7 @@ end
 -- @treturn number id Object ID
 
 function addContainer(x, y, width, length, color, bcolor, label)
-	for i, val in ipairs({x, y, width, length, color}) do if val == nil then error("Arg#"..i.." is not optional.") end end
+	for i, val in ipairs({x, y, width, length, color}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
 	table.insert(objects, {"Container", x, y, width, length, color, bcolor, label})
 	return table.getn(objects)
 end
@@ -97,12 +97,12 @@ end
 
 function modifyButton(id, bcolor, fcolor, f, ...)
 	local button = objects[id]
-	if button == nil or button[1] ~= "Button" then error("Invalid object: got "..button[1].." expected Button") end
+	if button == nil or button[1] ~= "Button" then error("invalid object: got "..button[1].." expected Button") end
 	local bcolor = bcolor or button[6]
 	local fcolor = bcolor or button[7]
 	local f = f or button[8]
 	local text = arg or button[9]
-	objects[id] = {button[1], button[2], button[3], button[4], button[5], width, length, bcolor, fcolor, f, text}
+	objects[id] = {button[1], button[2], button[3], button[4], button[5], bcolor, fcolor, f, text}
 end
 
 --- Modify progress bar ; make arguments nil to keep old values
@@ -115,7 +115,7 @@ end
 
 function modifyProgressBar(id, color, bcolor, value, maxValue)
 	local pb = objects[id]
-	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("Invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
+	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
 	local color = color or pb[6]
 	local bcolor = bcolor or pb[7]
 	local value = value or pb[8]
@@ -132,7 +132,7 @@ end
 
 function setProgressBarValues(id, value, maxValue)
 	local pb = objects[id]
-	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("Invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
+	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
 	local value = value or pb[8]
 	local maxValue = maxValue or pb[9]
 	if value>maxValue then error("value can't be greater than maxValue") end
@@ -146,7 +146,7 @@ end
 
 function setLabelText(id, ...)
 	local l = objects[id]
-	if l == nil or l[1] ~= "Label" then error("Invalid object: got "..l[1].." expected Label") end
+	if l == nil or l[1] ~= "Label" then error("invalid object: got "..l[1].." expected Label") end
 	objects[id] = {l[1], l[2], l[3], l[4], l[5], arg}
 end
 
