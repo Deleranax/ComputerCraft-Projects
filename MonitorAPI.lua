@@ -99,7 +99,7 @@ function modifyButton(id, bcolor, fcolor, f, ...)
 	local button = objects[id]
 	if button == nil or button[1] ~= "Button" then error("invalid object: got "..button[1].." expected Button") end
 	local bcolor = bcolor or button[6]
-	local fcolor = bcolor or button[7]
+	local fcolor = fcolor or button[7]
 	local f = f or button[8]
 	local text = arg or button[9]
 	objects[id] = {button[1], button[2], button[3], button[4], button[5], bcolor, fcolor, f, text}
@@ -159,7 +159,7 @@ end
 
 function modifyContainer(id, color, bcolor, label)
 	local c = objects[id]
-	if c == nil or c[1] ~= "Container" then error("Invalid object: got "..c[1].." expected Container") end
+	if c == nil or c[1] ~= "Container" then error("invalid object: got "..c[1].." expected Container") end
 	local color = color or c[6]
 	local bcolor = bcolor or c[7]
 	local label = label or c[8]
