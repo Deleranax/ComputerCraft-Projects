@@ -203,10 +203,11 @@ end
 -- @tparam peripheral monitor Monitor on which draw
 
 function draw(monitor)
+	ok = pcall(monitor.clear)
+	if not ok then error("Invalid peripheral.")
 	local oldfcolor = monitor.getTextColor()
 	local oldbcolor = monitor.getBackgroundColor()
 	local oldx, oldy = monitor.getCursorPos()
-	if monitor == nil then error("Vous devez specifier un peripherique valide.") end
 	for _, val in ipairs(objects) do
 		if val[1] == "Button" then
 			monitor.setTextColor(val[7])
