@@ -217,7 +217,7 @@ end
 
 function draw(monitor)
 	ok = pcall(monitor.clear)
-	if not ok then error("Invalid peripheral.")
+	if not ok then error("Invalid peripheral.") end
 	local oldfcolor = monitor.getTextColor()
 	local oldbcolor = monitor.getBackgroundColor()
 	local oldx, oldy = monitor.getCursorPos()
