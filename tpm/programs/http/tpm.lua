@@ -1,6 +1,8 @@
 local BASE_URL = "https://raw.githubusercontent.com/Deleranax/ComputerCraft-Projects/master/"
 projects = {}
 
+shell.setPath(shell.path()..":/programs/:/programs/http/")
+
 function complete(shell, index, arg, prev)
 	rtn = {}
 	if index == 1 then
@@ -78,7 +80,7 @@ end
 
 args = { ... }
 
-shell.setCompletionFunction("rom/programs/http/tpm.lua", complete)
+shell.setCompletionFunction("/programs/http/tpm.lua", complete)
 
 if args < 2 or args > 3 then
 	printUsage()

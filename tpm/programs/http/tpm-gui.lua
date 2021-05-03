@@ -4,6 +4,8 @@ local location = {}
 local selection = 1
 local backSelection = 1
 
+shell.setPath(shell.path()..":/programs/:/programs/http/")
+
 function getFile(url)
     if not http then
         printError("HTTP is not available.")

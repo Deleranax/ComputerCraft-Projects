@@ -1,2 +1,2 @@
-rom/programs/tpm-gui.lua
-rom/programs/tpm.lua
+programs/http/tpm-gui.lua
+programs/http/tpm.lua
