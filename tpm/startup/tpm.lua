@@ -1,7 +1,5 @@
-shell.setPath(shell.path()..":/programs/")
-package.path = package.path..":/apis/"
-
-local tpm = require("tpm-api")
+local tpm = require("/apis/tpm-api")
+shell.setPath(shell.path()..":/programs/:/programs/http/")
 
 function completion(shell, index, arg, args)
 	local rtn = {}
@@ -36,6 +34,3 @@ function completion(shell, index, arg, args)
 end
 
 shell.setCompletionFunction("tpm.lua", completion)
-
-for i in pairs("d") do
-end
