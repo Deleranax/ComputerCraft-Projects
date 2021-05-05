@@ -133,6 +133,8 @@ function getInstalledList()
 end
 
 function getPackage(url)
+	reloadDatabase()
+
 	if not get(url) then
 		printError("Unable to locate package "..url)
 		return
@@ -161,6 +163,9 @@ function reloadDatabase()
 end
 
 function updateDatabase()
+
+	reloadDatabase()
+
 	write("Connecting... ")
 	httpGet(BASE_URL.."CCINDEX")
 	print("Success")
