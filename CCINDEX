@@ -1,5 +1,2 @@
 tpm
-deprecated/HashAPI
-deprecated/MessageAPI
-deprecated/MonitorAPI
-deprecated/SCP-API
+deprecated/
