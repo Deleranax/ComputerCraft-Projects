@@ -33,4 +33,4 @@ function completion(shell, index, arg, args)
 	return frtn
 end
 
-shell.setCompletionFunction("tpm.lua", completion)
+shell.setCompletionFunction("programs/tpm.lua", completion)
