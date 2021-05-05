@@ -1,3 +1,6 @@
+shell.setPath(shell.path()..":/programs/")
+package.path = package.path..":/apis/"
+
 local tpm = require("tpm-api")
 
 function completion(shell, index, arg, args)

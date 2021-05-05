@@ -1,5 +1,5 @@
-5
+6
 Deleranax
-tpm-api.lua
-tpm.lua
+apis/tpm-api.lua
+programs/tpm.lua
 startup/tpm.lua

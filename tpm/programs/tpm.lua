@@ -21,7 +21,7 @@ if table.getn(args) == 1 then
 		local outdated = false
 		for k, v in pairs(tpm.getInstalledPackages()) do
 			if v.version ~= get(k)["version"] then
-				print(v.." needs update (v"..v.version.." -> v"..get(k)["version"]..")")
+				print(k.." needs update (v"..v.version.." -> v"..get(k)["version"]..")")
 				outdated = true
 			end
 			if outdated then
