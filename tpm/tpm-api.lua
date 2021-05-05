@@ -18,7 +18,7 @@ function httpGet(url)
         return nil
     end
 	
-    return http.get(url, nil, true).readAll()
+    return data.readAll()
 end
 
 function httpGetLines(url)
