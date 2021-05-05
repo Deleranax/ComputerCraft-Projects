@@ -4,7 +4,7 @@ function completion(shell, index, arg, args)
 	local rtn = {}
 
 	if index == 1 then
-		rtn = {"update", "upgrade", "list ", "install ", "remove "}
+		rtn = {"update", "upgrade", "list ", "show ", "install ", "reinstall ", "remove "}
 	elseif index == 2 then
 		if args[2] == "install" then
 			rtn = tpm.getPackageList()
@@ -12,6 +12,8 @@ function completion(shell, index, arg, args)
 			rtn = tpm.getInstalledList()
 		elseif args[2] == "list" then
 			rtn = {"installed", "available"}
+		elseif args[2] == "show" then
+			rtn = tpm.getPackageList()
 		end
 	end
 
@@ -35,7 +37,9 @@ function showUsage()
 	print("tpm update")
 	print("tpm upgrade")
 	print("tpm list <installed/available>")
+	print("tpm show <program>")
 	print("tpm install <program>")
+	print("tpm reinstall <program>")
 	print("tpm remove <program>")
 end
 
@@ -80,8 +84,19 @@ if table.getn(args) == 1 then
 elseif table.getn(args) == 2 then
 	if args[1] == "install" then
 		tpm.install(args[2])
+	elseif args[1] == "reinstall" then
+		if tpm.remove(args[2]) then
+			tpm.install(args[2])
+		end
 	elseif args[1] == "remove" then
 		tpm.remove(args[2])
+	elseif args[1] == "show" then
+		local pack = tpm.getPackage(args[2])
+		if not pack then
+			return
+		end
+		print("Package: "..pack.name)
+		print("Version: "..pack.version)
 	elseif args[1] == "list" then
 		if args[2] == "installed" then
 			tpm.reloadDatabase()

@@ -128,6 +128,20 @@ function getInstalledList()
 	return keys
 end
 
+function getPackage(url)
+	if not get(url) then
+		printError("Unable to locate package "..url)
+		return
+	end
+	
+	if not get(url).name then
+		printError("Unable to locate package "..url)
+		return
+	end
+	
+	return get(url)
+end
+
 function reloadDatabase()
 	write("Reading package list... ")
 	if not fs.exists(".tpm") then
@@ -160,7 +174,7 @@ function install(url)
 
 	if not get(url) then
 		printError("Unable to locate package "..url)
-		return
+		return false
 	end
 	
 	print("Fetching files...")
@@ -185,6 +199,7 @@ function install(url)
 	saveDatabase()
 	
 	print("Package successfully installed")
+	return true
 end
 
 function remove(url)
@@ -193,11 +208,10 @@ function remove(url)
 	
 	if not get(url) then
 		printError("Unable to locate package "..url)
-		return
 	end
 	if not _G.tpmTemp.installed[url] then
 		printError("Package "..url.." is not installed, so not removed")
-		return
+		return false
 	end
 	
 	print("Deleting files...")
@@ -212,6 +226,7 @@ function remove(url)
 	saveDatabase()
 	
 	print("Package successfully removed")
+	return true
 end
 
 function saveDatabase()
@@ -223,4 +238,4 @@ function saveDatabase()
 	print("Done")
 end
 
-return {BASE_URL = BASE_URL, httpGet = httpGet, httpGetLines = httpGetLines, reloadDatabase = reloadDatabase, updateDatabase = updateDatabase, saveDatabase = saveDatabase, get = get, getPackageList = getPackageList, getInstalledPackages = getInstalledPackages, getInstalledList = getInstalledList, install = install, remove = remove}
+return {BASE_URL = BASE_URL, httpGet = httpGet, httpGetLines = httpGetLines, reloadDatabase = reloadDatabase, updateDatabase = updateDatabase, saveDatabase = saveDatabase, get = get, getPackage = getPackage, getPackageList = getPackageList, getInstalledPackages = getInstalledPackages, getInstalledList = getInstalledList, install = install, remove = remove}
