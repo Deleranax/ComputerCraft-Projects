@@ -97,6 +97,8 @@ elseif table.getn(args) == 2 then
 		end
 		print("Package: "..pack.name)
 		print("Version: "..pack.version)
+		print("Maintainer: "..pack.maintainer)
+		print("TPM-Source: "..pack.url)
 	elseif args[1] == "list" then
 		if args[2] == "installed" then
 			tpm.reloadDatabase()

@@ -10,13 +10,15 @@ function httpGet(url)
         return nil
     end
  
-    local ok, err = http.checkURL(url)
- 
-    if not ok then
+	local data, err = http.get(url, nil, true)
+
+	if not data then
+		printError(url)
         printError(err or "Invalid URL.")
         return nil
     end
-    return http.get(url).readAll()
+	
+    return http.get(url, nil, true).readAll()
 end
 
 function httpGetLines(url)
@@ -27,7 +29,7 @@ function httpGetLines(url)
 	
 	local rtn = {}
 
-	local data, err = http.get(url)
+	local data, err = http.get(url, nil, true)
 
 	if not data then
 		printError(url)
@@ -83,10 +85,12 @@ function checkPack(url, name)
 	local manifest = httpGetLines(BASE_URL..url..name.."/CCMANIFEST")
 	
 	local version = tonumber(manifest[1])
+	local maintainer = manifest[2]
 
 	table.remove(manifest, 1)
+	table.remove(manifest, 1)
 	
-	return {name = name, version = version, url = BASE_URL..url..name.."/", files = manifest}
+	return {name = name, version = version, maintainer = maintainer, url = BASE_URL..url..name.."/", files = manifest}
 end
 
 function listEntries(url, rtn)
