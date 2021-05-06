@@ -5,7 +5,7 @@ function completion(shell, index, arg, args)
 	local rtn = {}
 
 	if index == 1 then
-		rtn = {"update", "upgrade", "list ", "show ", "install ", "reinstall ", "remove "}
+		rtn = {"help", "update", "upgrade", "list ", "show ", "install ", "reinstall ", "remove "}
 	elseif index == 2 then
 		if args[2] == "install" then
 			rtn = tpm.getPackageList()

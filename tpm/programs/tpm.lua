@@ -24,16 +24,16 @@ if table.getn(args) == 1 then
 				print(k.." needs update (v"..v.version.." -> v"..get(k)["version"]..")")
 				outdated = true
 			end
-			if outdated then
-				print("To update packets, run 'tpm upgrade'")
-			end
+		end
+		if outdated then
+			print("To update packets, run 'tpm upgrade'")
 		end
 	elseif args[1] == "upgrade" then
 		local update = 0
 		for k, v in pairs(tpm.getInstalledPackages()) do
 			if v.version ~= get(k)["version"] then
 				update = update + 1
-				print("Updating "..k.."...")
+				print("\nUpdating "..k.."...")
 				tpm.remove(k)
 				tpm.install(k)
 			end
