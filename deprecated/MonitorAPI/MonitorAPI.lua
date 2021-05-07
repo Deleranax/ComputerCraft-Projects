@@ -5,7 +5,7 @@
 -- @release https://pastebin.com/D325xpYJ
 -- @author Deleranax
 
-local _G.mapiObjects = {n=0}
+_G.mapiObjects = {}
 
 -- @section Declaring
 
@@ -172,7 +172,7 @@ end
 -- @within Deleting
 
 function reset()
-	_G.mapiObjects = {n=0}
+	_G.mapiObjects = {}
 end
 
 --- Delete object
@@ -283,4 +283,4 @@ function mainLoop(monitor)
 	end
 end
 
-return {addButton = addButton, addContainer = addContainer, addLabel = addLabel, addProgressBar = addProgressBar, modifyButton = modifyButton, modifyContainer = modifyContainer, modifyProgressBar = modifyProgressBar, draw = draw, mainLoop = mainLoop}
+return {addButton = addButton, addContainer = addContainer, addLabel = addLabel, addProgressBar = addProgressBar, modifyButton = modifyButton, modifyContainer = modifyContainer, modifyProgressBar = modifyProgressBar, setLabelText = setLabelText, setProgressBarValues = setProgressBarValues, delete = delete, draw = draw, reset = reset, mainLoop = mainLoop}
