@@ -5,7 +5,7 @@
 -- @release https://pastebin.com/D325xpYJ
 -- @author Deleranax
 
-local objects = {n=0}
+local _G.mapiObjects = {n=0}
 
 -- @section Declaring
 
@@ -23,8 +23,8 @@ local objects = {n=0}
 
 function addButton(x, y, width, length, bcolor, fcolor, f, ...)
 	for i, val in ipairs({x, y, width, length, bcolor, fcolor, f, arg}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
-	table.insert(objects, {"Button", x, y, width, length, bcolor, fcolor, f, arg})
-	return table.getn(objects)
+	table.insert(_G.mapiObjects, {"Button", x, y, width, length, bcolor, fcolor, f, arg})
+	return table.getn(_G.mapiObjects)
 end
 
 --- Add a progress bar
@@ -46,11 +46,11 @@ function addProgressBar(x, y, width, length, color, bcolor, value, maxValue, ver
 	for i, val in ipairs({x, y, width, length, color, bcolor, value, maxValue}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
 	if value>maxValue then error("value can't be greater than maxValue") end
 	if not vertical then
-		table.insert(objects, {"ProgressBar", x, y, width, length, color, bcolor, value, maxValue})
+		table.insert(_G.mapiObjects, {"ProgressBar", x, y, width, length, color, bcolor, value, maxValue})
 	else
-		table.insert(objects, {"VerticalProgressBar", x, y, width, length, color, bcolor, value, maxValue})
+		table.insert(_G.mapiObjects, {"VerticalProgressBar", x, y, width, length, color, bcolor, value, maxValue})
 	end
-	return table.getn(objects)
+	return table.getn(_G.mapiObjects)
 end
 
 --- Add a label
@@ -64,8 +64,8 @@ end
 function addLabel(x, y, color, bcolor, ...)
 	bcolor = bcolor or colors.black
 	for i, val in ipairs({x, y, color, bcolor, arg}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
-	table.insert(objects, {"Label", x, y, color, bcolor, arg})
-	return table.getn(objects)
+	table.insert(_G.mapiObjects, {"Label", x, y, color, bcolor, arg})
+	return table.getn(_G.mapiObjects)
 end
 
 --- Add a container
@@ -81,8 +81,8 @@ end
 
 function addContainer(x, y, width, length, color, bcolor, label)
 	for i, val in ipairs({x, y, width, length, color}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
-	table.insert(objects, {"Container", x, y, width, length, color, bcolor, label})
-	return table.getn(objects)
+	table.insert(_G.mapiObjects, {"Container", x, y, width, length, color, bcolor, label})
+	return table.getn(_G.mapiObjects)
 end
 
 -- @section Modifying
@@ -96,13 +96,13 @@ end
 -- @tparam[opt] string ... Button label
 
 function modifyButton(id, bcolor, fcolor, f, ...)
-	local button = objects[id]
+	local button = _G.mapiObjects[id]
 	if button == nil or button[1] ~= "Button" then error("invalid object: got "..button[1].." expected Button") end
 	local bcolor = bcolor or button[6]
 	local fcolor = fcolor or button[7]
 	local f = f or button[8]
 	local text = arg or button[9]
-	objects[id] = {button[1], button[2], button[3], button[4], button[5], bcolor, fcolor, f, text}
+	_G.mapiObjects[id] = {button[1], button[2], button[3], button[4], button[5], bcolor, fcolor, f, text}
 end
 
 --- Modify progress bar ; make arguments nil to keep old values
@@ -114,14 +114,14 @@ end
 -- @tparam[opt] number maxValue Max value
 
 function modifyProgressBar(id, color, bcolor, value, maxValue)
-	local pb = objects[id]
+	local pb = _G.mapiObjects[id]
 	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
 	local color = color or pb[6]
 	local bcolor = bcolor or pb[7]
 	local value = value or pb[8]
 	local maxValue = maxValue or pb[9]
 	if value>maxValue then error("value can't be greater than maxValue") end
-	objects[id] = {pb[1], pb[2], pb[3], pb[4], pb[5], color, bcolor, value, maxValue}
+	_G.mapiObjects[id] = {pb[1], pb[2], pb[3], pb[4], pb[5], color, bcolor, value, maxValue}
 end
 
 --- Set values of progress bar ; make arguments nil to keep old values
@@ -131,12 +131,12 @@ end
 -- @tparam[opt] number maxValue Max value
 
 function setProgressBarValues(id, value, maxValue)
-	local pb = objects[id]
+	local pb = _G.mapiObjects[id]
 	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
 	local value = value or pb[8]
 	local maxValue = maxValue or pb[9]
 	if value>maxValue then error("value can't be greater than maxValue") end
-	objects[id] = {pb[1], pb[2], pb[3], pb[4], pb[5], pb[6], pb[7], value, maxValue}
+	_G.mapiObjects[id] = {pb[1], pb[2], pb[3], pb[4], pb[5], pb[6], pb[7], value, maxValue}
 end
 
 --- Set text of label
@@ -145,9 +145,9 @@ end
 -- @tparam string ... Label text
 
 function setLabelText(id, ...)
-	local l = objects[id]
+	local l = _G.mapiObjects[id]
 	if l == nil or l[1] ~= "Label" then error("invalid object: got "..l[1].." expected Label") end
-	objects[id] = {l[1], l[2], l[3], l[4], l[5], arg}
+	_G.mapiObjects[id] = {l[1], l[2], l[3], l[4], l[5], arg}
 end
 
 --- Modify container ; make arguments nil to keep old values
@@ -158,21 +158,21 @@ end
 -- @tparam[opt] string label Container title
 
 function modifyContainer(id, color, bcolor, label)
-	local c = objects[id]
+	local c = _G.mapiObjects[id]
 	if c == nil or c[1] ~= "Container" then error("invalid object: got "..c[1].." expected Container") end
 	local color = color or c[6]
 	local bcolor = bcolor or c[7]
 	local label = label or c[8]
-	objects[id] = {l[1], l[2], l[3], l[4], l[5], color, bcolor, label}
+	_G.mapiObjects[id] = {l[1], l[2], l[3], l[4], l[5], color, bcolor, label}
 end
 
 -- @section Deleting
 
---- Reset Workspace (delete all objects)
+--- Reset Workspace (delete all _G.mapiObjects)
 -- @within Deleting
 
 function reset()
-	objects = {n=0}
+	_G.mapiObjects = {n=0}
 end
 
 --- Delete object
@@ -180,7 +180,7 @@ end
 -- @param id Object ID
 
 function delete(id)
-	objects[id] = nil
+	_G.mapiObjects[id] = nil
 end
 
 local function filledRect(monitor, cx, cy, dx, dy, color)
@@ -211,7 +211,7 @@ end
 
 -- @section Drawing
 
---- Draw the registered objects
+--- Draw the registered _G.mapiObjects
 -- @within Drawing
 -- @tparam peripheral monitor Monitor on which draw
 
@@ -221,7 +221,7 @@ function draw(monitor)
 	local oldfcolor = monitor.getTextColor()
 	local oldbcolor = monitor.getBackgroundColor()
 	local oldx, oldy = monitor.getCursorPos()
-	for _, val in ipairs(objects) do
+	for _, val in ipairs(_G.mapiObjects) do
 		if val[1] == "Button" then
 			monitor.setTextColor(val[7])
 			filledRect(monitor, val[2],val[3],val[4],val[5], val[6])
@@ -272,7 +272,7 @@ end
 function mainLoop(monitor)
 	draw(monitor)
 	local event, side, x, y = os.pullEvent("monitor_touch")
-	for _, val in ipairs(objects) do
+	for _, val in ipairs(_G.mapiObjects) do
 		if val[1] == "Button" then
 			if x >= val[2] and y >= val[3] then
 				if x <= val[2] + val[4]-1 and y <= val[3] + val[5]-1 then
@@ -282,3 +282,5 @@ function mainLoop(monitor)
 		end
 	end
 end
+
+return {addButton = addButton, addContainer = addContainer, addLabel = addLabel, addProgressBar = addProgressBar, modifyButton = modifyButton, modifyContainer = modifyContainer, modifyProgressBar = modifyProgressBar, draw = draw, mainLoop = mainLoop}
