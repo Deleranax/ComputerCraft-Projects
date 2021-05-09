@@ -16,8 +16,9 @@ function getOrientation()
 end
 
 function check(ok, block, x, y, z)
+
 	if ok then
-		rednet.send(id, textutils.serialize({request = "set", x = x, y = y, z = z, block = block}))
+		rednet.send(id, textutils.serialize({request = "set", x = x, y = y, z = z, block = block.name}))
 	end
 end
 
