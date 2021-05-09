@@ -4,8 +4,6 @@ end
 
 ttns = {}
 
-ttns.MODEM = "left"
-
 function ttns.toSectorCoords(x, z)
     return math.floor(x / 64), math.floor(z / 64), math.mod(x, 64), math.mod(z, 64)
 end
@@ -50,7 +48,7 @@ function ttns.loadSector(id)
     end
 
     f = fs.open("disk"..id.."/data.ttns", "r")
-    _G.ttnsTemp.sector[id] = textutils.unserialize(f.readAll())
+    _G.ttnsTemp.sectors[id] = textutils.unserialize(f.readAll())
     f.close()
     return true
 end
@@ -62,7 +60,7 @@ function ttns.saveSector(id)
     end
 
     f = fs.open("disk"..id.."/data.ttns", "wb")
-    f.write(textutils.serialize(_G.ttnsTemp.sector[id]))
+    f.write(textutils.serialize(_G.ttnsTemp.sectors[id]))
     f.close()
     return true
 end

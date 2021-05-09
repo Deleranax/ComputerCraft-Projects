@@ -12,7 +12,7 @@ end
 function check(x, y, z, ok, block)
     local x, y, z = getCoords(x, y, z)
     if ok then
-        rednet.send(id, textutils.serialize({request = "set", x = x, y = y, z = z, block = block.name}))
+        rednet.send(id, {sType = "set", x = x, y = y, z = z, block = block.name})
         return false
     end
     return true
