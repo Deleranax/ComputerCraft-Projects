@@ -1,25 +1,21 @@
 rednet.open("left")
-id = rednet.lookup("ttns")
+local id = rednet.lookup("ttns")
 
 function getOrientation()
-    loc1 = vector.new(gps.locate(2, false))
-    if not turtle.forward() then
-        for j=1,6 do
-            if not turtle.forward() then
-                turtle.dig()
-            else break end
-        end
-    end
-    loc2 = vector.new(gps.locate(2, false))
-    heading = loc2 - loc1
+    local loc1 = vector.new(gps.locate(2, false))
+    turtle.forward()
+    local loc2 = vector.new(gps.locate(2, false))
+    local heading = loc2 - loc1
     return ((heading.x + math.abs(heading.x) * 2) + (heading.z + math.abs(heading.z) * 3))
 end
 
-function check(ok, block, x, y, z)
+function check(x, y, z, ok, block)
+    local x, y, z = getCoords(x, y, z)
     if ok then
-        print(textutils.serialize({request = "set", x = x, y = y, z = z, block = block.name}))
         rednet.send(id, textutils.serialize({request = "set", x = x, y = y, z = z, block = block.name}))
+        return false
     end
+    return true
 end
 
 function left()
@@ -40,9 +36,7 @@ function right()
     end
 end
 
-function getCoords()
-    x, y, z = gps.locate(2, false)
-    
+function getCoords(x, y, z)   
     if (o == 1) then
         x = x - 1
     elseif (o == 2) then
@@ -56,60 +50,35 @@ function getCoords()
     return x, y, z
 end
 
-function explore()
-
-    check(turtle.inspect(), getCoords())
-
-    left()
-    
-    check(turtle.inspect(), getCoords())
-    
-    right()
-    right()
-    
-    check(turtle.inspect(), getCoords())
-    
-    left()
-    
-    x, y, z = gps.locate(2, false)
-    
-    check(turtle.inspectUp(), x, y + 1, z)
-    
-    check(turtle.inspectDown(), x, y - 1, z)
-end
-
-function go()
-    if not turtle.detect() then
-        turtle.forward()
-    end
-    
-    left()
-    
-    if not turtle.detect() then
-        turtle.forward()
-    end
-    
-    right()
-    right()
-    
-    if not turtle.detect() then
-        turtle.forward()
-    end
-    
-    left()
-    
-    if not turtle.detectUp() then
-        turtle.up()
-    end
-    
-    if not turtle.detectDown() then
-        turtle.down()
-    end
-end
-
-o = getOrientation()
+local o = getOrientation()
 
 while true do
-    explore()
-    go()
+    x, y, z = gps.locate(2, false)
+    front = check(x, y, z, turtle.inspect())
+    left()
+    dleft = check(x, y, z, turtle.inspect())
+    right()
+    right()
+    dright = check(x, y, z, turtle.inspect())
+    left()
+    up = check(x, y + 1, z, turtle.inspectUp())
+    down = check(x, y - 1, z, turtle.inspectDown())
+    
+    if front then
+        turtle.forward()
+    elseif dleft then
+        left()
+        turtle.forward()
+    elseif dright then
+        right()
+        turtle.forward()
+    elseif up then
+        turtle.up()
+    elseif down then
+        turtle.down()
+    else
+        right()
+        right()
+        turtle.forward()
+    end
 end
