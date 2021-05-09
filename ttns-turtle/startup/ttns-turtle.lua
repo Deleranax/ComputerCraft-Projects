@@ -78,30 +78,30 @@ function explore()
 end
 
 function go()
-	if turtle.detect() then
+	if not turtle.detect() then
 		turtle.forward()
 	end
 	
 	left()
 	
-	if turtle.detect() then
+	if not turtle.detect() then
 		turtle.forward()
 	end
 	
 	right()
     right()
 	
-	if turtle.detect() then
+	if not turtle.detect() then
 		turtle.forward()
 	end
 	
 	left()
 	
-	if turtle.detectUp() then
+	if not turtle.detectUp() then
 		turtle.up()
 	end
 	
-	if turtle.detectDown() then
+	if not turtle.detectDown() then
 		turtle.down()
 	end
 end

@@ -1,12 +1,12 @@
-ttns = require("apis/ttns-api")
+ttns = require("/apis/ttns-api")
 
 ttns.init()
 
 rednet.open("left")
-rednet.host("ttns")
+rednet.host("ttns", "main")
 
 while true do
-	id, msg = rednet.receive(10)
+	id, msg = rednet.receive()
 	data = textutils.unserialize(msg)
 	
 	if data.request == "get" then
@@ -19,4 +19,6 @@ while true do
 		ttns.setBlock(data.x, data.y, data.z, data.block)
 		print("Setting block ("..data.x..", "..data.y..", "..data.z..") by ID"..id)
 	end
+	
+	ttns.saveAll()
 end

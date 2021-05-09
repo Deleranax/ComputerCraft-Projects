@@ -56,7 +56,7 @@ function ttns.loadSector(id)
 end
 
 function ttns.saveSector(id)
-	if not fs.exists("disk"..id..) then
+	if not fs.exists("disk"..id) then
 		printError("Can't save sector "..id..", add disks")
 		return false
 	end
