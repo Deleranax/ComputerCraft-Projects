@@ -72,7 +72,7 @@ function ttns.newSector(x, z)
         table.insert(_G.ttnsTemp.sectorIndex, {x, z})
         id = table.getn(_G.ttnsTemp.sectorIndex)
         _G.ttnsTemp.sectors[id] = {}
-        return table.getn(id)
+        return id
     end
 end
 

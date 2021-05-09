@@ -50,7 +50,7 @@ function getCoords(x, y, z)
     return x, y, z
 end
 
-local o = getOrientation()
+o = getOrientation()
 
 while true do
     x, y, z = gps.locate(2, false)
