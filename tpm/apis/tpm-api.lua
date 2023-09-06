@@ -206,6 +206,7 @@ function resolveDependencies(url)
 	local set = {}
 
 	for i, v in ipairs(dependencies) do
+		set[v] = true
 		for i2, v2 in pairs(resolveDependencies(v)) do
 			if v2 == url then
 				printError("Circular dependence detected between "..url.." and "..v..".")
@@ -222,6 +223,8 @@ function resolveDependencies(url)
 			table.insert(list, k)
 		end
 	end
+
+	return list
 end
 
 function checkDependencies(url)
