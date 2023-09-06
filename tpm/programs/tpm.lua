@@ -81,7 +81,7 @@ elseif table.getn(args) == 2 then
 		print("0 upgraded, "..installed.." newly installed.")
 	elseif args[1] == "reinstall" then
 		if tpm.remove(args[2]) then
-			installed = tpm.install(args[2], false)
+			installed = tpm.install(args[2], false) - 1
 		end
 		print("0 upgraded, "..installed.." newly installed.")
 	elseif args[1] == "remove" then

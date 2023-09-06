@@ -1,3 +1,5 @@
+log = require("/apis/console-api")
+
 if not _G.ttnsTemp then
     _G.ttnsTemp = {sectorIndex = {}, sectors = {}, turtles = {}}
 end
@@ -55,7 +57,7 @@ end
 
 function ttns.saveSector(id)
     if not fs.exists("disk"..id) then
-        printError("Can't save sector "..id..", add disks")
+        log.loggedConsole("Can't save sector "..id..", add disks.", "e")
         return false
     end
 
@@ -113,25 +115,26 @@ function ttns.getBlock(x, y, z)
 end
 
 function ttns.init()
-    write("Loading configs... ")
+    log.loggedConsole("Loading configs... ", "m")
     ttns.loadConfigs()
-    print("Done")
+    log.loggedConsole("Done.", "m")
     
-    print("Loading sectors... ")
+    write("Loading sectors... ")
     for k, v in ipairs(_G.ttnsTemp.sectorIndex) do
         ttns.loadSector(k)
-        print("Sector "..k.." loaded")
+        log.loggedConsole("Sector "..k.." loaded.", "m")
     end
-    print("Done")
+    log.loggedConsole("Done.", m)
 end
 
 function ttns.saveAll()
-    print("Saving sectors... ")
+    write("Saving sectors... ")
     for k, v in ipairs(_G.ttnsTemp.sectorIndex) do
         ttns.saveSector(k)
-        print("Sector "..k.." saved")
+        log.loggedConsole("Sector "..k.." saved.", "m")
     end
     print("Done")
+    log.loggedConsole("Sectors saved.", "m")
 end
 
 return ttns
