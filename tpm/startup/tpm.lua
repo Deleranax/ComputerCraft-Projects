@@ -9,7 +9,7 @@ function completion(shell, index, arg, args)
 	elseif index == 2 then
 		if args[2] == "install" then
 			rtn = tpm.getPackageList()
-		elseif args[2] == "remove" then
+		elseif args[2] == "remove" or args[2] == "reinstall" then
 			rtn = tpm.getInstalledList()
 		elseif args[2] == "list" then
 			rtn = {"installed", "available"}
