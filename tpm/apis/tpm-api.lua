@@ -167,10 +167,6 @@ end
 
 function reloadDatabase()
 	write("Reading package list... ")
-	if not fs.exists(".tpm") then
-		printError("Missing database. Use 'tpm update' to update database.")
-		return
-	end
 	file = fs.open(".tpm", "r")
 	data = textutils.unserialize(file.readAll())
 	_G.tpmTemp.database = data.database
