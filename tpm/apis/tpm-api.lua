@@ -239,7 +239,7 @@ function checkDependencies(url)
 
 	for i, v in ipairs(dependencies) do
 		local check = false
-		for i2, v2 in getInstalledList() do
+		for i2, v2 in ipairs(getInstalledList()) do
 			if v2 == v then
 				check = true
 				break
