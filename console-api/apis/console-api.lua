@@ -11,10 +11,6 @@ function setTitle(title)
    prog = title
 end
 
-local function gDate()
-	return os.date("%D %T")
-end
-
 --- Initialize GUI
 
 function init()
@@ -76,7 +72,7 @@ function console(string, mode)
 	mode = mode or "m"
 	term.setBackgroundColor(1)
 	term.setTextColor(32768)
-	local date = gDate()
+	local date = os.date("%T")
 	if mode == "m" then
 		print("["..date.."] "..string)
 	term.setBackgroundColor(1)
@@ -119,19 +115,20 @@ function loggedConsole(string, mode)
 	mode = mode or "m"
 	term.setBackgroundColor(1)
 	term.setTextColor(32768)
-	local date = gDate()
+	local time = os.date("%T")
+	local date = os.date("%D %T")
 	if mode == "m" then
-		 print("["..date.."] "..string)
+		 print("["..time.."] "..string)
 		 log("["..date.."] "..string)
 		 term.setBackgroundColor(1)
 	elseif mode == "a" then
 		 term.setBackgroundColor(2)
-		 print("["..date.."] "..string)
+		 print("["..time.."] "..string)
 		 log("["..date.."] Warning : "..string)
 		 term.setBackgroundColor(1)
 	elseif mode == "e" then
 		 term.setBackgroundColor(16384)
-		 print("["..date.."] "..string)
+		 print("["..time.."] "..string)
 		 log("["..date.."] Error : "..string)
 		 term.setBackgroundColor(1)
 	end
