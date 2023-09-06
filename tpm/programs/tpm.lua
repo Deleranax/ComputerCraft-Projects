@@ -20,13 +20,15 @@ if table.getn(args) == 1 then
 		tpm.updateDatabase()
 		local outdated = false
 		for k, v in pairs(tpm.getInstalledPackages()) do
-			if v.version ~= get(k)["version"] then
+			if (get(k) == nil) then
+				print(k.." is no longer available, or the package was renamed.")
+			elseif v.version ~= get(k)["version"] then
 				print(k.." needs update (v"..v.version.." -> v"..get(k)["version"]..")")
 				outdated = true
 			end
 		end
 		if outdated then
-			print("To update packets, run 'tpm upgrade'")
+			print("To update packets, run 'tpm upgrade'.")
 		end
 	elseif args[1] == "upgrade" then
 		local update = 0
@@ -39,10 +41,10 @@ if table.getn(args) == 1 then
 			end
 		end
 		if update == 0 then
-			print("All packages are up to date")
+			print("All packages are up to date.")
 			return
 		end
-		print(update.." upgraded, 0 newly installed")
+		print(update.." upgraded, 0 newly installed.")
 	else
 		printError("Invalid command. Run 'tpm help' to show usage.")
 		return
