@@ -137,3 +137,5 @@ function loggedConsole(string, mode)
 	end
 	drawHeader()
 end
+
+return {setTitle = setTitle, init = init, popup = popup, console = console, log = log, loggedConsole = loggedConsole}
