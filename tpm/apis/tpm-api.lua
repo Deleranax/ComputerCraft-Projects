@@ -4,9 +4,11 @@ if not _G.tpmTemp then
 	_G.tpmTemp = {database = {}, installed = {}}
 end
 
-function httpGet(url)
+function httpGet(url, verbose)
     if not http then
-        printError("HTTP is not available.")
+		if verbose then
+			printError("HTTP is not available.")
+		end
         return nil
     end
  
@@ -21,9 +23,11 @@ function httpGet(url)
     return data.readAll()
 end
 
-function httpGetLines(url)
+function httpGetLines(url, verbose)
     if not http then
-        printError("HTTP is not available.")
+		if verbose then
+			printError("HTTP is not available.")
+		end
         return nil
     end
 	
@@ -32,8 +36,12 @@ function httpGetLines(url)
 	local data, err = http.get(url, nil, true)
 
 	if not data then
-		printError(url)
-        printError(err or "Invalid URL.")
+		if verbose then
+			printError(url)
+			printError(err or "Invalid URL.")
+		else
+			return nil
+		end
         return nil
     end
 
@@ -69,7 +77,11 @@ function getInstalled(name)
 end
 
 function checkDir(url)
-	local index = httpGetLines(BASE_URL..url.."CCINDEX")
+	local index = httpGetLines(BASE_URL..url.."CCINDEX", true)
+
+	if not index then
+		return
+	end
 		
 	for i, v in ipairs(index) do
 		if v:sub(-1) == "/" then
@@ -82,15 +94,20 @@ function checkDir(url)
 end
 
 function checkPack(url, name)
-	local manifest = httpGetLines(BASE_URL..url..name.."/CCMANIFEST")
+	local manifest = httpGetLines(BASE_URL..url..name.."/CCMANIFEST", true)
+	local dependencies = httpGetLines(BASE_URL..url..name.."/CCDEPENDENCIES", false)
 	
 	local version = tonumber(manifest[1])
 	local maintainer = manifest[2]
 
+	if not dependencies then
+		dependencies = {}
+	end
+
 	table.remove(manifest, 1)
 	table.remove(manifest, 1)
 	
-	return {name = name, version = version, maintainer = maintainer, url = BASE_URL..url..name.."/", files = manifest}
+	return {name = name, version = version, maintainer = maintainer, url = BASE_URL..url..name.."/", dependencies = dependencies, files = manifest}
 end
 
 function listEntries(url, rtn)
@@ -139,7 +156,7 @@ function getPackage(url)
 		printError("Unable to locate package '"..url.."'.")
 		return
 	end
-	
+
 	if not get(url).name then
 		printError("Unable to locate package '"..url.."'.")
 		return
@@ -151,7 +168,7 @@ end
 function reloadDatabase()
 	write("Reading package list... ")
 	if not fs.exists(".tpm") then
-		printError("Missing database. Try to update database.")
+		printError("Missing database. Use 'tpm update' to update database.")
 		return
 	end
 	file = fs.open(".tpm", "r")
@@ -177,13 +194,105 @@ function updateDatabase()
 	saveDatabase()
 end
 
-function install(url)
+function resolveDependencies(url)
+	if not get(url) then
+		printError("Unable to locate package '"..url.."' while resolving dependencies.")
+		return nil
+	end
+
+	local dependencies = get(url).dependencies
+
+	if not dependencies then
+		get(url)["dependencies"] = {}
+		return {}
+	end
+
+	local set = {}
+
+	for i, v in ipairs(dependencies) do
+		for i2, v2 in pairs(resolveDependencies(v)) do
+			if v2 == url then
+				printError("Circular dependence detected between "..url.." and "..v..".")
+				return nil
+			end
+			set[v2] = true
+		end
+	end
+
+	local list = {url}
+
+	for k, v in pairs(set) do
+		if v then
+			table.insert(list, k)
+		end
+	end
+end
+
+function checkDependencies(url)
+	if not get(url) then
+		printError("Unable to locate package '"..url.."' while checking dependencies.")
+		return nil
+	end
+
+	local dependencies = get(url).dependencies
+
+	if not dependencies then
+		get(url)["dependencies"] = {}
+		return true
+	end
+
+	for i, v in ipairs(dependencies) do
+		local check = false
+		for i2, v2 in getInstalledList() do
+			if v2 == v then
+				check = true
+				break
+			end
+		end
+
+		if not check then
+			return false
+		end
+	end
+
+	return true
+end
+
+function install(url, dep)
 
 	reloadDatabase()
 
 	if not get(url) then
 		printError("Unable to locate package '"..url.."'.")
 		return false
+	end
+
+	local count = 0
+
+	if not dep and not checkDependencies(url) then
+		list = resolveDependencies(url)
+
+		print("The following package(s) will be installed:")
+		for i, v in ipairs(list) do
+			print(" "..v)
+		end
+
+		write("Do you want to continue ? [Y/n] ")
+
+		local a = input()
+
+		if a == "n" or a == "N" then
+			return false
+		end
+
+		table.remove(list, 1)
+
+		for i, v in ipairs(list) do
+			print("Installing "..v.."...")
+			install(v, true)
+		end
+
+		print("Installing "..url.."...")
 	end
 	
 	print("Fetching files...")
@@ -204,11 +313,12 @@ function install(url)
 	end
 	
 	_G.tpmTemp.installed[url] = checkPack(urls.."/", name)
+	_G.tpmTemp.installed[url].installedAsDependency = dep
 	
 	saveDatabase()
 	
 	print("Package successfully installed.")
-	return true
+	return count
 end
 
 function remove(url)
@@ -218,6 +328,18 @@ function remove(url)
 	if not _G.tpmTemp.installed[url] then
 		printError("Package "..url.." is not installed.")
 		return false
+	end
+
+	if _G.tpmTemp.installed[url].installedAsDependency then
+		print(url.." is flagged as dependency.")
+
+		write("Do you want to continue ? [y/N] ")
+
+		local a = input()
+
+		if a ~= "y" and a ~= "Y" then
+			return false
+		end
 	end
 	
 	print("Deleting files...")

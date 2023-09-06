@@ -32,6 +32,7 @@ if table.getn(args) == 1 then
 		end
 	elseif args[1] == "upgrade" then
 		local update = 0
+		local installed = 0
 		for k, v in pairs(tpm.getInstalledPackages()) do
 			if (get(k) == nil) then
 				print(k.." is no longer available, skipping.")
@@ -39,27 +40,53 @@ if table.getn(args) == 1 then
 				update = update + 1
 				print("\nUpdating "..k.."...")
 				tpm.remove(k)
-				tpm.install(k)
+				installed = installed + tpm.install(k, false) - 1
 			end
 		end
 		if update == 0 then
 			print("All packages are up to date.")
 			return
 		end
-		print(update.." upgraded, 0 newly installed.")
+		print(update.." upgraded, "..installed.." newly installed.")
+	elseif args[1] == "clean" then
+		local dependencies = {}
+
+		local count = 0
+
+		for k, v in pairs(tpm.getInstalledPackages()) do
+			if v.dependencies then
+				for i, v2 in ipairs(v.dependencies) do
+					dependencies[v2] = true
+				end
+			else
+				v.dependencies = {}
+			end
+		end
+
+		for k, v in pairs(tpm.getInstalledPackages()) do
+			if v.installedAsDependency and not dependencies[k] then
+				print(k.." will be removed.")
+				tpm.remove(k)
+				count = count + 1
+			end
+		end
+		print(count.." removed.")
 	else
 		printError("Invalid command. Run 'tpm help' to show usage.")
 		return
 	end
 elseif table.getn(args) == 2 then
 	if args[1] == "install" then
-		tpm.install(args[2])
+		installed = tpm.install(args[2], false)
+		print("0 upgraded, "..installed.." newly installed.")
 	elseif args[1] == "reinstall" then
 		if tpm.remove(args[2]) then
-			tpm.install(args[2])
+			installed = tpm.install(args[2], false)
 		end
+		print("0 upgraded, "..installed.." newly installed.")
 	elseif args[1] == "remove" then
 		tpm.remove(args[2])
+		print("Use 'tpm clean' to clean any useless dependency.")
 	elseif args[1] == "show" then
 		local pack = tpm.getPackage(args[2])
 		if not pack then
@@ -69,6 +96,22 @@ elseif table.getn(args) == 2 then
 		print("Version: "..pack.version)
 		print("Maintainer: "..pack.maintainer)
 		print("TPM-Source: "..pack.url)
+
+		if pack.dependencies then
+			if table.getn(pack.dependencies) ~= 0 then
+				print("Dependencies:")
+				for i, v in ipairs(pack.dependencies) do
+					print(" "..v)
+				end
+			end
+		else
+			pack.dependencies = {}
+		end
+
+		if pack.installedAsDependency then
+			print("The package is flagged as dependency.")
+		end
+
 	elseif args[1] == "list" then
 		if args[2] == "installed" then
 			tpm.reloadDatabase()

@@ -1,11 +1,13 @@
 local tpm = require("/apis/tpm-api")
 shell.setPath(shell.path()..":/programs/:/programs/http/")
 
+tpm.reloadDatabase()
+
 function completion(shell, index, arg, args)
 	local rtn = {}
 
 	if index == 1 then
-		rtn = {"help", "update", "upgrade", "list ", "show ", "install ", "reinstall ", "remove "}
+		rtn = {"help", "update", "upgrade", "list ", "show ", "install ", "reinstall ", "remove ", "clean "}
 	elseif index == 2 then
 		if args[2] == "install" then
 			rtn = tpm.getPackageList()
