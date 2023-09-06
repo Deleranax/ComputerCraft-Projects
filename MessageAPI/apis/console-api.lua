@@ -1,11 +1,8 @@
 ----------------------
 -- Simple message script for ComputerCraft
 -- @license MIT
--- @module MessageAPI
--- @release https://pastebin.com/umGH65FP
+-- @module console-api
 -- @author Deleranax
-
-ts = peripheral.wrap("timeSensor_1")
 
 --- Define a title
 -- @tparam string title Title
@@ -15,9 +12,7 @@ function setTitle(title)
 end
 
 local function gDate()
-	ok = pcall(ts.getDate)
-	if not ok then d = os.day() else d = ts.getDate()["day"].."/"..ts.getDate()["month"].." "..ts.getDate()["hour"]..":"..ts.getDate()["minute"] end
-	return d
+	return os.date("%D %T")
 end
 
 --- Initialize GUI
