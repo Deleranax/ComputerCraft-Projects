@@ -278,7 +278,7 @@ function install(url, dep)
 
 		write("Do you want to continue ? [Y/n] ")
 
-		local a = input()
+		local a = read()
 
 		if a == "n" or a == "N" then
 			return false
@@ -337,7 +337,7 @@ function remove(url)
 
 		write("Do you want to continue ? [y/N] ")
 
-		local a = input()
+		local a = read()
 
 		if a ~= "y" and a ~= "Y" then
 			return false
