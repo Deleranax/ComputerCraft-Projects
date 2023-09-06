@@ -33,7 +33,9 @@ if table.getn(args) == 1 then
 	elseif args[1] == "upgrade" then
 		local update = 0
 		for k, v in pairs(tpm.getInstalledPackages()) do
-			if v.version ~= get(k)["version"] then
+			if (get(k) == nil) then
+				print(k.." is no longer available, skipping.")
+			elseif v.version ~= get(k)["version"] then
 				update = update + 1
 				print("\nUpdating "..k.."...")
 				tpm.remove(k)
