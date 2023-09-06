@@ -136,12 +136,12 @@ function getPackage(url)
 	reloadDatabase()
 
 	if not get(url) then
-		printError("Unable to locate package "..url)
+		printError("Unable to locate package '"..url.."'.")
 		return
 	end
 	
 	if not get(url).name then
-		printError("Unable to locate package "..url)
+		printError("Unable to locate package '"..url.."'.")
 		return
 	end
 	
@@ -182,7 +182,7 @@ function install(url)
 	reloadDatabase()
 
 	if not get(url) then
-		printError("Unable to locate package "..url)
+		printError("Unable to locate package '"..url.."'.")
 		return false
 	end
 	
@@ -207,19 +207,16 @@ function install(url)
 	
 	saveDatabase()
 	
-	print("Package successfully installed")
+	print("Package successfully installed.")
 	return true
 end
 
 function remove(url)
 
 	reloadDatabase()
-	
-	if not get(url) then
-		printError("Unable to locate package "..url)
-	end
+
 	if not _G.tpmTemp.installed[url] then
-		printError("Package "..url.." is not installed, so not removed")
+		printError("Package "..url.." is not installed.")
 		return false
 	end
 	
@@ -234,7 +231,7 @@ function remove(url)
 	
 	saveDatabase()
 	
-	print("Package successfully removed")
+	print("Package successfully removed.")
 	return true
 end
 
