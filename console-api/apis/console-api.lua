@@ -23,7 +23,7 @@ local function drawHeader()
 		x,y = term.getCursorPos()
 		term.setCursorPos(1,1)
 		term.setBackgroundColor(512)	
-		write(prog.." - (c) Temver Inc.															      ")
+		write(prog.." - (c) Temver Inc.															        ")
 		term.setBackgroundColor(back)
 		term.setCursorPos(x,y)
 end
