@@ -290,6 +290,7 @@ function install(url, dep)
 		for i, v in ipairs(list) do
 			print("Installing "..v.."...")
 			install(v, true)
+			count = count + 1
 		end
 
 		print("Installing "..url.."...")
@@ -316,6 +317,8 @@ function install(url, dep)
 	_G.tpmTemp.installed[url].installedAsDependency = dep
 	
 	saveDatabase()
+
+	count = count + 1
 	
 	print("Package successfully installed.")
 	return count
