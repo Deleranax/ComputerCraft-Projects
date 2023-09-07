@@ -70,7 +70,11 @@ if table.getn(args) == 1 then
 				count = count + 1
 			end
 		end
-		print(count.." removed.")
+		if count == 0 then
+			print("No useless packages detected.")
+		else
+			print(count.." removed.")
+		end
 	else
 		printError("Invalid command. Run 'tpm help' to show usage.")
 		return
