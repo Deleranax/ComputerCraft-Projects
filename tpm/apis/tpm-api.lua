@@ -207,12 +207,15 @@ function resolveDependencies(url)
 
 	for i, v in ipairs(dependencies) do
 		set[v] = true
-		for i2, v2 in pairs(resolveDependencies(v)) do
-			if v2 == url then
-				printError("Circular dependency detected between "..url.." and "..v..".")
-				return nil
+		dep = resolveDependencies(v)
+		if dep then
+			for i2, v2 in pairs(resolveDependencies(v)) do
+				if v2 == url then
+					printError("Circular dependency detected between "..url.." and "..v..".")
+					return nil
+				end
+				set[v2] = true
 			end
-			set[v2] = true
 		end
 	end
 
