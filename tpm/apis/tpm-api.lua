@@ -290,6 +290,7 @@ function install(url, dep)
 
 		if not list then
 			print("Cannot resolve dependencies.")
+			return 0
 		end
 
 		print("The following package(s) will be installed:")
