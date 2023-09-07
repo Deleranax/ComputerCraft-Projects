@@ -190,7 +190,16 @@ function updateDatabase()
 	saveDatabase()
 end
 
-function resolveDependencies(url)
+function resolveDependencies(url, previous)
+
+	for i, v in ipairs(previous) do
+		if v == url then
+			printError("Circular dependency detected between "..url.." and "..previous[i-1]..".")
+		end
+	end
+
+	table.insert(previous, 1, url)
+
 	if not get(url) then
 		printError("Unable to locate package '"..url.."' while resolving dependencies.")
 		return nil
@@ -207,13 +216,9 @@ function resolveDependencies(url)
 
 	for i, v in ipairs(dependencies) do
 		set[v] = true
-		dep = resolveDependencies(v)
+		dep = resolveDependencies(v, previous)
 		if dep then
-			for i2, v2 in pairs(resolveDependencies(v)) do
-				if v2 == url then
-					printError("Circular dependency detected between "..url.." and "..v..".")
-					return nil
-				end
+			for i2, v2 in pairs(dep) do
 				set[v2] = true
 			end
 		end
