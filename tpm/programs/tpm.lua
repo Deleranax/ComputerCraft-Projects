@@ -39,7 +39,7 @@ if table.getn(args) == 1 then
 			elseif v.version ~= get(k)["version"] then
 				update = update + 1
 				print("\nUpdating "..k.."...")
-				tpm.remove(k)
+				tpm.remove(k, true)
 				installed = installed + tpm.install(k, false) - 1
 			end
 		end
@@ -66,7 +66,7 @@ if table.getn(args) == 1 then
 		for k, v in pairs(tpm.getInstalledPackages()) do
 			if v.installedAsDependency and not dependencies[k] then
 				print(k.." will be removed.")
-				tpm.remove(k)
+				tpm.remove(k, false)
 				count = count + 1
 			end
 		end
@@ -84,12 +84,12 @@ elseif table.getn(args) == 2 then
 		installed = tpm.install(args[2], false)
 		print("0 upgraded, "..installed.." newly installed.")
 	elseif args[1] == "reinstall" then
-		if tpm.remove(args[2]) then
+		if tpm.remove(args[2], true) then
 			installed = tpm.install(args[2], false) - 1
 		end
 		print("0 upgraded, "..installed.." newly installed.")
 	elseif args[1] == "remove" then
-		tpm.remove(args[2])
+		tpm.remove(args[2], false)
 		print("Use 'tpm clean' to clean any useless dependency.")
 	elseif args[1] == "show" then
 		local pack = tpm.getPackage(args[2])

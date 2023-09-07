@@ -323,7 +323,7 @@ function install(url, dep)
 	return count
 end
 
-function remove(url)
+function remove(url, force)
 
 	reloadDatabase()
 
@@ -332,7 +332,7 @@ function remove(url)
 		return false
 	end
 
-	if _G.tpmTemp.installed[url].installedAsDependency then
+	if not force and _G.tpmTemp.installed[url].installedAsDependency then
 		print(url.." is flagged as dependency.")
 
 		write("Do you want to continue ? [y/N] ")
