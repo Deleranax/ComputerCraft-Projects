@@ -228,6 +228,8 @@ function resolveDependencies(url, previous)
 			for i2, v2 in pairs(dep) do
 				set[v2] = true
 			end
+		else
+			return nil
 		end
 	end
 
