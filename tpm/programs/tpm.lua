@@ -11,6 +11,34 @@ function showUsage()
 	print("tpm remove <program>")
 end
 
+function clean()
+	local dependencies = {}
+
+	local count = 0
+
+	for k, v in pairs(tpm.getInstalledPackages()) do
+		if v.dependencies then
+			for i, v2 in ipairs(v.dependencies) do
+				dependencies[v2] = true
+			end
+		else
+			v.dependencies = {}
+		end
+	end
+
+	for k, v in pairs(tpm.getInstalledPackages()) do
+		if v.installedAsDependency and not dependencies[k] then
+			print(k.." will be removed.")
+			if tpm.remove(k, false) then
+				count = count + 1 + clean()
+				break
+			end
+		end
+	end
+
+	return count
+end
+
 args = { ... }
 
 if table.getn(args) == 1 then
@@ -49,28 +77,7 @@ if table.getn(args) == 1 then
 		end
 		print(update.." upgraded, "..installed.." newly installed.")
 	elseif args[1] == "clean" then
-		local dependencies = {}
-
-		local count = 0
-
-		for k, v in pairs(tpm.getInstalledPackages()) do
-			if v.dependencies then
-				for i, v2 in ipairs(v.dependencies) do
-					dependencies[v2] = true
-				end
-			else
-				v.dependencies = {}
-			end
-		end
-
-		for k, v in pairs(tpm.getInstalledPackages()) do
-			if v.installedAsDependency and not dependencies[k] then
-				print(k.." will be removed.")
-				tpm.remove(k, false)
-				count = count + 1
-			end
-		end
-		if count == 0 then
+		if clean() == 0 then
 			print("No useless packages detected.")
 		else
 			print(count.." removed.")
