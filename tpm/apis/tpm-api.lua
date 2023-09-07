@@ -201,6 +201,7 @@ function resolveDependencies(url, previous)
 	for i, v in ipairs(previous) do
 		if v == url then
 			printError("Circular dependency detected between "..url.." and "..previous[i-1]..".")
+			return nil
 		end
 	end
 
