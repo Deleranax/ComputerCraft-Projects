@@ -277,7 +277,7 @@ function install(url, dep)
 	local count = 0
 
 	if not dep and not checkDependencies(url) then
-		list = resolveDependencies(url)
+		list = resolveDependencies(url, {})
 
 		print("The following package(s) will be installed:")
 		print(table.concat(list, ", "))
