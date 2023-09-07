@@ -118,8 +118,8 @@ function ttns.init()
     capi.loggedConsole("Loading configs... ", "m")
     ttns.loadConfigs()
     capi.loggedConsole("Done.", "m")
-    
-    write("Loading sectors... ")
+
+    capi.loggedConsole("Loading sectors... ", "m")
     for k, v in ipairs(_G.ttnsTemp.sectorIndex) do
         ttns.loadSector(k)
         capi.loggedConsole("Sector "..k.." loaded.", "m")
@@ -128,12 +128,12 @@ function ttns.init()
 end
 
 function ttns.saveAll()
-    write("Saving sectors... ")
+    capi.loggedConsole("Saving sectors... ", "m")
     for k, v in ipairs(_G.ttnsTemp.sectorIndex) do
         ttns.saveSector(k)
         capi.loggedConsole("Sector "..k.." saved.", "m")
     end
-    print("Done")
+    capi.loggedConsole("Done", "m")
     capi.loggedConsole("Sectors saved.", "m")
 end
 
