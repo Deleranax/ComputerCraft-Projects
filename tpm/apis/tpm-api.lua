@@ -168,11 +168,16 @@ end
 function reloadDatabase()
 	write("Reading package list... ")
 	file = fs.open(".tpm", "r")
+
+	if not file then
+		print("Missing Database.")
+	end
+
 	data = textutils.unserialize(file.readAll())
 	_G.tpmTemp.database = data.database
 	_G.tpmTemp.installed = data.installed
 	file.close()
-	print("Done")
+	print("Done.")
 end
 
 function updateDatabase()
@@ -181,11 +186,11 @@ function updateDatabase()
 
 	write("Connecting... ")
 	httpGet(BASE_URL.."CCINDEX")
-	print("Success")
+	print("Success.")
 	
 	write("Updating package list... ")
 	checkDir("")
-	print("Done")
+	print("Done.")
 	
 	saveDatabase()
 end
