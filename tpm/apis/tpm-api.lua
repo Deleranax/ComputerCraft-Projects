@@ -171,6 +171,7 @@ function reloadDatabase()
 
 	if not file then
 		print("Missing Database.")
+		return
 	end
 
 	data = textutils.unserialize(file.readAll())
