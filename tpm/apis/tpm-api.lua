@@ -288,6 +288,10 @@ function install(url, dep)
 	if not dep and not checkDependencies(url) then
 		list = resolveDependencies(url, {})
 
+		if not list then
+			print("Cannot resolve dependencies.")
+		end
+
 		print("The following package(s) will be installed:")
 		print(table.concat(list, ", "))
 
