@@ -209,7 +209,7 @@ function resolveDependencies(url)
 		set[v] = true
 		for i2, v2 in pairs(resolveDependencies(v)) do
 			if v2 == url then
-				printError("Circular dependence detected between "..url.." and "..v..".")
+				printError("Circular dependency detected between "..url.." and "..v..".")
 				return nil
 			end
 			set[v2] = true
