@@ -272,9 +272,7 @@ function install(url, dep)
 		list = resolveDependencies(url)
 
 		print("The following package(s) will be installed:")
-		for i, v in ipairs(list) do
-			print(" "..v)
-		end
+		print(table.concat(list, ", "))
 
 		write("Do you want to continue ? [Y/n] ")
 

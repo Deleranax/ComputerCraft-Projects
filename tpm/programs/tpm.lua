@@ -104,9 +104,7 @@ elseif table.getn(args) == 2 then
 		if pack.dependencies then
 			if table.getn(pack.dependencies) ~= 0 then
 				print("Dependencies:")
-				for i, v in ipairs(pack.dependencies) do
-					print(" "..v)
-				end
+				print(table.concat(pack.dependencies, ", "))
 			end
 		else
 			pack.dependencies = {}
