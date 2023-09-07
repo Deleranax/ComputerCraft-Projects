@@ -263,7 +263,7 @@ function install(url, dep)
 
 	if not get(url) then
 		printError("Unable to locate package '"..url.."'.")
-		return false
+		return 0
 	end
 
 	local count = 0
@@ -281,7 +281,7 @@ function install(url, dep)
 		local a = read()
 
 		if a == "n" or a == "N" then
-			return false
+			return 0
 		end
 
 		table.remove(list, 1)
