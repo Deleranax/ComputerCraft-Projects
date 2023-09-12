@@ -16,6 +16,16 @@ end
 function init()
 	popup("", "m")
 	term.setCursorPos(1,2)
+	_G.consoleTemp = {x=1,y=2}
+end
+
+function savePos()
+	sx,sy = term.getCursorPos()
+	_G.consoleTemp = {x=sx,y=sy}
+end
+
+function restorePos()
+	term.setCursorPos(_G.consoleTemp.x,_G.consoleTemp.y)
 end
 
 local function drawHeader()
@@ -38,6 +48,7 @@ end
 -- @tparam[opt=m] string mode Mode of the message (can be 'm', 'a' or 'e')
 
 function popup(message, mode)
+	restorePos()
 	mode = mode or "m"
 	term.setTextColor(32768)
 	local x,y = term.getSize()
@@ -59,9 +70,8 @@ function popup(message, mode)
 		drawHeader()
 		term.setCursorPos(math.ceil((x / 2) - (message:len() / 2)), 9)
 		write(message)
-		sleep(3)
-		os.reboot()
 	end
+	savePos()
 end
 
 --- Draw a message in console
@@ -69,6 +79,7 @@ end
 -- @tparam[opt="m"] string mode Mode of the message (can be "m" for message, "a" for advert, "e" for error)
 
 function console(string, mode)
+	restorePos()
 	mode = mode or "m"
 	term.setBackgroundColor(1)
 	term.setTextColor(32768)
@@ -86,6 +97,7 @@ function console(string, mode)
 	term.setBackgroundColor(1)
 	end
 	drawHeader()
+	savePos()
 end
 
 --- Log message in file
@@ -112,6 +124,7 @@ end
 -- @tparam[opt="m"] string mode Mode of the message (can be "m" for message, "a" for advert, "e" for error)
 
 function loggedConsole(string, mode)
+	restorePos()
 	mode = mode or "m"
 	term.setBackgroundColor(1)
 	term.setTextColor(32768)
@@ -133,6 +146,17 @@ function loggedConsole(string, mode)
 		 term.setBackgroundColor(1)
 	end
 	drawHeader()
+	savePos()
 end
 
-return {setTitle = setTitle, init = init, popup = popup, console = console, log = log, loggedConsole = loggedConsole}
+function input()
+	x, y = term.getSize()
+	setCursorPos(1,y)
+	write("> ")
+	rtn = read()
+	setCursorPos(1,y)
+	write(">                                                                    ")
+	return rtn
+end
+
+return {setTitle = setTitle, init = init, popup = popup, console = console, log = log, loggedConsole = loggedConsole, input = input}

@@ -29,7 +29,9 @@ function clean()
 	for k, v in pairs(tpm.getInstalledPackages()) do
 		if v.installedAsDependency and not dependencies[k] then
 			print(k.." will be removed.")
-			count = count + tpm.remove(k, false)
+			if tpm.remove(k, false) then
+				count = count + 1
+			end
 		end
 	end
 

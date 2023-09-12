@@ -1,6 +1,4 @@
 tpm
-ttns-server
-ttns-turtle
-ttns-worker/
+ttns
 console-api
 deprecated/
