@@ -7,14 +7,16 @@ function completion(shell, index, arg, args)
 	local rtn = {}
 
 	if index == 1 then
-		rtn = {"help", "update", "upgrade", "list ", "show ", "install ", "reinstall ", "remove ", "clean "}
+		rtn = {"help ", "update ", "upgrade ", "list ", "show ", "install ", "reinstall ", "remove ", "clean "}
 	elseif index == 2 then
 		if args[2] == "install" then
 			rtn = tpm.getPackageList()
 		elseif args[2] == "remove" or args[2] == "reinstall" then
-			rtn = tpm.getInstalledList()
+			for i, v in ipairs(tpm.getInstalledList()) do
+				table.insert(rtn, v.." ")
+			end
 		elseif args[2] == "list" then
-			rtn = {"installed", "available"}
+			rtn = {"installed ", "available "}
 		elseif args[2] == "show" then
 			rtn = tpm.getPackageList()
 		end

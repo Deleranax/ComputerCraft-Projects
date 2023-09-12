@@ -1,0 +1,9 @@
+{
+    "configurations": [
+        {
+            "type": "command",
+            "name": "Launch CraftOS",
+            "program": "C:\Program Files\CraftOS-PC\CraftOS-PC_console.",
+        },
+    ]
+}

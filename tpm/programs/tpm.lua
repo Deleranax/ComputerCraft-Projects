@@ -30,10 +30,13 @@ function clean()
 		if v.installedAsDependency and not dependencies[k] then
 			print(k.." will be removed.")
 			if tpm.remove(k, false) then
-				count = count + 1 + clean()
-				break
+				count = count + 1
 			end
 		end
+	end
+
+	if count ~= 0 then
+		count = count + clean()
 	end
 
 	return count
