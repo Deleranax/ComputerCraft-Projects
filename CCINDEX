@@ -1,4 +1,5 @@
 tpm
-ttns
 console-api
+ttns/
+tac/
 deprecated/

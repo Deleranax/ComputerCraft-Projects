@@ -97,6 +97,11 @@ function checkPack(url, name)
 	local manifest = httpGetLines(BASE_URL..url..name.."/CCMANIFEST", true)
 	local dependencies = httpGetLines(BASE_URL..url..name.."/CCDEPENDENCIES", false)
 	
+	if not manifest then
+		printError("Package "..name.." is not properly structured.")
+		return nil
+	end
+
 	local version = tonumber(manifest[1])
 	local maintainer = manifest[2]
 
@@ -332,8 +337,12 @@ function install(url, dep)
 		name = v
 	end
 	
-	_G.tpmTemp.installed[url] = checkPack(urls.."/", name)
-	_G.tpmTemp.installed[url].installedAsDependency = dep
+	pack = checkPack(urls.."/", name)
+
+	if pack then
+		_G.tpmTemp.installed[url] = pack
+		_G.tpmTemp.installed[url].installedAsDependency = dep
+	end
 	
 	saveDatabase()
 
