@@ -75,8 +75,10 @@ end
 function promptPassword(title, size)
     setUpMessage(title)
 
-    computeAlignment("Press ENTER to confirm and CTRL to quit.", math.floor(3 * (_G.vuiTemp.y/4)))
-    term.write("Press ENTER to confirm and CTRL to quit.")
+    if _G.vuiTemp.allowEscape then
+        computeAlignment("Press ENTER to confirm and CTRL to quit.", math.floor(3 * (_G.vuiTemp.y/4)))
+        term.write("Press ENTER to confirm and CTRL to quit.")
+    end
 
     local pass = ""
 
@@ -93,7 +95,7 @@ function promptPassword(title, size)
 
         if event == "key" then
 
-            if key == keys.leftCtrl or key == keys.rightCtrl then
+            if (key == keys.leftCtrl or key == keys.rightCtrl) and _G.vuiTemp.allowEscape then
                 return nil
             elseif key == keys.enter and pass:len() == size then
                 return pass
