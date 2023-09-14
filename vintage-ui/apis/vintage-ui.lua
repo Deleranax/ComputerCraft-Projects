@@ -75,11 +75,6 @@ end
 function promptPassword(title, size)
     setUpMessage(title)
 
-    term.setCursorPos(math.floor((x / 2) - (size - 0.5)), math.floor(_G.vuiTemp.y/2))
-    for i = 1, size, 1 do
-        term.write("_ ")
-    end
-
     computeAlignment("Press ENTER to confirm and CTRL to quit.", math.floor(3 * (_G.vuiTemp.y/4)))
     term.write("Press ENTER to confirm and CTRL to quit.")
 
@@ -101,10 +96,12 @@ function promptPassword(title, size)
                 return nil
             elseif key == keys.enter and pass:len() == size then
                 return pass
-            elseif keys.getName(key):len() == 1 then
-                pass = pass..keys.getName(keys)
-            elseif key == keys.backspace then
+            elseif keys.getName(key):len() == 1 and pass:len() < 6  then
+                pass = pass..keys.getName(key)
+            elseif key == keys.backspace and pass:len() > 1 then
                 pass = string.sub(pass, 1, pass:len() - 1)
+            elseif key == keys.backspace and pass:len() == 1 then
+                pass = ""
             end
         end
     end
@@ -145,7 +142,14 @@ function printSelection(choices, places, old, new)
 end
 
 function printPassword(current, size)
-
+    term.setCursorPos(math.floor((_G.vuiTemp.x / 2) - (size - 0.5)), math.floor(_G.vuiTemp.y/2))
+    for i = 1, size, 1 do
+        if i <= current then
+            term.write("# ")
+        else
+            term.write("_ ")
+        end
+    end
 end
 
 return {setVendor = setVendor, allowEscape = allowEscape, denyEscape = denyEscape, multipleChoice = multipleChoice, promptPassword = promptPassword, setUpMessage = setUpMessage}
