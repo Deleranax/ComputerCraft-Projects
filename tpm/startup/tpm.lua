@@ -10,7 +10,9 @@ function completion(shell, index, arg, args)
 		rtn = {"help ", "update ", "upgrade ", "list ", "show ", "install ", "reinstall ", "remove ", "clean "}
 	elseif index == 2 then
 		if args[2] == "install" then
-			rtn = tpm.getPackageList()
+			for i, v in ipairs(tpm.getPackageList()) do
+				table.insert(rtn, v.." ")
+			end
 		elseif args[2] == "remove" or args[2] == "reinstall" then
 			for i, v in ipairs(tpm.getInstalledList()) do
 				table.insert(rtn, v.." ")
