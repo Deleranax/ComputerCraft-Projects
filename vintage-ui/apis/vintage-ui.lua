@@ -75,14 +75,13 @@ end
 function promptPassword(title, size)
     setUpMessage(title)
 
-    term.setCursorPos(math.floor((x / 2) - (size - 0.5), math.floor(_G.vuiTemp.y/2)))
+    term.setCursorPos(math.floor((x / 2) - (size - 0.5)), math.floor(_G.vuiTemp.y/2))
     for i = 1, size, 1 do
         term.write("_ ")
     end
 
-    term.
     computeAlignment("Press ENTER to confirm and CTRL to quit.", math.floor(3 * (_G.vuiTemp.y/4)))
-    term.write("Press CTRL to quit.")
+    term.write("Press ENTER to confirm and CTRL to quit.")
 
     local pass = ""
 
@@ -102,7 +101,7 @@ function promptPassword(title, size)
                 return nil
             elseif key == keys.enter and pass:len() == size then
                 return pass
-            elseif keys.getName(keys):len() == 1 then
+            elseif keys.getName(key):len() == 1 then
                 pass = pass..keys.getName(keys)
             elseif key == keys.backspace then
                 pass = string.sub(pass, 1, pass:len() - 1)
@@ -149,4 +148,4 @@ function printPassword(current, size)
 
 end
 
-return {setVendor = setVendor, allowEscape = allowEscape, denyEscape = denyEscape, multipleChoice = multipleChoice}
+return {setVendor = setVendor, allowEscape = allowEscape, denyEscape = denyEscape, multipleChoice = multipleChoice, promptPassword = promptPassword, setUpMessage = setUpMessage}
