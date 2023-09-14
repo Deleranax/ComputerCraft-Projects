@@ -32,18 +32,18 @@ function multipleChoice(title, ...)
         table.insert(choices, "Quit")
     end
 
-    local line = math.floor((y / 2) - (nb + (escape + 1))) - 2
+    local line = math.floor((3 * (y / 4)) - ((nb + (escape + 1)) / 2))
 
     local places = {}
 
     for i, v in ipairs(choices) do
-        if _G.vuiTemp.allowEscape & i == nb + 1 then
+        if _G.vuiTemp.allowEscape and i == (nb + 1) then
             computeAlignment(v, line + (2 * i) + 1)
         else
             computeAlignment(v, line + (2 * i))
         end
         places[i] = {term.getCursorPos()}
-        term.slowWrite(v)
+        textutils.slowWrite(v)
     end
 
     local rtn = 1
@@ -69,6 +69,9 @@ function multipleChoice(title, ...)
         elseif key == keys.down then
             rtn = math.min(rtn + 1, nb + escape)
         elseif key == keys.enter then
+            if rtn > nb then
+                return 0
+            end
             return rtn
         end
     end
@@ -78,7 +81,7 @@ function printVendor()
     term.setBackgroundColor(colors.black)
     term.setTextColor(colors.lightGray)
     term.clear()
-    computeAlignment(message, 19)
+    computeAlignment(_G.vuiTemp.vendor, 19)
     term.write(_G.vuiTemp.vendor)
     term.setTextColor(colors.white)
 end
@@ -89,16 +92,16 @@ end
 
 function printSelection(choices, places, old, new)
     term.setCursorPos(places[old][1] - 2,places[old][2])
-    term.blit(" ", "0", "0")
+    term.blit(" ", "f", "f")
 
     term.setCursorPos(places[old][1] + choices[old]:len() + 1,places[old][2])
-    term.blit(" ", "0", "0")
+    term.blit(" ", "f", "f")
 
     term.setCursorPos(places[new][1] - 2,places[new][2])
-    term.blit("[", "0", "0")
+    term.blit("[", "0", "f")
 
     term.setCursorPos(places[new][1] + choices[new]:len() + 1,places[new][2])
-    term.blit("]", "0", "0")
+    term.blit("]", "0", "f")
 end
 
 return {setVendor = setVendor, allowEscape = allowEscape, denyEscape = denyEscape, multipleChoice = multipleChoice}
