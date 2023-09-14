@@ -86,22 +86,25 @@ function promptPassword(title, size)
         local event, key, is_held
 
         if _G.vuiTemp.allowEscape then
-            event, key, is_held = os.pullEvent("key")
+            event, key = os.pullEvent()
         else
-            event, key, is_held = os.pullEventRaw("key")
+            event, key = os.pullEventRaw()
         end
 
-        if key ~= nil and keys.getName(key) ~= nil then
+        if event == "key" then
+
             if key == keys.leftCtrl or key == keys.rightCtrl then
                 return nil
             elseif key == keys.enter and pass:len() == size then
                 return pass
-            elseif keys.getName(key):len() == 1 and pass:len() < 6  then
-                pass = pass..keys.getName(key)
             elseif key == keys.backspace and pass:len() > 1 then
                 pass = string.sub(pass, 1, pass:len() - 1)
             elseif key == keys.backspace and pass:len() == 1 then
                 pass = ""
+            end
+        elseif event == "char" then
+            if pass:len() < 6  then
+                pass = pass..key
             end
         end
     end
