@@ -32,7 +32,7 @@ function multipleChoice(title, ...)
         table.insert(choices, "Quit")
     end
 
-    local line = math.floor((3 * (y / 4)) - ((nb + (escape + 1)) / 2))
+    local line = math.floor(y/2)
 
     local places = {}
 
@@ -50,8 +50,8 @@ function multipleChoice(title, ...)
     local old = 1
 
     while true do
-        old = rtn
         printSelection(choices, places, old, rtn)
+        old = rtn
 
         local event, key, is_held
 
