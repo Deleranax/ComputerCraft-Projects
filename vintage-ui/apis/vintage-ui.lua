@@ -81,7 +81,7 @@ function printVendor()
     term.setBackgroundColor(colors.black)
     term.setTextColor(colors.lightGray)
     term.clear()
-    computeAlignment(_G.vuiTemp.vendor, 19)
+    term.setCursorPos(1, 19)
     term.write(_G.vuiTemp.vendor)
     term.setTextColor(colors.white)
 end
