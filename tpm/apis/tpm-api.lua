@@ -288,6 +288,13 @@ function install(url, dep)
 		return 0
 	end
 
+	for i, v in ipairs(_G.tpmTemp.installed) do
+		if v == url then
+			printError("The package is already installed.")
+			return 0
+		end
+	end
+
 	local count = 0
 
 	if not dep and not checkDependencies(url) then

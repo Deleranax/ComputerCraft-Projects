@@ -1,4 +1,5 @@
-_G["vuiTemp"] = {allowEscape = true, vendor = "Vintage UI Corp."}
+local x,y = term.getSize()
+_G["vuiTemp"] = {allowEscape = true, vendor = "Vintage UI Corp.", x = x, y = y}
 
 function setVendor(v)
     _G.vuiTemp.vendor = v
@@ -16,18 +17,31 @@ function multipleChoice(title, ...)
 
     local x,y = term.getSize()
 
+    local escape = 0
+
     printVendor()
     computeAlignment(title, math.floor(y/4))
     textutils.slowWrite(title)
 
     local choices = {...}
 
-    local line = math.floor((y / 2) - (table.getn(choices) / 2)) - 2
+    local nb = table.getn(choices)
+
+    if _G.vuiTemp.allowEscape then
+        escape = 1
+        table.insert(choices, "Quit")
+    end
+
+    local line = math.floor((y / 2) - (nb + (escape + 1))) - 2
 
     local places = {}
 
     for i, v in ipairs(choices) do
-        computeAlignment(v, line + (2 * i))
+        if _G.vuiTemp.allowEscape & i == nb + 1 then
+            computeAlignment(v, line + (2 * i) + 1)
+        else
+            computeAlignment(v, line + (2 * i))
+        end
         places[i] = {term.getCursorPos()}
         term.slowWrite(v)
     end
@@ -53,7 +67,7 @@ function multipleChoice(title, ...)
         if key == keys.up then
             rtn = math.max(rtn - 1, 1)
         elseif key == keys.down then
-            rtn = math.min(rtn + 1, table.getn(choices))
+            rtn = math.min(rtn + 1, nb + escape)
         elseif key == keys.enter then
             return rtn
         end
