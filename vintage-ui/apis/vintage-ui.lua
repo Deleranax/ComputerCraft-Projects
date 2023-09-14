@@ -14,14 +14,9 @@ function denyEscape()
 end
 
 function multipleChoice(title, ...)
-
-    local x,y = term.getSize()
-
     local escape = 0
 
-    printVendor()
-    computeAlignment(title, math.floor(y/4))
-    textutils.slowWrite(title)
+    setUpMessage(title)
 
     local choices = {...}
 
@@ -32,7 +27,7 @@ function multipleChoice(title, ...)
         table.insert(choices, "Quit")
     end
 
-    local line = math.floor(y/2)
+    local line = math.floor(_G.vuiTemp.y/2) - 1
 
     local places = {}
 
@@ -77,6 +72,52 @@ function multipleChoice(title, ...)
     end
 end
 
+function promptPassword(title, size)
+    setUpMessage(title)
+
+    term.setCursorPos(math.floor((x / 2) - (size - 0.5), math.floor(_G.vuiTemp.y/2)))
+    for i = 1, size, 1 do
+        term.write("_ ")
+    end
+
+    term.
+    computeAlignment("Press ENTER to confirm and CTRL to quit.", math.floor(3 * (_G.vuiTemp.y/4)))
+    term.write("Press CTRL to quit.")
+
+    local pass = ""
+
+    while true do
+        printPassword(pass:len(), size)
+
+        local event, key, is_held
+
+        if _G.vuiTemp.allowEscape then
+            event, key, is_held = os.pullEvent("key")
+        else
+            event, key, is_held = os.pullEventRaw("key")
+        end
+
+        if key ~= nil and keys.getName(key) ~= nil then
+            if key == keys.leftCtrl or key == keys.rightCtrl then
+                return nil
+            elseif key == keys.enter and pass:len() == size then
+                return pass
+            elseif keys.getName(keys):len() == 1 then
+                pass = pass..keys.getName(keys)
+            elseif key == keys.backspace then
+                pass = string.sub(pass, 1, pass:len() - 1)
+            end
+        end
+    end
+end
+
+function setUpMessage(title)
+    printVendor()
+    computeAlignment(title, math.floor(_G.vuiTemp.y/4))
+    textutils.slowWrite(title)
+    term.setCursorPos(1, _G.vuiTemp.y/2)
+end
+
 function printVendor()
     term.setBackgroundColor(colors.black)
     term.setTextColor(colors.lightGray)
@@ -87,7 +128,7 @@ function printVendor()
 end
 
 function computeAlignment(message, line)
-    term.setCursorPos(math.floor((x / 2) - (message:len() / 2)), line)
+    term.setCursorPos(math.floor((_G.vuiTemp.x / 2) - (message:len() / 2)), line)
 end
 
 function printSelection(choices, places, old, new)
@@ -102,6 +143,10 @@ function printSelection(choices, places, old, new)
 
     term.setCursorPos(places[new][1] + choices[new]:len() + 1,places[new][2])
     term.blit("]", "0", "f")
+end
+
+function printPassword(current, size)
+
 end
 
 return {setVendor = setVendor, allowEscape = allowEscape, denyEscape = denyEscape, multipleChoice = multipleChoice}
