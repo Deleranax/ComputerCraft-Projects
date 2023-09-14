@@ -38,9 +38,9 @@ function multipleChoice(title, ...)
 
     for i, v in ipairs(choices) do
         if _G.vuiTemp.allowEscape and i == (nb + 1) then
-            computeAlignment(v, line + (2 * i) + 1)
+            computeAlignment(v, line + i + 1)
         else
-            computeAlignment(v, line + (2 * i))
+            computeAlignment(v, line + i)
         end
         places[i] = {term.getCursorPos()}
         textutils.slowWrite(v)
@@ -87,7 +87,7 @@ function printVendor()
 end
 
 function computeAlignment(message, line)
-    term.setCursorPos(math.ceil((x / 2) - (message:len() / 2)), line)
+    term.setCursorPos(math.floor((x / 2) - (message:len() / 2)), line)
 end
 
 function printSelection(choices, places, old, new)
