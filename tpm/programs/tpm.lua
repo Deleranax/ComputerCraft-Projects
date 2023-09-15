@@ -51,9 +51,9 @@ if table.getn(args) >= 1 then
         tpm.updateDatabase()
         local outdated = false
         for k, v in pairs(tpm.getInstalledPackages()) do
-            if (get(k) == nil) then
+            if (tpm.get(k) == nil) then
                 print(k .. " is no longer available, or the package was renamed.")
-            elseif v.version ~= get(k)["version"] then
+            elseif v.version ~= tpm.get(k)["version"] then
                 print(k .. " needs update (v" .. v.version .. " -> v" .. get(k)["version"] .. ")")
                 outdated = true
             end
