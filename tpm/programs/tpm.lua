@@ -87,14 +87,26 @@ if table.getn(args) >= 1 then
             print(count .. " removed.")
         end
     elseif args[1] == "install" then
+        if not args[2] then
+            printError("Invalid command. Run 'tpm help' to show usage.")
+            return
+        end
         installed = tpm.install(args[2], false, args[3] == "-force")
         print("0 upgraded, " .. installed .. " newly installed.")
     elseif args[1] == "reinstall" then
+        if not args[2] then
+            printError("Invalid command. Run 'tpm help' to show usage.")
+            return
+        end
         if tpm.remove(args[2], true) then
             installed = tpm.install(args[2], false, args[3] == "-force") - 1
         end
         print("0 upgraded, " .. installed .. " newly installed.")
     elseif args[1] == "remove" then
+        if not args[2] then
+            printError("Invalid command. Run 'tpm help' to show usage.")
+            return
+        end
         tpm.remove(args[2], args[3] == "-force")
         print("Use 'tpm clean' to clean any useless dependency.")
     elseif args[1] == "show" then

@@ -324,10 +324,12 @@ function install(url, dep, force)
 		print("The following package(s) will be installed:")
 		print(table.concat(list, ", "))
 
+		local a
+
 		if not force then
 			write("Do you want to continue ? [Y/n] ")
 
-			local a = read()
+			a = read()
 		else
 			a = "yes"
 		end
