@@ -103,6 +103,9 @@ if table.getn(args) >= 1 then
             pack = tpm.getPackage(args[3])
         elseif args[2] == "remote" then
             pack = getInstalled(args[3])
+        else
+            printError("Invalid command. Run 'tpm help' to show usage.")
+            return
         end
 
         if not pack then
