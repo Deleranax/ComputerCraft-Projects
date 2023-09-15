@@ -170,6 +170,6 @@ local function retrievePublicKey(id, timeout)
     end
 end
 
-tac = {loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, secureReceive = secureReceive}
+tac = {loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureReceive, retrievePublicKey = retrievePublicKey}
 
 return tac
