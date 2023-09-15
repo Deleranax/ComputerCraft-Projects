@@ -97,7 +97,7 @@ local function verify(packetMsg, id)
         return 4, "Unable to read certificate"
     end
 
-    local h = rsa.decryptString(certificate)
+    local h = rsa.decryptString(certificate, publicKey)
 
     if type(h) ~= "string" then
         return 5, "Unable to decrypt certificate"
@@ -133,7 +133,8 @@ local function trust(id, publicKey)
         return 1, "Invalid ID or public key"
     end
 
-    table.insert(_G.tacTemp.database.verifiedHosts)
+    table.insert(id, _G.tacTemp.database.verifiedHosts)
+    return 0
 end
 
 local function secureReceive(timeout)
@@ -161,6 +162,7 @@ local function retrievePublicKey(id, timeout)
     rednet.send(id, "public_key", "tac_key")
 
     local rid, msg = -1
+
     while rid ~= id do
         msg = nil
         rid, msg = rednet.receive("tac_key", timeout)
@@ -168,6 +170,16 @@ local function retrievePublicKey(id, timeout)
             break
         end
     end
+
+    if rid ~= id then
+        return 1, "Unable to contact host"
+    end
+
+    if type(msg) ~= "table" then
+        return 2, "Unable to read key"
+    end
+
+    return 0, msg
 end
 
 tac = {loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureReceive, retrievePublicKey = retrievePublicKey}

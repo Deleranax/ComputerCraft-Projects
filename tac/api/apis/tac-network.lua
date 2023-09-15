@@ -1,36 +1,30 @@
 tac = {}
 
-local function handle(frameMsg)
+local function handle(frame)
     if not tac or not _G.tacTemp then
         printError("TAC-Network: Unable to find TAC-API (is it loaded?)")
     end
 
-    if type(packetMsg) ~= "string" then
-        return 1, "Unable to read frame (wrong type)"
-    end
-
-    local frame = textutils.unserialise(frameMsg)
-
     if type(frame) ~= "table" then
-        return 2, "Unable to read frame"
+        return 1, "Unable to read frame"
     end
 
     local header = frame.header
 
     if type(header) ~= "table" then
-        return 3, "Missing header"
+        return 2, "Missing header"
     end
 
     local sender, dest = table.unpack(header)
 
     if type(sender) ~= "number" or type(dest) ~= "number" then
-        return 4, "Malformed header or unable to read it"
+        return 3, "Malformed header or unable to read it"
     end
 
     local packet = data.packet
 
     if type(packet) ~= "string" then
-        return 5, "Unable to read content"
+        return 4, "Unable to read content"
     end
 
     return 0, packet, sender, dest
@@ -58,12 +52,11 @@ end
 
 
 local function receive(timeout)
-    local time = os.time() * 60
-    local frameMsg, id, protocol = rednet.receive("tac", timeout)
+    local id, frameMsg, protocol = rednet.receive(timeout)
 
     if protocol ~= "tac" then
         handleService(frameMsg, id, protocol)
-        return receive((os.time() * 60) - time)
+        return receive(timeout)
     end
 
     if type(frameMsg) ~= "string" then
