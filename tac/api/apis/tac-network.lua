@@ -6,25 +6,25 @@ local function handle(frame)
     end
 
     if type(frame) ~= "table" then
-        return 1, "Unable to read frame"
+        return 71, "Unable to read frame"
     end
 
     local header = frame.header
 
     if type(header) ~= "table" then
-        return 2, "Missing header"
+        return 72, "Missing header"
     end
 
     local sender, dest = table.unpack(header)
 
     if type(sender) ~= "number" or type(dest) ~= "number" then
-        return 3, "Malformed header or unable to read it"
+        return 73, "Malformed header or unable to read it"
     end
 
     local packet = data.packet
 
     if type(packet) ~= "string" then
-        return 4, "Unable to read content"
+        return 74, "Unable to read content"
     end
 
     return 0, packet, sender, dest
@@ -32,7 +32,7 @@ end
 
 local function prepare(packet, sender, dest)
     if type(content) ~= "string" or type(sender) ~= "number" or type(dest) ~= "number" then
-        return 1, "Invalid content or sender or dest"
+        return 81, "Invalid content or sender or dest"
     end
 
     return 0, {header = {sender = sender, dest = dest}, packet = packet}
@@ -60,7 +60,7 @@ local function receive(timeout)
     end
 
     if type(frameMsg) ~= "string" then
-        return 1, "Timed Out"
+        return 91, "Timed Out"
     end
 
     return handle(frameMsg)
