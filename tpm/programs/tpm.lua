@@ -81,7 +81,7 @@ if table.getn(args) == 1 then
 		print(update.." upgraded, "..installed.." newly installed.")
 	elseif args[1] == "clean" then
 		local count = clean()
-		if clean() == 0 then
+		if count == 0 then
 			print("No useless packages detected.")
 		else
 			print(count.." removed.")
