@@ -8,7 +8,7 @@ function completion(shell, index, arg, args)
 
 	if index == 1 then
 		rtn = {"help ", "update ", "upgrade ", "list ", "show ", "install ", "reinstall ", "remove ", "clean "}
-	elseif index >= 2 then
+	elseif index >= 2 and index <= 3 then
 		if args[2] == "install" or (args[2] == "show" and args[3] == "remote") then
 			for i, v in ipairs(tpm.getPackageList()) do
 				table.insert(rtn, v.." ")

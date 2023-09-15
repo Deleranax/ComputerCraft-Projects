@@ -124,7 +124,7 @@ if table.getn(args) >= 1 then
             return
         end
 
-        print("Package: " .. pack.name)
+        print("\nPackage: " .. pack.name)
         print("Version: " .. pack.version)
         print("Maintainer: " .. pack.maintainer)
         print("TPM-Source: " .. pack.url)
