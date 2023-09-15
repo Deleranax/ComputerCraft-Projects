@@ -895,7 +895,7 @@ end
 --
 -- MODIFICATION/ADAPTATION BY DELERANAX FOR TPM
 --
-_G["rsaCryptTemp"] = {byteSize = 8, bits = 256}
+_G["rsaCryptTemp"] = {byteSize = 8, bits = 512}
 
 local function loadLocalKeys()
     if fs.exists("/public.key") and fs.exists("/private.key") then
