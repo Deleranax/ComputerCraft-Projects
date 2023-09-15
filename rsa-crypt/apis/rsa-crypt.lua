@@ -1168,12 +1168,7 @@ local function loadLocalKeys()
 end
 
 local function encryptString(msg, key)
-    if msg:len() <= math.floor(_G.rsaCryptTemp.bits/_G.rsaCryptTemp.byteSize) then
-        return crypt(key, bytesToNumber(stringToBytes(msg), _G.rsaCryptTemp.bits, _G.rsaCryptTemp.byteSize))
-    else
-        -- printError("Unable to encrypt message: Message too long (current: "..msg:len().." max: "..math.floor(_G.rsaCryptTemp.bits/_G.rsaCryptTemp.byteSize)..")")
-        return nil
-    end
+    return crypt(key, bytesToNumber(stringToBytes(msg), _G.rsaCryptTemp.bits, _G.rsaCryptTemp.byteSize))
 end
 
 local function decryptString(msg, key)

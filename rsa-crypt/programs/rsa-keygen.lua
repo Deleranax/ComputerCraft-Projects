@@ -625,7 +625,7 @@ end
 local function generateLargePrime()
     local i = 0
     while true do
-        local randomNumber = bigRandomWithLength(39)
+        local randomNumber = bigRandomWithLength(64)
 
         if isPrime(randomNumber) then
             return randomNumber
