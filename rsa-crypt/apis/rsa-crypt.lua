@@ -893,33 +893,35 @@ end
 --
 -- END OF LIBRARY
 --
--- DEMO ENCRYPTION AND DECRYPTION
+-- MODIFICATION/ADAPTATION BY DELERANAX FOR TPM
 --
+_G["rsaCryptTemp"] {byteSize = 8, bits = 256}
 
-local f = io.open("/public.key", "r")
-local publicKey = textutils.unserialize(f:read("*a"))
-f:close()
-f = io.open("/private.key", "r")
-local privateKey = textutils.unserialize(f:read("*a"))
-f:close()
+function loadLocalKeys()
+    if fs.exists("/public.key") and fs.exists("/private.key") then
+        local f = io.open("/public.key", "r")
+        local publicKey = textutils.unserialize(f:read("*a"))
+        f:close()
+        f = io.open("/private.key", "r")
+        local privateKey = textutils.unserialize(f:read("*a"))
+        f:close()
+        return publicKey, privateKey
+    else
+        return nil
+    end
+end
 
-local byteSize = 8
-local bits = 256
+function encryptString(msg, key)
+    if msg:len() <= math.floor(_G.rsaCryptTemp.bits/_G.rsaCryptTemp.byteSize) then
+        return crypt(key, bytesToNumber(stringToBytes(msg), _G.rsaCryptTemp.bits, _G.rsaCryptTemp.byteSize))
+    else
+        printError("Unable to encrypt message: Message too long (current: "..msg:len().." max: "..math.floor(_G.rsaCryptTemp.bits/_G.rsaCryptTemp.byteSize)..")")
+        return nil
+    end
+end
 
-local msg = "hello" -- Maximum message size is bits / byteSize
+function decryptString(msg, key)
+    print(bytesToString(numberToBytes(crypt(key, msg), _G.rsaCryptTemp.bits, _G.rsaCryptTemp.byteSize)))
+end
 
-local startTime = os.clock()
--- Encrypting
-local res = bytesToNumber(stringToBytes(msg), bits, byteSize)
-local encrypted = crypt(publicKey, res)
-print("Took " .. os.clock() - startTime .. " seconds to encrypt.")
-
--- You may transmit "encrypted" in public. "encrypted" is a string.
-
-sleep(0.1)
-startTime = os.clock()
--- Decrypting
-local decrypted = crypt(privateKey, encrypted)
-local decryptedBytes = numberToBytes(decrypted, bits, byteSize)
-print("Took " .. os.clock() - startTime .. " seconds to decrypt.")
-print(bytesToString(decryptedBytes))
+return {loadLocalKeys = loadLocalKeys, encryptString = encryptString, decryptString = decryptString}
