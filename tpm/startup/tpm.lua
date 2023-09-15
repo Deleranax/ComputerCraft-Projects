@@ -13,7 +13,7 @@ local function completion(shell, index, arg, args)
 			for i, v in ipairs(tpm.getPackageList()) do
 				table.insert(rtn, v.." ")
 			end
-		elseif (args[2] == "remove" or args[2] == "reinstall") and args[3] == nil or (args[2] == "show" and args[3] == "local" and args[5] == nil) then
+		elseif ((args[2] == "remove" or args[2] == "reinstall") and args[3] == nil) or (args[2] == "show" and args[3] == "local" and args[4] == nil) then
 			for i, v in ipairs(tpm.getInstalledList()) do
 				table.insert(rtn, v.." ")
 			end
