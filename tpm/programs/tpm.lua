@@ -99,9 +99,9 @@ if table.getn(args) >= 1 then
         print("Use 'tpm clean' to clean any useless dependency.")
     elseif args[1] == "show" then
         local pack
-        if args[2] == "local" then
+        if args[2] == "remote" then
             pack = tpm.getPackage(args[3])
-        elseif args[2] == "remote" then
+        elseif args[2] == "local" then
             pack = getInstalled(args[3])
         else
             printError("Invalid command. Run 'tpm help' to show usage.")

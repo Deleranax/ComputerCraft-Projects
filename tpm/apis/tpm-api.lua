@@ -372,7 +372,7 @@ function install(url, dep, force)
 		name = v
 	end
 	
-	pack = checkPack(urls.."/", name)
+	pack = checkPack(urls, name)
 
 	if pack then
 		_G.tpmTemp.installed[url] = pack
