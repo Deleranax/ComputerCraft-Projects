@@ -31,7 +31,7 @@ local function handle(frame)
 end
 
 local function prepare(packet, sender, dest)
-    if type(content) ~= "string" or type(sender) ~= "number" or type(dest) ~= "number" then
+    if type(packet) ~= "string" or type(sender) ~= "number" or type(dest) ~= "number" then
         return 81, "Invalid content or sender or dest"
     end
 
@@ -40,7 +40,7 @@ end
 
 local function handleService(msg, id, protocol)
     if msg == "ping" then
-        rednet.send(id, "pong", protocol)
+        rednet.send(id, "pong", "service")
     end
 
     if protocol == "tac_key" then
@@ -53,6 +53,7 @@ end
 
 local function receive(timeout)
     local id, frameMsg, protocol = rednet.receive(timeout)
+    rednet.send(id, "pong", "service")
 
     if protocol ~= "tac" then
         handleService(frameMsg, id, protocol)
@@ -73,7 +74,15 @@ local function send(packet, sender, dest)
         return err, frame
     end
 
-    rednet.send(dest, frame)
+    for i = 1, 5, 1 do
+        rednet.send(dest, frame)
+        local id, msg, protocol = rednet.receive(2)
+        if id == os.getComputerID() then
+            return 0
+        end
+    end
+
+    return 101, "No response after 5 retry"
 end
 
 return { handle = handle, prepare = prepare, receive = receive, send = send }
