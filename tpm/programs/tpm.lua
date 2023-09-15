@@ -54,7 +54,7 @@ if table.getn(args) >= 1 then
             if (tpm.get(k) == nil) then
                 print(k .. " is no longer available, or the package was renamed.")
             elseif v.version ~= tpm.get(k)["version"] then
-                print(k .. " needs update (v" .. v.version .. " -> v" .. get(k)["version"] .. ")")
+                print(k .. " needs update (v" .. v.version .. " -> v" .. tpm.get(k)["version"] .. ")")
                 outdated = true
             end
         end
