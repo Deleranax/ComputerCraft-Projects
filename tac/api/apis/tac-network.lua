@@ -44,8 +44,27 @@ local function prepare(packet, sender, dest)
     return 0, {header = {sender = sender, dest = dest}, packet = packet}
 end
 
+local function handleService(msg, id, protocol)
+    if msg == "ping" then
+        rednet.send(id, "pong", protocol)
+    end
+
+    if protocol == "tac_key" then
+        if msg == "public_key" then
+            rednet.send(id, _G.tacTemp.publicKey, protocol)
+        end
+    end
+end
+
+
 local function receive(timeout)
-    local frameMsg = rednet.receive("tac", timeout)
+    local time = os.time() * 60
+    local frameMsg, id, protocol = rednet.receive("tac", timeout)
+
+    if protocol ~= "tac" then
+        handleService(frameMsg, id, protocol)
+        return receive((os.time() * 60) - time)
+    end
 
     if type(frameMsg) ~= "string" then
         return 1, "Timed Out"

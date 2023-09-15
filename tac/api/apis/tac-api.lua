@@ -140,12 +140,36 @@ local function secureReceive(timeout)
     local err, packet, sender, dest = net.receive(timeout)
 
     if err == 0 then
-        return verify(packet, pack)
+        return verify(packet, sender)
     else
        return err, packet
     end
 end
 
-tac = {loadDatabase = loadDatabase, sign = sign, verify = verify, net = net}
+local function secureSend(id, data)
+    local err, packet = sign(data)
+
+    if err == 0 then
+        return net.send(packet, os.getComputerID(), id)
+    else
+        return err, packet
+    end
+end
+
+-- Retrieve public key for directly connected computers only
+local function retrievePublicKey(id, timeout)
+    rednet.send(id, "public_key", "tac_key")
+
+    local rid, msg = -1
+    while rid ~= id do
+        msg = nil
+        rid, msg = rednet.receive("tac_key", timeout)
+        if msg == nil then
+            break
+        end
+    end
+end
+
+tac = {loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, secureReceive = secureReceive}
 
 return tac

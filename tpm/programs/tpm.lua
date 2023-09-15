@@ -65,9 +65,9 @@ if table.getn(args) >= 1 then
         local update = 0
         local installed = 0
         for k, v in pairs(tpm.getInstalledPackages()) do
-            if (get(k) == nil) then
+            if (tpm.get(k) == nil) then
                 print(k .. " is no longer available, skipping.")
-            elseif v.version ~= get(k)["version"] then
+            elseif v.version ~= tpm.get(k)["version"] then
                 update = update + 1
                 print("\nUpdating " .. k .. "...")
                 tpm.remove(k, true)
@@ -98,8 +98,9 @@ if table.getn(args) >= 1 then
             printError("Invalid command. Run 'tpm help' to show usage.")
             return
         end
+        local installed = 0
         if tpm.remove(args[2], true) then
-            local installed = tpm.install(args[2], false, args[3] == "-force") - 1
+            installed = tpm.install(args[2], false, args[3] == "-force") - 1
         end
         print("0 upgraded, " .. installed .. " newly installed.")
     elseif args[1] == "remove" then
