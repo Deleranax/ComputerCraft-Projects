@@ -373,6 +373,7 @@ local function activityDot()
     if counter >= 1000 then
         counter = 0
         write(".")
+        sleep(0.1)
     end
 end
 
