@@ -1,19 +1,9 @@
-sha256 = require("apis/sha256")
-rsa = require("apis/rsa-crypt")
+ecc = require("apis/ecc")
 net = require("apis/tac-network")
 
-_G["tacTemp"] = {database = {verifiedHosts = {}}, publicKey = nil, privateKey = nil}
+_G["tacTemp"] = {database = {seed = ecc.random.random(), verifiedHosts = {}}, publicKey = nil, privateKey = nil}
 
 local function loadDatabase()
-    if fs.exists("/public.key") and fs.exists("/private.key") then
-        _G.tacTemp.publicKey, _G.tacTemp.privateKey = rsa.loadLocalKeys();
-    else
-        return 11, "RSA keys are missing"
-    end
-
-    if not _G.tacTemp.publicKey or not _G.tacTemp.privateKey then
-        return 12, "Can't load RSA keys"
-    end
 
     if fs.exists("/.tac") then
         local file = fs.open("/.tac", "r")
@@ -21,18 +11,19 @@ local function loadDatabase()
         file.close()
 
         if not msg then
-            return 13, "Unable to load DataBase's File"
+            return 11, "Unable to load DataBase's File"
         end
 
         local database = textutils.unserialise(msg)
 
         if not database then
-            return 14, "Unable to load DataBase"
+            return 12, "Unable to load DataBase"
         end
 
         _G.tacTemp.database = database
+        _G.tacTemp.privateKey, _G.tacTemp.publicKey = ecc.keypair(_G.tacTemp.database.seed)
     else
-        return 15, "DataBase is missing"
+        return 13, "DataBase is missing"
     end
 
     return 0
@@ -59,19 +50,13 @@ local function sign(data)
         return 31, "Unable to write data"
     end
 
-    local h = sha256.hash(msg)
+    local signature = ecc.sign(_G.tacTemp.privateKey, msg)
 
-    if not h then
-        return 32, "Unable to hash data"
+    if not signature then
+        return 32, "Unable to compute certificate"
     end
 
-    local certificate = rsa.encryptString(h, _G.tacTemp.privateKey)
-
-    if not certificate then
-        return 33, "Unable to compute certificate"
-    end
-
-    return 0, textutils.serialise({certificate = certificate, data = msg})
+    return 0, textutils.serialise({signature = signature, data = msg})
 end
 
 local function verify(packetMsg, id, dest)
@@ -91,38 +76,26 @@ local function verify(packetMsg, id, dest)
         return 43, "Unable to read packet"
     end
 
-    local certificate = packet.certificate
+    local signature = packet.signature
 
-    if type(certificate) ~= "string" then
-        return 44, "Unable to read certificate"
-    end
-
-    local h = rsa.decryptString(certificate, publicKey)
-
-    if type(h) ~= "string" then
-        return 45, "Unable to decrypt certificate"
+    if type(signature) ~= "table" then
+        return 44, "Unable to read signature"
     end
 
     local msg = packet.data
 
     if type(msg) ~= "string" then
-        return 46, "Unable to read data"
+        return 45, "Unable to read data"
     end
 
-    local h2 = sha256.hash(msg)
-
-    if type(h2) ~= "string" then
-        return 47, "Unable to hash data"
-    end
-
-    if h2 ~= h then
-        return 48, "Invalid certificate: Host("..h..") and Local("..h2..")"
+    if ecc.verify(publicKey, msg, signature) then
+        return 46, "Invalid certificate: Host("..h..") and Local("..h2..")"
     end
 
     local data = textutils.unserialise(msg)
 
     if type(data) ~= "table" then
-        return 49, "Unable to unpack data"
+        return 47, "Unable to unpack data"
     end
 
     return 0, data, id, dest
