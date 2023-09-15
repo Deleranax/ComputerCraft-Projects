@@ -1,19 +1,19 @@
 local x,y = term.getSize()
 _G["vuiTemp"] = {allowEscape = true, vendor = "Vintage UI Corp.", x = x, y = y}
 
-function setVendor(v)
+local function setVendor(v)
     _G.vuiTemp.vendor = v
 end
 
-function allowEscape()
+local function allowEscape()
     _G.vuiTemp.allowEscape = true
 end
 
-function denyEscape()
+local function denyEscape()
     _G.vuiTemp.allowEscape = false
 end
 
-function multipleChoice(title, ...)
+local function multipleChoice(title, ...)
     local escape = 0
 
     setUpMessage(title)
@@ -72,7 +72,7 @@ function multipleChoice(title, ...)
     end
 end
 
-function promptPassword(title, size)
+local function promptPassword(title, size)
     setUpMessage(title)
 
     if _G.vuiTemp.allowEscape then
@@ -112,14 +112,14 @@ function promptPassword(title, size)
     end
 end
 
-function setUpMessage(title)
+local function setUpMessage(title)
     printVendor()
     computeAlignment(title, math.floor(_G.vuiTemp.y/4))
     textutils.slowWrite(title)
     term.setCursorPos(1, _G.vuiTemp.y/2)
 end
 
-function printVendor()
+local function printVendor()
     term.setBackgroundColor(colors.black)
     term.setTextColor(colors.lightGray)
     term.clear()
@@ -128,11 +128,11 @@ function printVendor()
     term.setTextColor(colors.white)
 end
 
-function computeAlignment(message, line)
+local function computeAlignment(message, line)
     term.setCursorPos(math.floor((_G.vuiTemp.x / 2) - (message:len() / 2)), line)
 end
 
-function printSelection(choices, places, old, new)
+local function printSelection(choices, places, old, new)
     term.setCursorPos(places[old][1] - 2,places[old][2])
     term.blit(" ", "f", "f")
 
@@ -146,7 +146,7 @@ function printSelection(choices, places, old, new)
     term.blit("]", "0", "f")
 end
 
-function printPassword(current, size)
+local function printPassword(current, size)
     term.setCursorPos(math.floor((_G.vuiTemp.x / 2) - (size - 0.5)), math.floor(_G.vuiTemp.y/2))
     for i = 1, size, 1 do
         if i <= current then

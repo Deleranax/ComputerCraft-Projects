@@ -4,7 +4,7 @@ if not _G.ttnsTemp then
     _G.ttnsTemp = {sectorIndex = {}, sectors = {}, turtles = {}}
 end
 
-ttns = {}
+local ttns = {}
 
 function ttns.toSectorCoords(x, z)
     return math.floor(x / 64), math.floor(z / 64), math.mod(x, 64), math.mod(z, 64)
@@ -32,14 +32,14 @@ function ttns.loadConfigs()
     end
     
     f = fs.open(".ttns", "r")
-    _G.ttnsTemp.sectorIndex = textutils.unserialize(f.readAll())
+    _G.ttnsTemp.sectorIndex = textutils.unserialise(f.readAll())
     f.close()
     return true
 end
 
 function ttns.saveConfigs()
     f = fs.open(".ttns", "wb")
-    f.write(textutils.serialize(_G.ttnsTemp.sectorIndex))
+    f.write(textutils.serialise(_G.ttnsTemp.sectorIndex))
     f.close()
     return true
 end
@@ -50,7 +50,7 @@ function ttns.loadSector(id)
     end
 
     f = fs.open("disk"..id.."/data.ttns", "r")
-    _G.ttnsTemp.sectors[id] = textutils.unserialize(f.readAll())
+    _G.ttnsTemp.sectors[id] = textutils.unserialise(f.readAll())
     f.close()
     return true
 end
@@ -62,7 +62,7 @@ function ttns.saveSector(id)
     end
 
     f = fs.open("disk"..id.."/data.ttns", "wb")
-    f.write(textutils.serialize(_G.ttnsTemp.sectors[id]))
+    f.write(textutils.serialise(_G.ttnsTemp.sectors[id]))
     f.close()
     return true
 end

@@ -14,7 +14,7 @@ while true do
     
     if data.sType == "get" then
         r = ttns.getBlock(data.x, data.y, data.z)
-        rednet.send(id, textutils.serialize(r))
+        rednet.send(id, textutils.serialise(r))
         capi.console("Getting block ("..data.x..", "..data.y..", "..data.z..") by ID"..id, "m")
     end
     

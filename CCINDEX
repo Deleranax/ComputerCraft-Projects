@@ -2,6 +2,7 @@ tpm
 console-api
 vintage-ui
 rsa-crypt
+sha256
 ttns/
 tac/
 deprecated/

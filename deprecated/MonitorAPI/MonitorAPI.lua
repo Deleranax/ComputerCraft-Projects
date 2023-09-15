@@ -21,7 +21,7 @@ _G.mapiObjects = {}
 -- @tparam strings ... Label of the button
 -- @treturn number id Object ID
 
-function addButton(x, y, width, length, bcolor, fcolor, f, ...)
+local function addButton(x, y, width, length, bcolor, fcolor, f, ...)
 	for i, val in ipairs({x, y, width, length, bcolor, fcolor, f, arg}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
 	table.insert(_G.mapiObjects, {"Button", x, y, width, length, bcolor, fcolor, f, arg})
 	return table.getn(_G.mapiObjects)
@@ -40,7 +40,7 @@ end
 -- @tparam[opt=false] bool vertical Make this bar vertical
 -- @treturn number id Object ID
 
-function addProgressBar(x, y, width, length, color, bcolor, value, maxValue, vertical)
+local function addProgressBar(x, y, width, length, color, bcolor, value, maxValue, vertical)
 	vertical = vertical or false
 	bcolor = bcolor or colors.gray
 	for i, val in ipairs({x, y, width, length, color, bcolor, value, maxValue}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
@@ -61,7 +61,7 @@ end
 -- @tparam[opt=black] color bcolor Background color
 -- @treturn number id Object ID
 
-function addLabel(x, y, color, bcolor, ...)
+local function addLabel(x, y, color, bcolor, ...)
 	bcolor = bcolor or colors.black
 	for i, val in ipairs({x, y, color, bcolor, arg}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
 	table.insert(_G.mapiObjects, {"Label", x, y, color, bcolor, arg})
@@ -79,7 +79,7 @@ end
 -- @tparam[opt] string label Container title
 -- @treturn number id Object ID
 
-function addContainer(x, y, width, length, color, bcolor, label)
+local function addContainer(x, y, width, length, color, bcolor, label)
 	for i, val in ipairs({x, y, width, length, color}) do if val == nil then error("bad argument #"..i.." (got nil)") end end
 	table.insert(_G.mapiObjects, {"Container", x, y, width, length, color, bcolor, label})
 	return table.getn(_G.mapiObjects)
@@ -95,7 +95,7 @@ end
 -- @tparam[opt] func f Button command
 -- @tparam[opt] string ... Button label
 
-function modifyButton(id, bcolor, fcolor, f, ...)
+local function modifyButton(id, bcolor, fcolor, f, ...)
 	local button = _G.mapiObjects[id]
 	if button == nil or button[1] ~= "Button" then error("invalid object: got "..button[1].." expected Button") end
 	local bcolor = bcolor or button[6]
@@ -113,7 +113,7 @@ end
 -- @tparam[opt] number value Current value
 -- @tparam[opt] number maxValue Max value
 
-function modifyProgressBar(id, color, bcolor, value, maxValue)
+local function modifyProgressBar(id, color, bcolor, value, maxValue)
 	local pb = _G.mapiObjects[id]
 	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
 	local color = color or pb[6]
@@ -130,7 +130,7 @@ end
 -- @tparam[opt] number value Current value
 -- @tparam[opt] number maxValue Max value
 
-function setProgressBarValues(id, value, maxValue)
+local function setProgressBarValues(id, value, maxValue)
 	local pb = _G.mapiObjects[id]
 	if pb == nil or (pb[1] ~= "ProgressBar" and pb[1] ~= "VerticalProgressBar") then error("invalid object: got "..pb[1].." expected ProgressBar or VerticalProgressBar") end
 	local value = value or pb[8]
@@ -144,7 +144,7 @@ end
 -- @param id Object ID
 -- @tparam string ... Label text
 
-function setLabelText(id, ...)
+local function setLabelText(id, ...)
 	local l = _G.mapiObjects[id]
 	if l == nil or l[1] ~= "Label" then error("invalid object: got "..l[1].." expected Label") end
 	_G.mapiObjects[id] = {l[1], l[2], l[3], l[4], l[5], arg}
@@ -157,7 +157,7 @@ end
 -- @tparam[opt] color bcolor Background color
 -- @tparam[opt] string label Container title
 
-function modifyContainer(id, color, bcolor, label)
+local function modifyContainer(id, color, bcolor, label)
 	local c = _G.mapiObjects[id]
 	if c == nil or c[1] ~= "Container" then error("invalid object: got "..c[1].." expected Container") end
 	local color = color or c[6]
@@ -171,7 +171,7 @@ end
 --- Reset Workspace (delete all _G.mapiObjects)
 -- @within Deleting
 
-function reset()
+local function reset()
 	_G.mapiObjects = {}
 end
 
@@ -179,7 +179,7 @@ end
 -- @within Deleting
 -- @param id Object ID
 
-function delete(id)
+local function delete(id)
 	_G.mapiObjects[id] = nil
 end
 

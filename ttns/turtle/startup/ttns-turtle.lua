@@ -1,7 +1,7 @@
 rednet.open("left")
 local id = rednet.lookup("ttns")
 
-function getOrientation()
+local function getOrientation()
     local loc1 = vector.new(gps.locate(2, false))
     turtle.forward()
     local loc2 = vector.new(gps.locate(2, false))
@@ -9,7 +9,7 @@ function getOrientation()
     return ((heading.x + math.abs(heading.x) * 2) + (heading.z + math.abs(heading.z) * 3))
 end
 
-function check(x, y, z, ok, block)
+local function check(x, y, z, ok, block)
     local x, y, z = getCoords(x, y, z)
     if ok then
         rednet.send(id, {sType = "set", x = x, y = y, z = z, block = block.name})
@@ -18,7 +18,7 @@ function check(x, y, z, ok, block)
     return true
 end
 
-function left()
+local function left()
     if turtle.turnLeft() then
         o = o -1
         if o == 0 then
@@ -27,7 +27,7 @@ function left()
     end
 end
 
-function right()
+local function right()
     if turtle.turnRight() then
         o = o + 1
         if o == 5 then
@@ -36,7 +36,7 @@ function right()
     end
 end
 
-function getCoords(x, y, z)   
+local function getCoords(x, y, z)
     if (o == 1) then
         x = x - 1
     elseif (o == 2) then

@@ -1,6 +1,6 @@
 ----------------------
 -- Secure Hashing Algorithm 256 for ComputerCraft
--- @module HashAPI
+-- @module sha256
 -- @release https://pastebin.com/ezdWXsJT
 -- @author GravityScore
 
@@ -194,7 +194,7 @@ end
 -- @tparam string msg String to hash.
 -- @treturn string Hash
 
-function sha256(msg)
+local function hash(msg)
 	msg = preproc(msg, #msg)
 	local H = initH256({})
 	for i = 1, #msg, 64 do digestblock(msg, i, H) end
@@ -202,4 +202,4 @@ function sha256(msg)
 		num2s(H[5], 4) .. num2s(H[6], 4) .. num2s(H[7], 4) .. num2s(H[8], 4))
 end
 
-return {sha256 = sha256}
+return {hash = hash}

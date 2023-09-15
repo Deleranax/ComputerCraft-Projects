@@ -1,6 +1,6 @@
 local tpm = require("/apis/tpm-api")
 
-function showUsage()
+local function showUsage()
     print("Usage: ")
     print("tpm update")
     print("tpm upgrade [-force]")
@@ -11,7 +11,7 @@ function showUsage()
     print("tpm remove <program> [-force]")
 end
 
-function clean(force)
+local function clean(force)
     local dependencies = {}
 
     local count = 0

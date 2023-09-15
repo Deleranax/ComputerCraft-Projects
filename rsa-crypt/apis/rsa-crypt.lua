@@ -895,15 +895,15 @@ end
 --
 -- MODIFICATION/ADAPTATION BY DELERANAX FOR TPM
 --
-_G["rsaCryptTemp"] {byteSize = 8, bits = 256}
+_G["rsaCryptTemp"] = {byteSize = 8, bits = 256}
 
 function loadLocalKeys()
     if fs.exists("/public.key") and fs.exists("/private.key") then
         local f = io.open("/public.key", "r")
-        local publicKey = textutils.unserialize(f:read("*a"))
+        local publicKey = textutils.unserialise(f:read("*a"))
         f:close()
         f = io.open("/private.key", "r")
-        local privateKey = textutils.unserialize(f:read("*a"))
+        local privateKey = textutils.unserialise(f:read("*a"))
         f:close()
         return publicKey, privateKey
     else
@@ -915,13 +915,13 @@ function encryptString(msg, key)
     if msg:len() <= math.floor(_G.rsaCryptTemp.bits/_G.rsaCryptTemp.byteSize) then
         return crypt(key, bytesToNumber(stringToBytes(msg), _G.rsaCryptTemp.bits, _G.rsaCryptTemp.byteSize))
     else
-        printError("Unable to encrypt message: Message too long (current: "..msg:len().." max: "..math.floor(_G.rsaCryptTemp.bits/_G.rsaCryptTemp.byteSize)..")")
+        -- printError("Unable to encrypt message: Message too long (current: "..msg:len().." max: "..math.floor(_G.rsaCryptTemp.bits/_G.rsaCryptTemp.byteSize)..")")
         return nil
     end
 end
 
 function decryptString(msg, key)
-    print(bytesToString(numberToBytes(crypt(key, msg), _G.rsaCryptTemp.bits, _G.rsaCryptTemp.byteSize)))
+    return bytesToString(numberToBytes(crypt(key, msg), _G.rsaCryptTemp.bits, _G.rsaCryptTemp.byteSize))
 end
 
 return {loadLocalKeys = loadLocalKeys, encryptString = encryptString, decryptString = decryptString}

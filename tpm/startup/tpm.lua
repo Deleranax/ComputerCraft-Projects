@@ -3,7 +3,7 @@ shell.setPath(shell.path()..":/programs/:/programs/http/")
 
 tpm.reloadDatabase()
 
-function completion(shell, index, arg, args)
+local function completion(shell, index, arg, args)
 	local rtn = {}
 
 	if index == 1 then

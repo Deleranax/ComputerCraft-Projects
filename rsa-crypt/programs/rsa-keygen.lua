@@ -373,7 +373,6 @@ local function activityDot()
     if counter >= 1000 then
         counter = 0
         write(".")
-        sleep(0.1)
     end
 end
 
@@ -714,10 +713,10 @@ local start = os.clock()
 local publicKey, privateKey = generateKeyPair()
 
 local f = io.open("/public.key", "w")
-f:write(textutils.serialize(publicKey))
+f:write(textutils.serialise(publicKey))
 f:close()
 f = io.open("/private.key", "w")
-f:write(textutils.serialize(privateKey))
+f:write(textutils.serialise(privateKey))
 f:close()
 
 print("")

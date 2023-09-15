@@ -7,24 +7,24 @@
 --- Define a title
 -- @tparam string title Title
 
-function setTitle(title)
+local function setTitle(title)
    prog = title
 end
 
 --- Initialize GUI
 
-function init()
+local function init()
 	popup("", "m")
 	term.setCursorPos(1,2)
 	_G.consoleTemp = {x=1,y=2}
 end
 
-function savePos()
+local function savePos()
 	sx,sy = term.getCursorPos()
 	_G.consoleTemp = {x=sx,y=sy}
 end
 
-function restorePos()
+local function restorePos()
 	term.setCursorPos(_G.consoleTemp.x,_G.consoleTemp.y)
 end
 
@@ -38,7 +38,7 @@ local function drawHeader()
 		term.setCursorPos(x,y)
 end
 
-function ms(message, mode)
+local function ms(message, mode)
 	 popup(message, mode)
 end
 
@@ -47,7 +47,7 @@ end
 -- @tparam string message
 -- @tparam[opt=m] string mode Mode of the message (can be 'm', 'a' or 'e')
 
-function popup(message, mode)
+local function popup(message, mode)
 	restorePos()
 	mode = mode or "m"
 	term.setTextColor(32768)
@@ -78,7 +78,7 @@ end
 -- @tparam string string Message
 -- @tparam[opt="m"] string mode Mode of the message (can be "m" for message, "a" for advert, "e" for error)
 
-function console(string, mode)
+local function console(string, mode)
 	restorePos()
 	mode = mode or "m"
 	term.setBackgroundColor(1)
@@ -103,7 +103,7 @@ end
 --- Log message in file
 -- @tparam string log Message
 
-function log(log)
+local function log(log)
 	if fs.exists("Logs") then
 		local sfile = fs.open("Logs", "r")
 		local plm = sfile.readAll()
@@ -123,7 +123,7 @@ end
 -- @tparam string string Message
 -- @tparam[opt="m"] string mode Mode of the message (can be "m" for message, "a" for advert, "e" for error)
 
-function loggedConsole(string, mode)
+local function loggedConsole(string, mode)
 	restorePos()
 	mode = mode or "m"
 	term.setBackgroundColor(1)
@@ -149,7 +149,7 @@ function loggedConsole(string, mode)
 	savePos()
 end
 
-function input()
+local function input()
 	x, y = term.getSize()
 	setCursorPos(1,y)
 	write("> ")

@@ -4,7 +4,7 @@ if not _G.tpmTemp then
 	_G.tpmTemp = {database = {}, installed = {}}
 end
 
-function httpGet(url, verbose)
+local function httpGet(url, verbose)
     if not http then
 		if verbose then
 			printError("HTTP is not available.")
@@ -22,7 +22,7 @@ function httpGet(url, verbose)
     return data.readAll()
 end
 
-function httpGetLines(url, verbose)
+local function httpGetLines(url, verbose)
     if not http then
 		if verbose then
 			printError("HTTP is not available.")
@@ -54,7 +54,7 @@ function httpGetLines(url, verbose)
     return rtn
 end
 
-function get(name)
+local function get(name)
 	if name == "" then
 		return _G.tpmTemp.database
 	end
@@ -71,11 +71,11 @@ function get(name)
 	return cwd
 end
 
-function getInstalled(name)
+local function getInstalled(name)
 	return _G.tpmTemp.installed[name]
 end
 
-function checkDir(url)
+local function checkDir(url)
 	local index = httpGetLines(BASE_URL..url.."CCINDEX", true)
 
 	if not index then
@@ -92,7 +92,7 @@ function checkDir(url)
 	end
 end
 
-function checkPack(url, name)
+local function checkPack(url, name)
 	local manifest = httpGetLines(BASE_URL..url.."/"..name.."/CCMANIFEST", true)
 	local dependencies = httpGetLines(BASE_URL..url.."/"..name.."/CCDEPENDENCIES", false)
 	
@@ -114,7 +114,7 @@ function checkPack(url, name)
 	return {name = name, version = version, maintainer = maintainer, url = BASE_URL..url..name.."/", dependencies = dependencies, files = manifest}
 end
 
-function listEntries(url, rtn)
+local function listEntries(url, rtn)
 	local index = get(url)
 		
 	for k, v in pairs(index) do
@@ -134,17 +134,17 @@ function listEntries(url, rtn)
 	end
 end
 
-function getPackageList()
+local function getPackageList()
 	local rtn = {}
 	listEntries("", rtn)
 	return rtn
 end
 
-function getInstalledPackages()
+local function getInstalledPackages()
 	return _G.tpmTemp.installed
 end
 
-function getInstalledList()
+local function getInstalledList()
 	local keys = {}
 	
 	for k, v in pairs(_G.tpmTemp.installed) do
@@ -153,7 +153,7 @@ function getInstalledList()
 	return keys
 end
 
-function getPackage(url)
+local function getPackage(url)
 	reloadDatabase()
 
 	if not get(url) then
@@ -169,7 +169,7 @@ function getPackage(url)
 	return get(url)
 end
 
-function reloadDatabase()
+local function reloadDatabase()
 	write("Reading package list... ")
 	file = fs.open(".tpm", "r")
 
@@ -178,14 +178,14 @@ function reloadDatabase()
 		return
 	end
 
-	data = textutils.unserialize(file.readAll())
+	data = textutils.unserialise(file.readAll())
 	_G.tpmTemp.database = data.database
 	_G.tpmTemp.installed = data.installed
 	file.close()
 	print("Done.")
 end
 
-function updateDatabase()
+local function updateDatabase()
 
 	reloadDatabase()
 
@@ -200,7 +200,7 @@ function updateDatabase()
 	saveDatabase()
 end
 
-function resolveDependencies(url, previous)
+local function resolveDependencies(url, previous)
 
 	for i, v in ipairs(previous) do
 		if v == url then
@@ -248,7 +248,7 @@ function resolveDependencies(url, previous)
 	return list
 end
 
-function checkDependencies(url)
+local function checkDependencies(url)
 	if not get(url) then
 		printError("Unable to locate package '"..url.."' while checking dependencies.")
 		return nil
@@ -278,7 +278,7 @@ function checkDependencies(url)
 	return true
 end
 
-function install(url, dep, force)
+local function install(url, dep, force)
 
 	dep = dep or false
 	force = force or false
@@ -351,7 +351,7 @@ function install(url, dep, force)
 	
 	print("Fetching files...")
 
-	error = 0
+	local error = 0
 	
 	for i, v in ipairs(get(url).files) do
 		print("GET: "..v)
@@ -393,7 +393,7 @@ function install(url, dep, force)
 	return count
 end
 
-function remove(url, force)
+local function remove(url, force)
 
 	reloadDatabase()
 
@@ -429,10 +429,10 @@ function remove(url, force)
 	return true
 end
 
-function saveDatabase()
+local function saveDatabase()
 	write("Saving database... ")
 	file = fs.open(".tpm", "wb")
-	data = textutils.serialize({database = _G.tpmTemp.database, installed = _G.tpmTemp.installed})
+	data = textutils.serialise({database = _G.tpmTemp.database, installed = _G.tpmTemp.installed})
 	file.write(data)
 	file.close()
 	print("Done")
