@@ -31,14 +31,14 @@ function ttns.loadConfigs()
         return false
     end
     
-    f = fs.open(".ttns", "r")
+    local f = fs.open(".ttns", "r")
     _G.ttnsTemp.sectorIndex = textutils.unserialise(f.readAll())
     f.close()
     return true
 end
 
 function ttns.saveConfigs()
-    f = fs.open(".ttns", "wb")
+    local f = fs.open(".ttns", "wb")
     f.write(textutils.serialise(_G.ttnsTemp.sectorIndex))
     f.close()
     return true
@@ -49,7 +49,7 @@ function ttns.loadSector(id)
         return false
     end
 
-    f = fs.open("disk"..id.."/data.ttns", "r")
+    local f = fs.open("disk"..id.."/data.ttns", "r")
     _G.ttnsTemp.sectors[id] = textutils.unserialise(f.readAll())
     f.close()
     return true
@@ -61,7 +61,7 @@ function ttns.saveSector(id)
         return false
     end
 
-    f = fs.open("disk"..id.."/data.ttns", "wb")
+    local f = fs.open("disk"..id.."/data.ttns", "wb")
     f.write(textutils.serialise(_G.ttnsTemp.sectors[id]))
     f.close()
     return true
@@ -70,16 +70,16 @@ end
 function ttns.newSector(x, z)
     if not ttns.getSectorId(x, z) then
         table.insert(_G.ttnsTemp.sectorIndex, {x, z})
-        id = table.getn(_G.ttnsTemp.sectorIndex)
+        local id = table.getn(_G.ttnsTemp.sectorIndex)
         _G.ttnsTemp.sectors[id] = {}
         return id
     end
 end
 
 function ttns.setBlock(x, y, z, block)
-    sx, sz = ttns.toSectorCoords(x, z)
+    local sx, sz = ttns.toSectorCoords(x, z)
     
-    id = ttns.getSectorId(sx, sz)
+    local id = ttns.getSectorId(sx, sz)
     
     if not id then
         id = ttns.newSector(sx, sz)
@@ -99,7 +99,7 @@ end
 function ttns.getBlock(x, y, z)
     sx, sz = ttns.toSectorCoords(x, z)
     
-    id = ttns.getSectorId(sx, sz)
+    local id = ttns.getSectorId(sx, sz)
     
     if not id then
         if not _G.ttnsTemp.sectors[id][x] then

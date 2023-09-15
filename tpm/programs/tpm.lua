@@ -42,7 +42,7 @@ local function clean(force)
     return count
 end
 
-args = { ... }
+local args = { ... }
 
 if table.getn(args) >= 1 then
     if args[1] == "help" then
@@ -91,7 +91,7 @@ if table.getn(args) >= 1 then
             printError("Invalid command. Run 'tpm help' to show usage.")
             return
         end
-        installed = tpm.install(args[2], false, args[3] == "-force")
+        local installed = tpm.install(args[2], false, args[3] == "-force")
         print("0 upgraded, " .. installed .. " newly installed.")
     elseif args[1] == "reinstall" then
         if not args[2] then
@@ -99,7 +99,7 @@ if table.getn(args) >= 1 then
             return
         end
         if tpm.remove(args[2], true) then
-            installed = tpm.install(args[2], false, args[3] == "-force") - 1
+            local installed = tpm.install(args[2], false, args[3] == "-force") - 1
         end
         print("0 upgraded, " .. installed .. " newly installed.")
     elseif args[1] == "remove" then
@@ -114,7 +114,7 @@ if table.getn(args) >= 1 then
         if args[2] == "remote" then
             pack = tpm.getPackage(args[3])
         elseif args[2] == "local" then
-            pack = getInstalled(args[3])
+            pack = tpm.getInstalled(args[3])
         else
             printError("Invalid command. Run 'tpm help' to show usage.")
             return

@@ -8,19 +8,11 @@
 -- @tparam string title Title
 
 local function setTitle(title)
-   prog = title
-end
-
---- Initialize GUI
-
-local function init()
-	popup("", "m")
-	term.setCursorPos(1,2)
-	_G.consoleTemp = {x=1,y=2}
+   local prog = title
 end
 
 local function savePos()
-	sx,sy = term.getCursorPos()
+	local sx,sy = term.getCursorPos()
 	_G.consoleTemp = {x=sx,y=sy}
 end
 
@@ -29,17 +21,13 @@ local function restorePos()
 end
 
 local function drawHeader()
-	back = term.getBackgroundColor()
-		x,y = term.getCursorPos()
+	local back = term.getBackgroundColor()
+		local x,y = term.getCursorPos()
 		term.setCursorPos(1,1)
 		term.setBackgroundColor(512)	
 		write(prog.." - (c) Temver Inc.															        ")
 		term.setBackgroundColor(back)
 		term.setCursorPos(x,y)
-end
-
-local function ms(message, mode)
-	 popup(message, mode)
 end
 
 --- Draw a message
@@ -72,6 +60,16 @@ local function popup(message, mode)
 		write(message)
 	end
 	savePos()
+end
+
+local function init()
+	popup("", "m")
+	term.setCursorPos(1,2)
+	_G.consoleTemp = {x=1,y=2}
+end
+
+local function ms(message, mode)
+	popup(message, mode)
 end
 
 --- Draw a message in console
@@ -150,10 +148,10 @@ local function loggedConsole(string, mode)
 end
 
 local function input()
-	x, y = term.getSize()
+	local x, y = term.getSize()
 	setCursorPos(1,y)
 	write("> ")
-	rtn = read()
+	local rtn = read()
 	setCursorPos(1,y)
 	write(">                                                                    ")
 	return rtn

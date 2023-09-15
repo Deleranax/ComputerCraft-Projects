@@ -75,23 +75,6 @@ local function getInstalled(name)
 	return _G.tpmTemp.installed[name]
 end
 
-local function checkDir(url)
-	local index = httpGetLines(BASE_URL..url.."CCINDEX", true)
-
-	if not index then
-		return
-	end
-		
-	for i, v in ipairs(index) do
-		if v:sub(-1) == "/" then
-			get(url)[v:sub(1,-2)] = {}
-			checkDir(url..v)
-		else
-			get(url)[v] = checkPack(url, v)
-		end
-	end
-end
-
 local function checkPack(url, name)
 	local manifest = httpGetLines(BASE_URL..url.."/"..name.."/CCMANIFEST", true)
 	local dependencies = httpGetLines(BASE_URL..url.."/"..name.."/CCDEPENDENCIES", false)
@@ -112,6 +95,23 @@ local function checkPack(url, name)
 	table.remove(manifest, 1)
 	
 	return {name = name, version = version, maintainer = maintainer, url = BASE_URL..url..name.."/", dependencies = dependencies, files = manifest}
+end
+
+local function checkDir(url)
+	local index = httpGetLines(BASE_URL..url.."CCINDEX", true)
+
+	if not index then
+		return
+	end
+
+	for i, v in ipairs(index) do
+		if v:sub(-1) == "/" then
+			get(url)[v:sub(1,-2)] = {}
+			checkDir(url..v)
+		else
+			get(url)[v] = checkPack(url, v)
+		end
+	end
 end
 
 local function listEntries(url, rtn)
@@ -153,6 +153,46 @@ local function getInstalledList()
 	return keys
 end
 
+local function saveDatabase()
+	write("Saving database... ")
+	local file = fs.open(".tpm", "wb")
+	local data = textutils.serialise({database = _G.tpmTemp.database, installed = _G.tpmTemp.installed})
+	file.write(data)
+	file.close()
+	print("Done")
+end
+
+local function reloadDatabase()
+	write("Reading package list... ")
+	local file = fs.open(".tpm", "r")
+
+	if not file then
+		print("Missing Database.")
+		return
+	end
+
+	local data = textutils.unserialise(file.readAll())
+	_G.tpmTemp.database = data.database
+	_G.tpmTemp.installed = data.installed
+	file.close()
+	print("Done.")
+end
+
+local function updateDatabase()
+
+	reloadDatabase()
+
+	write("Connecting... ")
+	httpGet(BASE_URL.."CCINDEX")
+	print("Success.")
+
+	write("Updating package list... ")
+	checkDir("")
+	print("Done.")
+
+	saveDatabase()
+end
+
 local function getPackage(url)
 	reloadDatabase()
 
@@ -167,37 +207,6 @@ local function getPackage(url)
 	end
 	
 	return get(url)
-end
-
-local function reloadDatabase()
-	write("Reading package list... ")
-	file = fs.open(".tpm", "r")
-
-	if not file then
-		print("Missing Database.")
-		return
-	end
-
-	data = textutils.unserialise(file.readAll())
-	_G.tpmTemp.database = data.database
-	_G.tpmTemp.installed = data.installed
-	file.close()
-	print("Done.")
-end
-
-local function updateDatabase()
-
-	reloadDatabase()
-
-	write("Connecting... ")
-	httpGet(BASE_URL.."CCINDEX")
-	print("Success.")
-	
-	write("Updating package list... ")
-	checkDir("")
-	print("Done.")
-	
-	saveDatabase()
 end
 
 local function resolveDependencies(url, previous)
@@ -227,7 +236,7 @@ local function resolveDependencies(url, previous)
 
 	for i, v in ipairs(dependencies) do
 		set[v] = true
-		dep = resolveDependencies(v, previous)
+		local dep = resolveDependencies(v, previous)
 		if dep then
 			for i2, v2 in pairs(dep) do
 				set[v2] = true
@@ -310,7 +319,7 @@ local function install(url, dep, force)
 		local list = {}
 
         for i, v in ipairs(prelist) do
-			flag = true
+			local flag = true
             for k, v2 in pairs(_G.tpmTemp.installed) do
 			    if v == k then
 				   flag = false
@@ -355,12 +364,12 @@ local function install(url, dep, force)
 	
 	for i, v in ipairs(get(url).files) do
 		print("GET: "..v)
-		content = httpGet(BASE_URL..url.."/"..v)
+		local content = httpGet(BASE_URL..url.."/"..v)
 
 		if not content then
 			error = error + 1
 		else
-			file = fs.open(v, "wb")
+			local file = fs.open(v, "wb")
 			file.write(content)
 			file.close()
 		end
@@ -374,7 +383,7 @@ local function install(url, dep, force)
 		name = v
 	end
 	
-	pack = checkPack(urls, name)
+	local pack = checkPack(urls, name)
 
 	if pack then
 		_G.tpmTemp.installed[url] = pack
@@ -427,15 +436,6 @@ local function remove(url, force)
 	
 	print("Package successfully removed.")
 	return true
-end
-
-local function saveDatabase()
-	write("Saving database... ")
-	file = fs.open(".tpm", "wb")
-	data = textutils.serialise({database = _G.tpmTemp.database, installed = _G.tpmTemp.installed})
-	file.write(data)
-	file.close()
-	print("Done")
 end
 
 return {BASE_URL = BASE_URL, httpGet = httpGet, httpGetLines = httpGetLines, reloadDatabase = reloadDatabase, updateDatabase = updateDatabase, saveDatabase = saveDatabase, get = get, getPackage = getPackage, getPackageList = getPackageList, getInstalledPackages = getInstalledPackages, getInstalledList = getInstalledList, install = install, remove = remove}

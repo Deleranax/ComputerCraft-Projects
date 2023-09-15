@@ -16,15 +16,15 @@ local function loadDatabase()
     end
 
     if fs.exists("/.tac") then
-        file = fs.open("/.tac")
-        msg = file.readAll()
+        local file = fs.open("/.tac", "r")
+        local msg = file.readAll()
         file.close()
 
         if not msg then
             return 3, "Unable to load DataBase's File"
         end
 
-        database = textutils.unserialise(msg)
+        local database = textutils.unserialise(msg)
 
         if not database then
             return 4, "Unable to load DataBase"
@@ -38,7 +38,19 @@ local function loadDatabase()
     return 0
 end
 
-saveDatabase()
+local function saveDatabase()
+    local msg = textutils.serialise(_G.tacTemp.database)
+
+    if type(msg) ~= "string" then
+        return 1, "Unable to save database"
+    end
+
+    local file = fs.open("/.tac", "w")
+    file.write(msg)
+    file.close()
+
+    return 0
+end
 
 local function sign(data)
     local msg = textutils.serialise(data)
@@ -122,6 +134,16 @@ local function trust(id, publicKey)
     end
 
     table.insert(_G.tacTemp.database.verifiedHosts)
+end
+
+local function secureReceive(timeout)
+    local err, packet, sender, dest = net.receive(timeout)
+
+    if err == 0 then
+        return verify(packet, pack)
+    else
+       return err, packet
+    end
 end
 
 tac = {loadDatabase = loadDatabase, sign = sign, verify = verify, net = net}

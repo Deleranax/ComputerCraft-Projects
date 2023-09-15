@@ -897,7 +897,7 @@ end
 --
 _G["rsaCryptTemp"] = {byteSize = 8, bits = 256}
 
-function loadLocalKeys()
+local function loadLocalKeys()
     if fs.exists("/public.key") and fs.exists("/private.key") then
         local f = io.open("/public.key", "r")
         local publicKey = textutils.unserialise(f:read("*a"))
@@ -911,7 +911,7 @@ function loadLocalKeys()
     end
 end
 
-function encryptString(msg, key)
+local function encryptString(msg, key)
     if msg:len() <= math.floor(_G.rsaCryptTemp.bits/_G.rsaCryptTemp.byteSize) then
         return crypt(key, bytesToNumber(stringToBytes(msg), _G.rsaCryptTemp.bits, _G.rsaCryptTemp.byteSize))
     else
@@ -920,7 +920,7 @@ function encryptString(msg, key)
     end
 end
 
-function decryptString(msg, key)
+local function decryptString(msg, key)
     return bytesToString(numberToBytes(crypt(key, msg), _G.rsaCryptTemp.bits, _G.rsaCryptTemp.byteSize))
 end
 
