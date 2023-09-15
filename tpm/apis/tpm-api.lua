@@ -93,8 +93,8 @@ function checkDir(url)
 end
 
 function checkPack(url, name)
-	local manifest = httpGetLines(BASE_URL..url..name.."/CCMANIFEST", true)
-	local dependencies = httpGetLines(BASE_URL..url..name.."/CCDEPENDENCIES", false)
+	local manifest = httpGetLines(BASE_URL..url.."/"..name.."/CCMANIFEST", true)
+	local dependencies = httpGetLines(BASE_URL..url.."/"..name.."/CCDEPENDENCIES", false)
 	
 	if not manifest then
 		printError("Package "..name.." is not properly structured.")
