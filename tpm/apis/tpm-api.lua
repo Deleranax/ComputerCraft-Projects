@@ -308,7 +308,7 @@ function install(url, dep)
 
         for i, v in ipairs(prelist) do
 			flag = true
-            for k, v in pairs(_G.tpmTemp.installed) do
+            for k, v2 in pairs(_G.tpmTemp.installed) do
 			    if v == k then
 				   flag = false
 			    end
@@ -341,13 +341,15 @@ function install(url, dep)
 	end
 	
 	print("Fetching files...")
+
+	error = 0
 	
 	for i, v in ipairs(get(url).files) do
 		print("GET: "..v)
 		content = httpGet(BASE_URL..url.."/"..v)
 
 		if not content then
-			sleep(0.1)
+			error = error + 1
 		else
 			file = fs.open(v, "wb")
 			file.write(content)
@@ -373,8 +375,12 @@ function install(url, dep)
 	saveDatabase()
 
 	count = count + 1
-	
-	print("Package successfully installed.")
+
+	if error == 0 then
+		print("Package successfully installed.")
+	else
+		print("Package installed with errors.")
+	end
 	return count
 end
 
