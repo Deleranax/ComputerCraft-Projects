@@ -15,8 +15,7 @@ function httpGet(url, verbose)
 	local data, err = http.get(url, nil, true)
 
 	if not data then
-		printError(url)
-        printError(err or "Invalid URL.")
+		printError(url..": "..(err or "Invalid URL."))
         return nil
     end
 	
@@ -94,8 +93,8 @@ function checkDir(url)
 end
 
 function checkPack(url, name)
-	local manifest = httpGetLines(BASE_URL..url..name.."/CCMANIFEST", true)
-	local dependencies = httpGetLines(BASE_URL..url..name.."/CCDEPENDENCIES", false)
+	local manifest = httpGetLines(BASE_URL..url.."/"..name.."/CCMANIFEST", true)
+	local dependencies = httpGetLines(BASE_URL..url.."/"..name.."/CCDEPENDENCIES", false)
 	
 	if not manifest then
 		printError("Package "..name.." is not properly structured.")
@@ -279,7 +278,10 @@ function checkDependencies(url)
 	return true
 end
 
-function install(url, dep)
+function install(url, dep, force)
+
+	dep = dep or false
+	force = force or false
 
 	reloadDatabase()
 
@@ -288,8 +290,8 @@ function install(url, dep)
 		return 0
 	end
 
-	for i, v in ipairs(_G.tpmTemp.installed) do
-		if v == url then
+	for k, v in pairs(_G.tpmTemp.installed) do
+		if k == url then
 			printError("The package is already installed.")
 			return 0
 		end
@@ -298,19 +300,39 @@ function install(url, dep)
 	local count = 0
 
 	if not dep and not checkDependencies(url) then
-		list = resolveDependencies(url, {})
+		local prelist = resolveDependencies(url, {})
 
-		if not list then
+		if not prelist then
 			print("Cannot resolve dependencies.")
 			return 0
 		end
 
+		local list = {}
+
+        for i, v in ipairs(prelist) do
+			flag = true
+            for k, v2 in pairs(_G.tpmTemp.installed) do
+			    if v == k then
+				   flag = false
+			    end
+           end
+			if flag then
+				table.insert(list, v)
+			end
+        end
+
 		print("The following package(s) will be installed:")
 		print(table.concat(list, ", "))
 
-		write("Do you want to continue ? [Y/n] ")
+		local a
 
-		local a = read()
+		if not force then
+			write("Do you want to continue ? [Y/n] ")
+
+			a = read()
+		else
+			a = "yes"
+		end
 
 		if a == "n" or a == "N" then
 			return 0
@@ -328,12 +350,20 @@ function install(url, dep)
 	end
 	
 	print("Fetching files...")
+
+	error = 0
 	
 	for i, v in ipairs(get(url).files) do
 		print("GET: "..v)
-		file = fs.open(v, "wb")
-		file.write(httpGet(BASE_URL..url.."/"..v))
-		file.close()
+		content = httpGet(BASE_URL..url.."/"..v)
+
+		if not content then
+			error = error + 1
+		else
+			file = fs.open(v, "wb")
+			file.write(content)
+			file.close()
+		end
 	end
 
 	local name = ""
@@ -344,7 +374,7 @@ function install(url, dep)
 		name = v
 	end
 	
-	pack = checkPack(urls.."/", name)
+	pack = checkPack(urls, name)
 
 	if pack then
 		_G.tpmTemp.installed[url] = pack
@@ -354,8 +384,12 @@ function install(url, dep)
 	saveDatabase()
 
 	count = count + 1
-	
-	print("Package successfully installed.")
+
+	if error == 0 then
+		print("Package successfully installed.")
+	else
+		print("Package installed with errors.")
+	end
 	return count
 end
 
