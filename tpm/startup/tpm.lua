@@ -9,16 +9,16 @@ function completion(shell, index, arg, args)
 	if index == 1 then
 		rtn = {"help ", "update ", "upgrade ", "list ", "show ", "install ", "reinstall ", "remove ", "clean "}
 	elseif index == 2 then
-		if args[2] == "install" then
+		if args[2] == "install" or args[3] == "remote" then
 			for i, v in ipairs(tpm.getPackageList()) do
 				table.insert(rtn, v.." ")
 			end
-		elseif args[2] == "remove" or args[2] == "reinstall" then
+		elseif args[2] == "remove" or args[2] == "reinstall" or args[3] == "local" then
 			for i, v in ipairs(tpm.getInstalledList()) do
 				table.insert(rtn, v.." ")
 			end
-		elseif args[2] == "list" then
-			rtn = {"installed ", "available "}
+		elseif args[2] == "list" or args[2] == "show" then
+			rtn = {"local ", "remote "}
 		elseif args[2] == "show" then
 			rtn = tpm.getPackageList()
 		end

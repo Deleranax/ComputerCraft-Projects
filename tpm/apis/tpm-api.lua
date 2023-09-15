@@ -278,7 +278,10 @@ function checkDependencies(url)
 	return true
 end
 
-function install(url, dep)
+function install(url, dep, force)
+
+	dep = dep or false
+	force = force or false
 
 	reloadDatabase()
 
@@ -321,9 +324,13 @@ function install(url, dep)
 		print("The following package(s) will be installed:")
 		print(table.concat(list, ", "))
 
-		write("Do you want to continue ? [Y/n] ")
+		if not force then
+			write("Do you want to continue ? [Y/n] ")
 
-		local a = read()
+			local a = read()
+		else
+			a = "yes"
+		end
 
 		if a == "n" or a == "N" then
 			return 0
