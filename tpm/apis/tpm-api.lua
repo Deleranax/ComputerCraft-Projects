@@ -15,8 +15,7 @@ function httpGet(url, verbose)
 	local data, err = http.get(url, nil, true)
 
 	if not data then
-		printError(url)
-        printError(err or "Invalid URL.")
+		printError(url..": "..(err or "Invalid URL."))
         return nil
     end
 	
@@ -309,12 +308,14 @@ function install(url, dep)
 
         for i, v in ipairs(prelist) do
 			flag = true
-           for k, v in pairs(_G.tpmTemp.installed) do
-			   if v == k then
+            for k, v in pairs(_G.tpmTemp.installed) do
+			    if v == k then
 				   flag = false
-			   end
+			    end
            end
-			table.insert(list, v)
+			if flag then
+				table.insert(list, v)
+			end
         end
 
 		print("The following package(s) will be installed:")
@@ -343,9 +344,15 @@ function install(url, dep)
 	
 	for i, v in ipairs(get(url).files) do
 		print("GET: "..v)
-		file = fs.open(v, "wb")
-		file.write(httpGet(BASE_URL..url.."/"..v))
-		file.close()
+		content = httpGet(BASE_URL..url.."/"..v)
+
+		if not content then
+			sleep(0.1)
+		else
+			file = fs.open(v, "wb")
+			file.write(content)
+			file.close()
+		end
 	end
 
 	local name = ""
