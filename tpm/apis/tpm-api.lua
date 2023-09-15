@@ -288,8 +288,8 @@ function install(url, dep)
 		return 0
 	end
 
-	for i, v in ipairs(_G.tpmTemp.installed) do
-		if v == url then
+	for k, v in pairs(_G.tpmTemp.installed) do
+		if k == url then
 			printError("The package is already installed.")
 			return 0
 		end
@@ -298,12 +298,24 @@ function install(url, dep)
 	local count = 0
 
 	if not dep and not checkDependencies(url) then
-		list = resolveDependencies(url, {})
+		local prelist = resolveDependencies(url, {})
 
-		if not list then
+		if not prelist then
 			print("Cannot resolve dependencies.")
 			return 0
 		end
+
+		local list = {}
+
+        for i, v in ipairs(prelist) do
+			flag = true
+           for k, v in pairs(_G.tpmTemp.installed) do
+			   if v == k then
+				   flag = false
+			   end
+           end
+			table.insert(list, v)
+        end
 
 		print("The following package(s) will be installed:")
 		print(table.concat(list, ", "))
