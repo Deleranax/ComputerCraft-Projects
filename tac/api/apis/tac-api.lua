@@ -157,10 +157,14 @@ local function handleService(data, sender, dest)
 end
 
 local function secureReceive(timeout)
-    local e, packet, sender, dest = net.receive(timeout)
+    local e, packet, sender, dest, id = net.receive(timeout)
 
     if e == 0 then
         local e2, data, sender2, dest2 = verify(packet, sender, dest)
+
+        if e2 ~= 0 then
+            return e2, data
+        end
 
         if data.service then
             local rtn = handleService(data, sender, dest)
@@ -170,6 +174,8 @@ local function secureReceive(timeout)
                 return 0, rtn, sender, dest
             end
         end
+
+        return e2, data, sender2, dest2, id
     else
         return e, packet, sender, dest
     end
