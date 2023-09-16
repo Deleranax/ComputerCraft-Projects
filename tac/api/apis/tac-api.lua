@@ -59,6 +59,8 @@ local function initialise()
     if e ~= 0 then
         return e, msg
     end
+
+    return 0
 end
 
 local function sign(data)

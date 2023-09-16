@@ -46,14 +46,15 @@ while active do
         if command == "accept" then
             if not _G.tacServerTemp.undergoingCom then
                 vui.console("There is no communication initiation waiting for approval.")
-            end
-            status, message =  tac.confirmCommunication(_G.tacServerTemp.comID, tostring(args[1]), _G.tacServerTemp.comDest)
-            if status == 0 then
-                vui.consoleLog("Communication initiation successfully confirmed for "..tostring(_G.tacServerTemp.comDest).." via ".._G.tacServerTemp.comID)
-                _G.tacServerTemp.undergoingCom = false
             else
-                vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
-                _G.tacServerTemp.undergoingCom = false
+                status, message =  tac.confirmCommunication(_G.tacServerTemp.comID, tostring(args[1]), _G.tacServerTemp.comDest)
+                if status == 0 then
+                    vui.consoleLog("Communication initiation successfully confirmed for "..tostring(_G.tacServerTemp.comDest).." via ".._G.tacServerTemp.comID)
+                    _G.tacServerTemp.undergoingCom = false
+                else
+                    vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
+                    _G.tacServerTemp.undergoingCom = false
+                end
             end
         end
     else
