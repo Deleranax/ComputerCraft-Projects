@@ -171,13 +171,13 @@ local function secureReceive(timeout)
             if not rtn then
                 return secureReceive(timeout)
             else
-                return 0, rtn, sender, dest
+                return 0, rtn, sender, dest, id
             end
         end
 
         return e2, data, sender2, dest2, id
     else
-        return e, packet, sender, dest
+        return e, packet
     end
 end
 
