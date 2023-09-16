@@ -1,5 +1,5 @@
-tac = require("apis/tac-api")
-capi = require("apis/console-api")
+local tac = require("/apis/tac-api")
+local capi = require("/apis/console-api")
 
 capi.setTitle("Temver Access Control Server")
 capi.init()

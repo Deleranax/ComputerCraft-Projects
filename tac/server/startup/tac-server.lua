@@ -1,5 +1,5 @@
-local tac = require("apis/tac-api")
-local vui = require("apis/vintage-ui")
+local tac = require("/apis/tac-api")
+local vui = require("/apis/vintage-ui")
 
 _G["tacServerTemp"] = {comID = nil, comDest = nil}
 

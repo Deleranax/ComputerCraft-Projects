@@ -1,4 +1,4 @@
-local err = require("apis/tac-error")
+local err = require("/apis/tac-error")
 
 local function handle(frame, id)
     if type(frame) ~= "table" then
