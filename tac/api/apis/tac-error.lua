@@ -1,5 +1,5 @@
 local errors = {
-    [11] = "Unable to load DataBase's File",
+    [11] = "Unable to load DataBase File",
     [12] = "Unable to load DataBase",
     [13] = "DataBase is missing",
     [21] = "Unable to save database",
@@ -10,7 +10,7 @@ local errors = {
     [43] = "Unable to read packet",
     [44] = "Unable to read signature",
     [45] = "Unable to read data",
-    [46] = "Invalid certificate: Host(%s) and Local(%s)",
+    [46] = "Invalid signature: Wrong key or compromised communication",
     [47] = "Unable to unpack data",
     [51] = "Invalid ID or public key",
     [61] = "Unable to contact host",

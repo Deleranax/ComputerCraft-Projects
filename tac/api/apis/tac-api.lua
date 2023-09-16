@@ -20,6 +20,8 @@ local function loadDatabase()
         if not database then
             return err.parse(12)
         end
+
+        _G.tacTemp.database = database
     else
         return err.parse(13)
     end
@@ -104,8 +106,8 @@ local function verify(packetMsg, id, dest)
         return err.parse(45)
     end
 
-    if ecc.verify(publicKey, msg, signature) then
-        return err.parse(46, h, h2)
+    if not ecc.verify(publicKey, msg, signature) then
+        return err.parse(46)
     end
 
     local data = textutils.unserialise(msg)
@@ -132,7 +134,7 @@ local function secureReceive(timeout)
     if e == 0 then
         return verify(packet, sender, dest)
     else
-       return e, packet
+        return e, packet
     end
 end
 
@@ -171,6 +173,6 @@ local function retrievePublicKey(id, timeout)
     return 0, msg
 end
 
-tac = {loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureSend, retrievePublicKey = retrievePublicKey}
+tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureSend, retrievePublicKey = retrievePublicKey}
 
 return tac
