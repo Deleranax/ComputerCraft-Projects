@@ -438,4 +438,4 @@ local function remove(url, force)
 	return true
 end
 
-return {BASE_URL = BASE_URL, httpGet = httpGet, httpGetLines = httpGetLines, reloadDatabase = reloadDatabase, updateDatabase = updateDatabase, saveDatabase = saveDatabase, get = get, getPackage = getPackage, getPackageList = getPackageList, getInstalledPackages = getInstalledPackages, getInstalledList = getInstalledList, install = install, remove = remove}
+return {BASE_URL = BASE_URL, httpGet = httpGet, httpGetLines = httpGetLines, reloadDatabase = reloadDatabase, updateDatabase = updateDatabase, saveDatabase = saveDatabase, get = get, getInstalled = getInstalled, getPackage = getPackage, getPackageList = getPackageList, getInstalledPackages = getInstalledPackages, getInstalledList = getInstalledList, install = install, remove = remove}
