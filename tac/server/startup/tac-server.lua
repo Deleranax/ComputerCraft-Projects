@@ -68,7 +68,7 @@ while active do
         if status == 130 then
             vui.consoleLog("Incoming communication initiation request from "..tostring(sender).." via "..tostring(id))
             _G.tacServerTemp.comID = id
-            _G.tacServerTemp.comDest = dest
+            _G.tacServerTemp.comDest = sender
             _G.tacServerTemp.undergoingCom = true
         elseif status ~= 0 then
             vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
