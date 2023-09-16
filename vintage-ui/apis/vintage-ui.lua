@@ -191,7 +191,7 @@ local function console(mess)
 
     local x, y = term.getCursorPos()
 
-    term.scroll(math.min(y - _G.vuiTemp.y + 4, 0))
+    term.scroll(math.min(y - _G.vuiTemp.y + 5, 0))
 
     printVendor()
 end

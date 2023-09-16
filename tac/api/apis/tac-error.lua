@@ -15,6 +15,7 @@ local errors = {
     [51] = "Invalid ID or public key",
     [61] = "Unable to contact host",
     [62] = "Unable to read key",
+    [63] = "Invalid ID",
     [71] = "Unable to read frame",
     [72] = "Missing header",
     [73] = "Malformed header or unable to read it",

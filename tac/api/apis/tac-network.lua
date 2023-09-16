@@ -88,6 +88,10 @@ end
 local function retrievePublicKey(id, timeout)
     local rid, msg = -1
 
+    if type(id) ~= "number" then
+        return err.parse(63)
+    end
+
     while rid ~= id do
         msg = nil
         rednet.send(id, "public_key", "service")
