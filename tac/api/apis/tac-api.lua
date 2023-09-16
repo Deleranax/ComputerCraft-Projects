@@ -240,7 +240,7 @@ local function initiateCommunication(id, pass, dest)
     end
 
     local eh
-    status = pcall(function() eh = ecc.encrypt(h, ss)  end)
+    status = pcall(function() eh = string.char(unpack(ecc.encrypt(h, ss)))  end)
 
     local e, msg = net.send(textutils.serialise({initCom = true, hash = eh}), os.getComputerID(), id)
 
@@ -267,7 +267,7 @@ local function initiateCommunication(id, pass, dest)
 
     _G.tacTemp.busy = false
     local a
-    status = pcall(function()  a = ecc.decrypt(packet, ss) end)
+    status = pcall(function()  a = string.char(unpack(ecc.decrypt(packet, ss))) end)
 
     if not status or type(a) ~= "string" then
         return err.parse(132)
@@ -303,13 +303,14 @@ local function confirmCommunication(id, pass, dest)
     end
 
     local a
-    local status = pcall(function()  a = ecc.decrypt(_G.tacTemp.initiation, ss) end)
+    local status = pcall(function()  a = string.char(unpack(ecc.decrypt(_G.tacTemp.initiation, ss))) end)
 
     if not status or type(a) ~= "string" then
         return err.parse(132)
     end
 
     if a ~= h then
+        net.send("pass", os.getComputerID(), id)
         return err.parse(133)
     end
 
@@ -319,7 +320,7 @@ local function confirmCommunication(id, pass, dest)
         return e, mess
     end
 
-    local status = pcall(function()  a = ecc.encrypt(pass, ss) end)
+    local status = pcall(function()  a = string.char(unpack(ecc.encrypt(pass, ss))) end)
 
     if not status or type(a) ~= "string" then
         return err.parse(132)
@@ -330,6 +331,8 @@ local function confirmCommunication(id, pass, dest)
     if e ~= 0 then
         return e, msg
     end
+
+    return 0
 end
 
 
