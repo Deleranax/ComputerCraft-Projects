@@ -5,7 +5,7 @@ local errors = {
     [21] = "Unable to save database",
     [31] = "Unable to write data",
     [32] = "Unable to compute certificate",
-    [41] = "Unable to read packet (wrong type) or ID",
+    [41] = "Invalid packet or ID",
     [42] = "Host is not verified",
     [43] = "Unable to read packet",
     [44] = "Unable to read signature",
@@ -24,7 +24,13 @@ local errors = {
     [92] = "Incorrect message",
     [101] = "No response after 5 retry",
     [111] = "Unable to generate keypair",
-    [121] = "Unable to verify after 5 retry"
+    [121] = "",
+    [130] = "Communication Initiation",
+    [131] = "Invalid passcode or ID",
+    [132] = "Unable to encrypt/decrypt",
+    [133] = "Wrong passcode",
+    [134] = "Unable to hash",
+    [135] = "Unable to compute shared secret"
 }
 
 local function parse(int, ...)

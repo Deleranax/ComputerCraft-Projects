@@ -2,7 +2,7 @@ local ecc = require("apis/ecc")
 local net = require("apis/tac-network")
 local err = require("apis/tac-error")
 
-_G["tacTemp"] = {database = {seed = ecc.random.random(), verifiedHosts = {}}, publicKey = {}, privateKey = {}, waitForPong = false}
+_G["tacTemp"] = {database = {seed = ecc.random.random(), verifiedHosts = {}}, publicKey = {}, privateKey = {}, waitForPong = false, busy = false, initiation = {}}
 
 local function loadDatabase()
 
@@ -46,9 +46,9 @@ end
 local function initialise()
     local e, msg = loadDatabase()
 
-    _G.tacTemp.privateKey, _G.tacTemp.publicKey = ecc.keypair(_G.tacTemp.database.seed)
+    local status = pcall(function() _G.tacTemp.privateKey, _G.tacTemp.publicKey = ecc.keypair(_G.tacTemp.database.seed) end)
 
-    if not _G.tacTemp.privateKey or not _G.tacTemp.publicKey then
+    if not status or not _G.tacTemp.privateKey or not _G.tacTemp.publicKey then
         return err.parse(111)
     end
 
@@ -68,9 +68,10 @@ local function sign(data)
         return err.parse(31)
     end
 
-    local signature = ecc.sign(_G.tacTemp.privateKey, msg)
+    local signature
+    local status = pcall(function() signature = ecc.sign(_G.tacTemp.privateKey, msg) end)
 
-    if not signature then
+    if not status or not signature then
         return err.parse(32)
     end
 
@@ -84,14 +85,19 @@ local function verify(packetMsg, id, dest)
         return err.parse(41)
     end
 
-    if type(publicKey) ~= "table" then
-        return err.parse(42)
-    end
-
     local packet = textutils.unserialise(packetMsg)
 
     if type(packet) ~= "table" then
         return err.parse(43)
+    end
+
+    if type(publicKey) ~= "table" then
+        if packet.initCom then
+            _G.tacTemp.initiation = packet.hash
+            return err.parse(130)
+        else
+            return err.parse(42)
+        end
     end
 
     local signature = packet.signature
@@ -106,7 +112,10 @@ local function verify(packetMsg, id, dest)
         return err.parse(45)
     end
 
-    if not ecc.verify(publicKey, msg, signature) then
+    local flag
+    local status = pcall(function() flag = ecc.verify(publicKey, msg, signature) end)
+
+    if not status or not flag then
         return err.parse(46)
     end
 
@@ -128,11 +137,12 @@ local function trust(id, publicKey)
     return 0
 end
 
-local function secureSend(id, data)
+local function secureSend(id, data, dest)
+    dest = dest or id
     local e, packet = sign(data)
 
     if e == 0 then
-        return net.send(packet, os.getComputerID(), id)
+        return net.send(packet, os.getComputerID(), id, dest)
     else
         return e, packet
     end
@@ -165,7 +175,8 @@ local function secureReceive(timeout)
     end
 end
 
-local function verifyCommunication(id)
+local function verifyCommunication(id, dest)
+    dest = dest or id
     local e, mess = secureSend(id, {service = true, serviceMessage = "ping"})
 
     if e ~= 0 then
@@ -173,6 +184,7 @@ local function verifyCommunication(id)
     end
 
     _G.tacTemp.waitForPong = true
+    _G.tacTemp.busy = true
 
     local e, data, sender, dest
 
@@ -181,18 +193,142 @@ local function verifyCommunication(id)
         e, data, sender, dest = secureReceive(2)
 
         if e == 0 and sender == id then
+            rednet.send(id, "pong", "service")
             break
         end
     end
 
     _G.tacTemp.waitForPong = false
+    _G.tacTemp.busy = false
 
     if e ~= 0 then
-        return err.parse(121)
+        return e, data
+    end
+end
+
+local function initiateCommunication(id, pass, dest)
+    dest = dest or id
+
+    if type(id) ~= "number" or type(pass) ~= "string" then
+        return err.parse(131)
+    end
+
+    local e, publicKey = net.retrievePublicKey(id, 2)
+
+    if e ~= 0 then
+        return e, publicKey
+    end
+
+    local ss
+    local status = pcall(function()  ss = ecc.exchange(_G.tacTemp.privateKey, publicKey) end)
+
+    if not status or type(ss) ~= "table" then
+        return err.parse(135)
+    end
+
+    local h
+    status = pcall(function()  h = string.char(ecc.sha256.digest(pass)) end)
+
+    if not status or type(h) ~= "string" then
+        return err.parse(134)
+    end
+
+    local eh
+    status = pcall(function() eh = ecc.encrypt(h, ss)  end)
+
+    local e, msg = net.send(textutils.serialise({initCom = true, hash = eh}), os.getComputerID(), id)
+
+    if e ~= 0 then
+        return e, msg
+    end
+
+    _G.tacTemp.busy = true
+
+    local e, packet, sender, dest2
+
+    for i = 1, 30, 1 do
+        e, packet, sender, dest2 = net.receive(10)
+
+        if sender == dest then
+            rednet.send(id, "pong", "service")
+            break
+        end
+    end
+
+    if e ~= 0 then
+        return e, packet
+    end
+
+    _G.tacTemp.busy = false
+    local a
+    status = pcall(function()  a = ecc.decrypt(packet, ss) end)
+
+    if not status or type(a) ~= "string" then
+        return err.parse(132)
+    end
+
+    if a ~= pass then
+        return err.parse(133)
+    end
+
+    return trust(dest, publicKey)
+end
+
+local function confirmCommunication(id, pass, dest)
+    dest = dest or id
+    local e, publicKey = net.retrievePublicKey(id, 2)
+
+    if e ~= 0 then
+        return e, publicKey
+    end
+
+    local ss
+    local status = pcall(function()  ss = ecc.exchange(_G.tacTemp.privateKey, publicKey) end)
+
+    local h
+    status = pcall(function()  h = string.char(ecc.sha256.digest(pass)) end)
+
+    if not status or type(h) ~= "string" then
+        return err.parse(134)
+    end
+
+    if not status or type(ss) ~= "table" then
+        return err.parse(135)
+    end
+
+    local a
+    local status = pcall(function()  a = ecc.decrypt(_G.tacTemp.initiation, ss) end)
+
+    if not status or type(a) ~= "string" then
+        return err.parse(132)
+    end
+
+    if a ~= h then
+        return err.parse(133)
+    end
+
+    local e, mess = trust(dest, publicKey)
+
+    if e ~= 0 then
+        return e, mess
+    end
+
+    local status = pcall(function()  a = ecc.encrypt(pass, ss) end)
+
+    if not status or type(a) ~= "string" then
+        return err.parse(132)
+    end
+
+    local e, msg = net.send(a, os.getComputerID(), id)
+
+    if e ~= 0 then
+        return e, msg
     end
 end
 
 
-tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, retrievePublicKey = retrievePublicKey}
+-- TODO: Add Relays
+
+tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication}
 
 return tac

@@ -1,11 +1,6 @@
-tac = {}
 local err = require("apis/tac-error")
 
-local function handle(frame)
-    if not tac or not _G.tacTemp then
-        printError("TAC-Network: Unable to find TAC-API (is it loaded?)")
-    end
-
+local function handle(frame, id)
     if type(frame) ~= "table" then
         return err.parse(71)
     end
@@ -29,7 +24,7 @@ local function handle(frame)
         return err.parse(74)
     end
 
-    return 0, packet, sender, dest
+    return 0, packet, sender, dest, id
 end
 
 local function prepare(packet, sender, dest)
@@ -43,12 +38,8 @@ end
 local function handleService(msg, id, protocol)
     if msg == "ping" then
         rednet.send(id, "pong", "service")
-    end
-
-    if protocol == "tac_key" then
-        if msg == "public_key" then
-            rednet.send(id, _G.tacTemp.publicKey, protocol)
-        end
+    elseif msg == "public_key" then
+        rednet.send(id, _G.tacTemp.publicKey, "service")
     end
 end
 
@@ -60,10 +51,12 @@ local function receive(timeout)
         return err.parse(91)
     end
 
-    rednet.send(id, "pong", "service")
+    if not _G.tacTemp.busy then
+        rednet.send(id, "pong", "service")
+    end
 
     if protocol ~= "tac" then
-        handleService(frame, id, protocol)
+        local rtn = handleService(frame, id, protocol)
         return receive(timeout)
     end
 
@@ -71,10 +64,12 @@ local function receive(timeout)
         return err.parse(92)
     end
 
-    return handle(frame)
+    return handle(frame, id)
 end
 
-local function send(packet, sender, dest)
+local function send(packet, sender, id, dest)
+    dest = dest or id
+
     local e, frame = prepare(packet, sender, dest)
 
     if e ~= 0 or type(frame) ~= "table" then
@@ -82,7 +77,7 @@ local function send(packet, sender, dest)
     end
 
     for i = 1, 5, 1 do
-        rednet.send(dest, frame, "tac")
+        rednet.send(id, frame, "tac")
         local id, msg = rednet.receive("service", 2)
         if id == dest then
             return 0
@@ -97,8 +92,8 @@ local function retrievePublicKey(id, timeout)
 
     while rid ~= id do
         msg = nil
-        rednet.send(id, "public_key", "tac_key")
-        rid, msg = rednet.receive("tac_key", timeout)
+        rednet.send(id, "public_key", "service")
+        rid, msg = rednet.receive("service", timeout)
         if msg == nil then
             break
         end
