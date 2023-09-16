@@ -67,7 +67,6 @@ while active do
         end
         if status == 130 then
             vui.consoleLog("Incoming communication initiation request from "..tostring(sender).." via "..tostring(id))
-            vui.console("Type 'accept <Passcode>' to confirm")
             _G.tacServerTemp.comID = id
             _G.tacServerTemp.comDest = dest
             _G.tacServerTemp.undergoingCom = true

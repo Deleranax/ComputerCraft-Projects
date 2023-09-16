@@ -181,14 +181,14 @@ end
 
 local function console(mess)
     clearLine(_G.vuiTemp.y)
-    term.setCursorPos(1, _G.vuiTemp.y - 4)
+    term.setCursorPos(1, _G.vuiTemp.y - 3)
 
     local date = os.date("%T")
     print("["..date.."] "..mess)
 
     local x, y = term.getCursorPos()
 
-    term.scroll(math.max(y - _G.vuiTemp.y + 4, 0))
+    term.scroll(math.max(y - _G.vuiTemp.y + 3, 0))
 
     printVendor()
 end
@@ -222,6 +222,7 @@ local function consoleInput()
     local args = {}
     for word in read():gmatch("%w+") do table.insert(args, word) end
     local command = table.remove(args, 1)
+    clearLine(_G.vuiTemp.y - 3)
     return command, args
 end
 
