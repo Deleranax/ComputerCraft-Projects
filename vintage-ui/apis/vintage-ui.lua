@@ -37,9 +37,9 @@ local function printVendor()
     term.setTextColor(colors.white)
 end
 
-local function clearVendor()
+local function clearLine(y)
     term.setBackgroundColor(colors.black)
-    term.setCursorPos(1, _G.vuiTemp.y)
+    term.setCursorPos(1, y)
     term.write(completeLine("", " "))
 end
 
@@ -180,7 +180,7 @@ local function promptPassword(title, size)
 end
 
 local function console(mess)
-    clearVendor()
+    clearLine(_G.vuiTemp.y)
 
     term.setCursorPos(1, _G.vuiTemp.y - 4)
 
@@ -217,10 +217,11 @@ local function consoleLog(mess)
 end
 
 local function consoleInput()
+    clearLine(_G.vuiTemp.y - 3)
     term.setCursorPos(1, _G.vuiTemp.y - 3)
     term.write("> ")
     local args = {}
-    for word in s:gmatch("%w+") do table.insert(args, word) end
+    for word in read():gmatch("%w+") do table.insert(args, word) end
     local command = table.remove(args, 1)
     return command
 end

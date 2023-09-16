@@ -7,7 +7,6 @@ vui.setVendor("TEMVER ACCESS CONTROL SERVER - © TEMVER INCORPORATED")
 vui.setUpMessage("")
 
 local active = true
-local state = vui.printConsoleStatus("Idle")
 local userInput = false
 local command, args, status, message, sender, dest, id
 
@@ -23,6 +22,8 @@ local function commandLoop()
     command, args = vui.consoleInput()
     userInput = true
 end
+
+local state = vui.printConsoleStatus("Idle")
 
 while active do
     parallel.waitForAny(backendLoop, commandLoop)
@@ -50,5 +51,5 @@ while active do
     end
 
     state = vui.printConsoleStatus("Idle")
-    command, args, r1, r2, r3, r4, r5 = nil
+    command, args, status, message, sender, dest, id = nil
 end
