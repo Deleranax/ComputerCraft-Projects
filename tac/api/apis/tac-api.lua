@@ -227,7 +227,7 @@ local function initiateCommunication(id, pass, dest)
     end
 
     local h
-    status = pcall(function()  h = string.char(ecc.sha256.digest(pass)) end)
+    status = pcall(function()  h = string.char(unpack(ecc.sha256.digest(pass))) end)
 
     if not status or type(h) ~= "string" then
         return err.parse(134)
@@ -286,7 +286,7 @@ local function confirmCommunication(id, pass, dest)
     local status = pcall(function()  ss = ecc.exchange(_G.tacTemp.privateKey, publicKey) end)
 
     local h
-    status = pcall(function()  h = string.char(ecc.sha256.digest(pass)) end)
+    status = pcall(function()  h = string.char(unpack(ecc.sha256.digest(pass))) end)
 
     if not status or type(h) ~= "string" then
         return err.parse(134)

@@ -51,13 +51,11 @@ local function receive(timeout)
         return err.parse(91)
     end
 
-    if not _G.tacTemp.busy then
-        rednet.send(id, "pong", "service")
-    end
-
-    if protocol ~= "tac" then
+    if protocol == "service" then
         local rtn = handleService(frame, id, protocol)
         return receive(timeout)
+    elseif not _G.tacTemp.busy then
+        rednet.send(id, "pong", "service")
     end
 
     if type(frame) ~= "table" then
