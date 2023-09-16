@@ -8,6 +8,7 @@ vui.setUpMessage("")
 
 local active = true
 local userInput = false
+local state
 local command, args, status, message, sender, dest, id
 
 local function backendLoop()
@@ -23,7 +24,7 @@ local function commandLoop()
     userInput = true
 end
 
-local state = vui.printConsoleStatus("Idle")
+state = vui.printConsoleStatus("Idle")
 
 while active do
     parallel.waitForAny(backendLoop, commandLoop)

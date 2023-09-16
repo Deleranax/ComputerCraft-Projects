@@ -182,6 +182,8 @@ end
 local function console(mess)
     clearLine(_G.vuiTemp.y)
 
+    term.scroll(1)
+
     term.setCursorPos(1, _G.vuiTemp.y - 4)
 
     local date = os.date("%T")
