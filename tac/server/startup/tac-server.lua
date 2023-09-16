@@ -56,6 +56,9 @@ while active do
                     _G.tacServerTemp.undergoingCom = false
                 end
             end
+        elseif command == "exit" then
+            active = false
+            term.clear()
         end
     else
         if dest ~= nil and dest ~= os.getComputerID() then

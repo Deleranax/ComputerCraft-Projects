@@ -80,10 +80,10 @@ local function sign(data)
     return 0, textutils.serialise({signature = signature, data = msg})
 end
 
-local function verify(packetMsg, id, dest)
-    local publicKey = _G.tacTemp.database.verifiedHosts[id]
+local function verify(packetMsg, sender, dest, id)
+    local publicKey = _G.tacTemp.database.verifiedHosts[sender]
 
-    if type(packetMsg) ~= "string" or type(id) ~= "number" then
+    if type(packetMsg) ~= "string" or type(sender) ~= "number" then
         return err.parse(41)
     end
 
@@ -95,7 +95,11 @@ local function verify(packetMsg, id, dest)
 
     if packet.initCom then
         _G.tacTemp.initiation = packet.hash
-        return err.parse(130)
+        local rtn = {err.parse(130)}
+        table.insert(rtn, sender)
+        table.insert(rtn, dest)
+        table.insert(rtn, id)
+        return unpack(rtn)
     end
 
     if type(publicKey) ~= "table" then
@@ -127,7 +131,7 @@ local function verify(packetMsg, id, dest)
         return err.parse(47)
     end
 
-    return 0, data, id, dest
+    return 0, data, sender, dest
 end
 
 local function trust(id, publicKey)
@@ -175,7 +179,7 @@ local function secureReceive(timeout)
     local e, packet, sender, dest, id = net.receive(timeout)
 
     if e == 0 then
-        local e2, data, sender2, dest2 = verify(packet, sender, dest)
+        local e2, data, sender2, dest2 = verify(packet, sender, dest, id)
 
         if e2 ~= 0 then
             return e2, data
