@@ -54,19 +54,24 @@ end
 
 
 local function receive(timeout)
-    local id, frameMsg, protocol = rednet.receive(timeout)
-    rednet.send(id, "pong", "service")
+    local id, frame, protocol = rednet.receive(timeout)
 
-    if protocol ~= "tac" then
-        handleService(frameMsg, id, protocol)
-        return receive(timeout)
-    end
-
-    if type(frameMsg) ~= "table" then
+    if type(id) ~= "number" then
         return err.parse(91)
     end
 
-    return handle(frameMsg)
+    rednet.send(id, "pong", "service")
+
+    if protocol ~= "tac" then
+        handleService(frame, id, protocol)
+        return receive(timeout)
+    end
+
+    if type(frame) ~= "table" then
+        return err.parse(92)
+    end
+
+    return handle(frame)
 end
 
 local function send(packet, sender, dest)
@@ -78,7 +83,7 @@ local function send(packet, sender, dest)
 
     for i = 1, 5, 1 do
         rednet.send(dest, frame, "tac")
-        local id, msg, protocol = rednet.receive(2)
+        local id, msg = rednet.receive("service", 2)
         if id == dest then
             return 0
         end
@@ -87,4 +92,27 @@ local function send(packet, sender, dest)
     return err.parse(101)
 end
 
-return { handle = handle, prepare = prepare, receive = receive, send = send }
+local function retrievePublicKey(id, timeout)
+    local rid, msg = -1
+
+    while rid ~= id do
+        msg = nil
+        rednet.send(id, "public_key", "tac_key")
+        rid, msg = rednet.receive("tac_key", timeout)
+        if msg == nil then
+            break
+        end
+    end
+
+    if rid ~= id then
+        return err.parse(61)
+    end
+
+    if type(msg) ~= "table" then
+        return err.parse(62)
+    end
+
+    return 0, msg
+end
+
+return { handle = handle, prepare = prepare, receive = receive, send = send, retrievePublicKey = retrievePublicKey }

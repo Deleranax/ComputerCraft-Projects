@@ -21,8 +21,10 @@ local errors = {
     [74] = "Unable to read content",
     [81] = "Invalid content or sender or dest",
     [91] = "Timed Out",
+    [92] = "Incorrect message",
     [101] = "No response after 5 retry",
-    [111] = "Unable to generate keypair"
+    [111] = "Unable to generate keypair",
+    [121] = "Unable to verify after 5 retry"
 }
 
 local function parse(int, ...)

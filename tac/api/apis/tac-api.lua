@@ -2,7 +2,7 @@ ecc = require("apis/ecc")
 net = require("apis/tac-network")
 err = require("apis/tac-error")
 
-_G["tacTemp"] = {database = {seed = ecc.random.random(), verifiedHosts = {}}, publicKey = {}, privateKey = {}}
+_G["tacTemp"] = {database = {seed = ecc.random.random(), verifiedHosts = {}}, publicKey = {}, privateKey = {}, waitForPong = false}
 
 local function loadDatabase()
 
@@ -128,16 +128,6 @@ local function trust(id, publicKey)
     return 0
 end
 
-local function secureReceive(timeout)
-    local e, packet, sender, dest = net.receive(timeout)
-
-    if e == 0 then
-        return verify(packet, sender, dest)
-    else
-        return e, packet
-    end
-end
-
 local function secureSend(id, data)
     local e, packet = sign(data)
 
@@ -148,31 +138,61 @@ local function secureSend(id, data)
     end
 end
 
--- Retrieve public key for directly connected computers only
-local function retrievePublicKey(id, timeout)
-    rednet.send(id, "public_key", "tac_key")
+local function handleService(data, sender, dest)
+    if data.serviceMessage == "ping" then
+        secureSend(sender, {service = true, serviceMessage = "pong"})
+    elseif data.serviceMessage == "pong" and _G.tacTemp.waitForPong then
+        return "pong"
+    end
+end
 
-    local rid, msg = -1
+local function secureReceive(timeout)
+    local e, packet, sender, dest = net.receive(timeout)
 
-    while rid ~= id do
-        msg = nil
-        rid, msg = rednet.receive("tac_key", timeout)
-        if msg == nil then
+    if e == 0 then
+        local e2, data, sender2, dest2 = verify(packet, sender, dest)
+
+        if data.service then
+            local rtn = handleService(data, sender, dest)
+            if not rtn then
+                return secureReceive(timeout)
+            else
+                return 0, rtn, sender, dest
+            end
+        end
+    else
+        return e, packet, sender, dest
+    end
+end
+
+local function verifyCommunication(id)
+    local e, mess = secureSend(id, {service = true, serviceMessage = "ping"})
+
+    if e ~= 0 then
+        return e, mess
+    end
+
+    _G.tacTemp.waitForPong = true
+
+    local e, data, sender, dest
+
+    for i = 1, 5, 1 do
+
+        e, data, sender, dest = secureReceive(2)
+
+        if e == 0 and sender == id then
             break
         end
     end
 
-    if rid ~= id then
-        return err.parse(61)
-    end
+    _G.tacTemp.waitForPong = false
 
-    if type(msg) ~= "table" then
-        return err.parse(62)
+    if e ~= 0 then
+        return err.parse(121)
     end
-
-    return 0, msg
 end
 
-tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureSend, retrievePublicKey = retrievePublicKey}
+
+tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, retrievePublicKey = retrievePublicKey}
 
 return tac
