@@ -269,13 +269,13 @@ local function initiateCommunication(id, pass, dest)
 
     _G.tacTemp.busy = true
 
-    local e, packet, sender, dest2
+    local e, packet, sender, dest2, id2
 
     for i = 1, 30, 1 do
-        e, packet, sender, dest2 = net.receive(10)
+        e, packet, sender, dest2, id2 = net.receive(10)
 
         if sender == dest then
-            rednet.send(id, "pong", "service")
+            rednet.send(id2, "pong", "service")
             break
         end
     end

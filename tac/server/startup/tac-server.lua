@@ -78,3 +78,5 @@ while active do
     state = vui.printConsoleStatus("Idle")
     command, args, status, message, sender, dest, id = nil
 end
+
+tac.saveDatabase()
