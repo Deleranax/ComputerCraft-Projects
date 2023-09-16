@@ -225,7 +225,7 @@ local function consoleInput()
     local args = {}
     for word in read():gmatch("%w+") do table.insert(args, word) end
     local command = table.remove(args, 1)
-    return command
+    return command, args
 end
 
 local function printConsoleStatus(mess)

@@ -1,7 +1,7 @@
 local tac = require("/apis/tac-api")
 local vui = require("/apis/vintage-ui")
 
-_G["tacServerTemp"] = {comID = nil, comDest = nil}
+_G["tacServerTemp"] = {undergoingCom = false, comID = nil, comDest = nil}
 
 vui.setVendor("TAC SERVER - © TEMVER INCORPORATED")
 vui.setUpMessage("")
@@ -24,6 +24,18 @@ local function commandLoop()
     userInput = true
 end
 
+state = vui.printConsoleStatus("Initialisation")
+
+vui.consoleLog("Initialisation...")
+
+status, message = tac.initialise()
+
+if status ~= 0 then
+    vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
+end
+
+vui.consoleLog("Done.")
+
 state = vui.printConsoleStatus("Idle")
 
 while active do
@@ -32,11 +44,16 @@ while active do
     state = vui.printConsoleStatus("Busy")
     if userInput then
         if command == "accept" then
+            if not _G.tacServerTemp.undergoingCom then
+                vui.console("There is no communication initiation waiting for approval.")
+            end
             status, message =  tac.confirmCommunication(_G.tacServerTemp.comID, tostring(args[1]), _G.tacServerTemp.comDest)
             if status == 0 then
                 vui.consoleLog("Communication initiation successfully confirmed for "..tostring(_G.tacServerTemp.comDest).." via ".._G.tacServerTemp.comID)
+                _G.tacServerTemp.undergoingCom = false
             else
                 vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
+                _G.tacServerTemp.undergoingCom = false
             end
         end
     else
@@ -46,6 +63,7 @@ while active do
         if status == 130 then
             vui.consoleLog("Incoming communication initiation request from "..tostring(sender).." via "..tostring(id))
             vui.console("Type 'accept <passcode>' confirm")
+            _G.tacServerTemp.undergoingCom = true
         elseif status ~= 0 then
             vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
         end
