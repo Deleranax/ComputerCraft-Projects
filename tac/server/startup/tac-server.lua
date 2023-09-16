@@ -3,7 +3,7 @@ local vui = require("/apis/vintage-ui")
 
 _G["tacServerTemp"] = {comID = nil, comDest = nil}
 
-vui.setVendor("TEMVER ACCESS CONTROL SERVER - © TEMVER INCORPORATED")
+vui.setVendor("TAC SERVER - © TEMVER INCORPORATED")
 vui.setUpMessage("")
 
 local active = true
