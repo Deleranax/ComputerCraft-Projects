@@ -30,7 +30,10 @@ local errors = {
     [132] = "Unable to encrypt/decrypt",
     [133] = "Wrong passcode",
     [134] = "Unable to hash",
-    [135] = "Unable to compute shared secret"
+    [135] = "Unable to compute shared secret",
+    [136] = "Already initiated",
+    [141] = "Invalid ID",
+    [142] = "Host is not marked as trusted"
 }
 
 local function parse(int, ...)

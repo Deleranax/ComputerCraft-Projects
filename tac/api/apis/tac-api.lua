@@ -91,13 +91,13 @@ local function verify(packetMsg, id, dest)
         return err.parse(43)
     end
 
+    if packet.initCom then
+        _G.tacTemp.initiation = packet.hash
+        return err.parse(130)
+    end
+
     if type(publicKey) ~= "table" then
-        if packet.initCom then
-            _G.tacTemp.initiation = packet.hash
-            return err.parse(130)
-        else
-            return err.parse(42)
-        end
+        return err.parse(42)
     end
 
     local signature = packet.signature
@@ -134,6 +134,19 @@ local function trust(id, publicKey)
     end
 
     table.insert(_G.tacTemp.database.verifiedHosts, id, publicKey)
+    return 0
+end
+
+local function doubt(id)
+    if type(id) ~= "number" then
+        return err.parse(141)
+    end
+
+    if not _G.tacTemp.database.verifiedHosts[id] then
+        return err.parse(142)
+    end
+
+    _G.tacTemp.database.verifiedHosts[id] = nil
     return 0
 end
 
@@ -217,6 +230,10 @@ local function initiateCommunication(id, pass, dest)
 
     if type(id) ~= "number" or type(pass) ~= "string" then
         return err.parse(131)
+    end
+
+    if _G.tacTemp.database.verifiedHosts[id] then
+        return err.parse(136)
     end
 
     local e, publicKey = net.retrievePublicKey(id, 2)
