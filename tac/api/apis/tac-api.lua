@@ -1,6 +1,6 @@
-ecc = require("apis/ecc")
-net = require("apis/tac-network")
-err = require("apis/tac-error")
+local ecc = require("apis/ecc")
+local net = require("apis/tac-network")
+local err = require("apis/tac-error")
 
 _G["tacTemp"] = {database = {seed = ecc.random.random(), verifiedHosts = {}}, publicKey = {}, privateKey = {}, waitForPong = false}
 

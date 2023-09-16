@@ -1,5 +1,5 @@
 tac = {}
-err = require("apis/tac-error")
+local err = require("apis/tac-error")
 
 local function handle(frame)
     if not tac or not _G.tacTemp then
