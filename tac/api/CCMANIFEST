@@ -2,3 +2,4 @@
 Deleranax
 apis/tac-api.lua
 apis/tac-network.lua
+apis/tac-error.lua

@@ -1,4 +1,5 @@
 tac = {}
+err = require("apis/tac-error")
 
 local function handle(frame)
     if not tac or not _G.tacTemp then
@@ -6,25 +7,26 @@ local function handle(frame)
     end
 
     if type(frame) ~= "table" then
-        return 71, "Unable to read frame"
+        return err.parse(71)
     end
 
     local header = frame.header
 
     if type(header) ~= "table" then
-        return 72, "Missing header"
+        return err.parse(72)
     end
 
-    local sender, dest = table.unpack(header)
+    local sender = header.sender
+    local dest = header.dest
 
     if type(sender) ~= "number" or type(dest) ~= "number" then
-        return 73, "Malformed header or unable to read it"
+        return err.parse(73)
     end
 
-    local packet = data.packet
+    local packet = frame.packet
 
     if type(packet) ~= "string" then
-        return 74, "Unable to read content"
+        return err.parse(74)
     end
 
     return 0, packet, sender, dest
@@ -32,7 +34,7 @@ end
 
 local function prepare(packet, sender, dest)
     if type(packet) ~= "string" or type(sender) ~= "number" or type(dest) ~= "number" then
-        return 81, "Invalid content or sender or dest"
+        return err.parse(81)
     end
 
     return 0, {header = {sender = sender, dest = dest}, packet = packet}
@@ -60,29 +62,29 @@ local function receive(timeout)
         return receive(timeout)
     end
 
-    if type(frameMsg) ~= "string" then
-        return 91, "Timed Out"
+    if type(frameMsg) ~= "table" then
+        return err.parse(91)
     end
 
     return handle(frameMsg)
 end
 
 local function send(packet, sender, dest)
-    local err, frame = prepare(packet, sender, dest)
+    local e, frame = prepare(packet, sender, dest)
 
-    if err ~= 0 or type(frame) ~= "table" then
-        return err, frame
+    if e ~= 0 or type(frame) ~= "table" then
+        return e, frame
     end
 
     for i = 1, 5, 1 do
-        rednet.send(dest, frame)
+        rednet.send(dest, frame, "tac")
         local id, msg, protocol = rednet.receive(2)
-        if id == os.getComputerID() then
+        if id == dest then
             return 0
         end
     end
 
-    return 101, "No response after 5 retry"
+    return err.parse(101)
 end
 
 return { handle = handle, prepare = prepare, receive = receive, send = send }

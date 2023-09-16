@@ -1,7 +1,8 @@
 ecc = require("apis/ecc")
 net = require("apis/tac-network")
+err = require("apis/tac-error")
 
-_G["tacTemp"] = {database = {seed = ecc.random.random(), verifiedHosts = {}}, publicKey = nil, privateKey = nil}
+_G["tacTemp"] = {database = {seed = ecc.random.random(), verifiedHosts = {}}, publicKey = {}, privateKey = {}}
 
 local function loadDatabase()
 
@@ -11,19 +12,16 @@ local function loadDatabase()
         file.close()
 
         if not msg then
-            return 11, "Unable to load DataBase's File"
+            return err.parse(11)
         end
 
         local database = textutils.unserialise(msg)
 
         if not database then
-            return 12, "Unable to load DataBase"
+            return err.parse(12)
         end
-
-        _G.tacTemp.database = database
-        _G.tacTemp.privateKey, _G.tacTemp.publicKey = ecc.keypair(_G.tacTemp.database.seed)
     else
-        return 13, "DataBase is missing"
+        return err.parse(13)
     end
 
     return 0
@@ -33,7 +31,7 @@ local function saveDatabase()
     local msg = textutils.serialise(_G.tacTemp.database)
 
     if type(msg) ~= "string" then
-        return 21, "Unable to save database"
+        return err.parse(21)
     end
 
     local file = fs.open("/.tac", "w")
@@ -43,17 +41,35 @@ local function saveDatabase()
     return 0
 end
 
+local function initialise()
+    local e, msg = loadDatabase()
+
+    _G.tacTemp.privateKey, _G.tacTemp.publicKey = ecc.keypair(_G.tacTemp.database.seed)
+
+    if not _G.tacTemp.privateKey or not _G.tacTemp.publicKey then
+        return err.parse(111)
+    end
+
+    if e == 13 then
+        saveDatabase()
+    end
+
+    if e ~= 0 then
+        return e, msg
+    end
+end
+
 local function sign(data)
     local msg = textutils.serialise(data)
 
     if not msg then
-        return 31, "Unable to write data"
+        return err.parse(31)
     end
 
     local signature = ecc.sign(_G.tacTemp.privateKey, msg)
 
     if not signature then
-        return 32, "Unable to compute certificate"
+        return err.parse(32)
     end
 
     return 0, textutils.serialise({signature = signature, data = msg})
@@ -63,39 +79,39 @@ local function verify(packetMsg, id, dest)
     local publicKey = _G.tacTemp.database.verifiedHosts[id]
 
     if type(packetMsg) ~= "string" or type(id) ~= "number" then
-        return 41, "Unable to read packet (wrong type) or ID"
+        return err.parse(41)
     end
 
     if type(publicKey) ~= "table" then
-        return 42, "Host is not verified"
+        return err.parse(42)
     end
 
     local packet = textutils.unserialise(packetMsg)
 
     if type(packet) ~= "table" then
-        return 43, "Unable to read packet"
+        return err.parse(43)
     end
 
     local signature = packet.signature
 
     if type(signature) ~= "table" then
-        return 44, "Unable to read signature"
+        return err.parse(44)
     end
 
     local msg = packet.data
 
     if type(msg) ~= "string" then
-        return 45, "Unable to read data"
+        return err.parse(45)
     end
 
     if ecc.verify(publicKey, msg, signature) then
-        return 46, "Invalid certificate: Host("..h..") and Local("..h2..")"
+        return err.parse(46, h, h2)
     end
 
     local data = textutils.unserialise(msg)
 
     if type(data) ~= "table" then
-        return 47, "Unable to unpack data"
+        return err.parse(47)
     end
 
     return 0, data, id, dest
@@ -103,7 +119,7 @@ end
 
 local function trust(id, publicKey)
     if type(id) ~= "number" or type(publicKey) ~= "table" then
-        return 51, "Invalid ID or public key"
+        return err.parse(51)
     end
 
     table.insert(_G.tacTemp.database.verifiedHosts, id, publicKey)
@@ -111,22 +127,22 @@ local function trust(id, publicKey)
 end
 
 local function secureReceive(timeout)
-    local err, packet, sender, dest = net.receive(timeout)
+    local e, packet, sender, dest = net.receive(timeout)
 
-    if err == 0 then
+    if e == 0 then
         return verify(packet, sender, dest)
     else
-       return err, packet
+       return e, packet
     end
 end
 
 local function secureSend(id, data)
-    local err, packet = sign(data)
+    local e, packet = sign(data)
 
-    if err == 0 then
+    if e == 0 then
         return net.send(packet, os.getComputerID(), id)
     else
-        return err, packet
+        return e, packet
     end
 end
 
@@ -145,11 +161,11 @@ local function retrievePublicKey(id, timeout)
     end
 
     if rid ~= id then
-        return 61, "Unable to contact host"
+        return err.parse(61)
     end
 
     if type(msg) ~= "table" then
-        return 62, "Unable to read key"
+        return err.parse(62)
     end
 
     return 0, msg
