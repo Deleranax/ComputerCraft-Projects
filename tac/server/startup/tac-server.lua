@@ -59,6 +59,7 @@ while active do
         elseif command == "exit" then
             active = false
             term.clear()
+            term.setCursorPos(1,1)
         end
     else
         if dest ~= nil and dest ~= os.getComputerID() then
