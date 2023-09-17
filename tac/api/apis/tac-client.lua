@@ -83,6 +83,7 @@ local function connect(host, id, userHash, userCode)
         local request = {...}
         table.insert(request, 1, sHash)
         table.insert(request, 2, sCode)
+        table.insert(request, 3, requestType)
 
         return tac.secureSend(id, request, host)
     end
