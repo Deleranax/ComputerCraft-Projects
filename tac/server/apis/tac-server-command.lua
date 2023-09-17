@@ -4,16 +4,17 @@ local tpm = require("/apis/tpm-api")
 
 local function com(command, args)
     if command == "help" then
-        vui.console("Usage: ")
+        vui.console("-- Usage --")
         vui.console("accept <passcode>")
-        vui.console("action <create/remove> <name> [perm] [id] [dest]")
+        vui.console("action <update/remove> <name> [perm] [id] [dest]")
         vui.console("actions")
         vui.console("perm <user> [level]")
-        vui.console("user <create/remove> <username> <passcode>")
+        vui.console("user <update/remove> <username> <passcode>")
         vui.console("users")
         vui.console("update")
         vui.console("reboot")
         vui.console("exit")
+        vui.console("-- Usage --")
         return
     elseif command == "accept" then
         if not _G.tacServerTemp.undergoingCom then
@@ -67,7 +68,7 @@ local function com(command, args)
         os.reboot()
         return
     elseif command == "user" then
-        if args[1] == "create" then
+        if args[1] == "update" then
             local name = args[2]
             local passcode = args[3]
 
@@ -105,19 +106,19 @@ local function com(command, args)
 
                 _G.tacTemp.database.users[hashName] = nil
                 vui.log("Deleting user "..name)
-                vui.console("User successfully deleted")
+                vui.console("User successfully updated")
                 return
             end
         end
     elseif command == "users" then
         vui.console("-- Users --")
         for k, v in pairs(_G.tacTemp.database.users) do
-            vui.console(string.format("%20s %3d", v.name, v.perm))
+            vui.console(string.format("%20s  %3d", v.name, v.perm))
         end
         vui.console("-- Users --")
         return
     elseif command == "action" then
-        if args[1] == "create" then
+        if args[1] == "update" then
             local name = args[2]
             local perm = tonumber(args[3])
             local id = tonumber(args[4])
@@ -126,7 +127,7 @@ local function com(command, args)
             if type(name) == "string" and type(perm) == "number" and type(id) == "number" and type(dest) == "number" then
                 _G.tacTemp.database.actions[name] = {perm = perm, id = id, dest = dest}
                 vui.log("Creating action "..name.." requiring permission level "..perm.." performed on "..dest.." via "..id)
-                vui.console("Action successfully created")
+                vui.console("Action successfully updated")
                 return
             end
         elseif args[1] == "remove" then
@@ -142,13 +143,13 @@ local function com(command, args)
     elseif command == "actions" then
         vui.console("-- Actions --")
         for k, v in pairs(_G.tacTemp.database.actions) do
-            vui.console(string.format("%20s %3d %3d %3d", k, v.perm, v.id, v.dest))
+            vui.console(string.format("%20s  %3d  %3d  %3d", k, v.perm, v.id, v.dest))
         end
         vui.console("-- Actions --")
         return
     elseif command == "perm" then
-        local name = args[2]
-        local perm = tonumber(args[3])
+        local name = args[1]
+        local perm = tonumber(args[2])
         if type(name) == "string" and type(perm) == "number" then
             local e, hashName = tac.client.hash(name)
 

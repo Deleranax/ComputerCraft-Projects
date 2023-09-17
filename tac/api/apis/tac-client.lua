@@ -143,13 +143,13 @@ local function connect(host, id, userHash, userCode)
 
     local connection = {host = host, id = id, userHash = sHash, userCode = sCode, boundUser = boundUser, requireAction = requireAction, confirmAction = confirmAction}
 
-    local e, mess = sendRequest(connection, "auth")
+    local e, mess = sendRequest("auth")
 
     if e ~= 0 then
         return e, mess
     end
 
-    return e, mess
+    return 0, connection
 end
 
 return {encryptFor = encryptFor, decryptFrom = decryptFrom, hash = hash, connect = connect}
