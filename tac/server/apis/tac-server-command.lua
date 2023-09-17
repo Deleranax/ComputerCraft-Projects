@@ -6,6 +6,7 @@ local function com(command, args)
     if command == "help" then
         vui.console("-- Usage --")
         vui.console("accept <passcode>")
+        vui.console("doubt <id>")
         vui.console("action <update/remove> <name> [perm] [id] [dest]")
         vui.console("actions")
         vui.console("perm <user> [level]")
@@ -23,7 +24,7 @@ local function com(command, args)
         else
             local status, message =  tac.confirmCommunication(_G.tacServerTemp.comID, tostring(args[1]), _G.tacServerTemp.comDest)
             if status == 0 then
-                vui.consoleLog("Communication initiation successfully confirmed for "..tostring(_G.tacServerTemp.comDest).." via ".._G.tacServerTemp.comID)
+                vui.consoleLog("Communication initiation successfully confirmed for ID"..tostring(_G.tacServerTemp.comDest).." via ID".._G.tacServerTemp.comID)
                 _G.tacServerTemp.undergoingCom = false
                 return
             else
@@ -31,6 +32,19 @@ local function com(command, args)
                 _G.tacServerTemp.undergoingCom = false
                 return
             end
+        end
+    elseif command == "doubt" then
+        local id = tonumber(args[1])
+
+        if type(id) == "number" then
+            local e, mess = tac.doubt(id)
+            if e ~= 0 then
+                vui.console("Error "..tostring(e)..": "..tostring(mess))
+                return
+            end
+            vui.log("Doubting ID"..id)
+            vui.console("Successfully flagged host as unverified")
+            return
         end
     elseif command == "exit" then
         tac.saveDatabase()
@@ -126,7 +140,7 @@ local function com(command, args)
 
             if type(name) == "string" and type(perm) == "number" and type(id) == "number" and type(dest) == "number" then
                 _G.tacTemp.database.actions[name] = {perm = perm, id = id, dest = dest}
-                vui.log("Creating action "..name.." requiring permission level "..perm.." performed on "..dest.." via "..id)
+                vui.log("Creating action "..name.." requiring permission level "..perm.." performed on ID"..dest.." via ID"..id)
                 vui.console("Action successfully updated")
                 return
             end

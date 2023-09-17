@@ -56,12 +56,12 @@ local function process()
         end
     else
         if dest ~= nil and dest ~= os.getComputerID() then
-            vui.consoleLog("Ignored message from "..tostring(sender).." via "..tostring(sender).." for "..tostring(dest))
+            vui.consoleLog("Ignored message from ID"..tostring(sender).." via ID"..tostring(sender).." for ID"..tostring(dest))
         end
         if status == 42 then
 
         elseif status == 130 then
-            vui.consoleLog("Incoming communication initiation request from "..tostring(sender).." via "..tostring(id))
+            vui.consoleLog("Incoming communication initiation request from ID"..tostring(sender).." via ID"..tostring(id))
             _G.tacServerTemp.comID = id
             _G.tacServerTemp.comDest = sender
             _G.tacServerTemp.undergoingCom = true
@@ -69,7 +69,7 @@ local function process()
             vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
             return
         else
-            vui.consoleLog("Processing request from "..tostring(sender).." via "..tostring(id))
+            vui.consoleLog("Processing request from ID"..tostring(sender).." via ID"..tostring(id))
             local e, userHash = tac.client.decryptFrom(message[1], sender)
 
             if e ~= 0 then
