@@ -67,13 +67,13 @@ local function connect(host, id, userHash, userCode)
         return err.parse(171)
     end
 
-    local e, sHash encryptFor(userHash, host)
+    local e, sHash = encryptFor(userHash, host)
 
     if e ~= 0 then
         return e, sHash
     end
 
-    local e, sCode encryptFor(userCode, host)
+    local e, sCode = encryptFor(userCode, host)
 
     if e ~= 0 then
         return e, sCode
@@ -147,6 +147,16 @@ local function connect(host, id, userHash, userCode)
 
     if e ~= 0 then
         return e, mess
+    end
+
+    local e, mess = waitRequest(2)
+
+    if e ~= 0 then
+        return e, mess
+    end
+
+    if mess.code ~= 200 then
+        return err.parse(173, tonumber(mess.code))
     end
 
     return 0, connection

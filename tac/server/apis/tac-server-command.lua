@@ -13,6 +13,7 @@ local function com(command, args)
         vui.console("user <update/remove> <username> <passcode>")
         vui.console("users")
         vui.console("update")
+        vui.console("clear")
         vui.console("reboot")
         vui.console("exit")
         vui.console("-- Usage --")
@@ -51,6 +52,10 @@ local function com(command, args)
         _G.tacServerTemp.active = false
         term.clear()
         term.setCursorPos(1,1)
+        return
+    elseif command == "clear" then
+        term.clear()
+        vui.console("Cleared")
         return
     elseif command == "reboot" then
         tac.saveDatabase()

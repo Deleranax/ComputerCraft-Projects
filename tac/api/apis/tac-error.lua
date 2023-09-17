@@ -40,7 +40,8 @@ local errors = {
     [153] = "Unable to encrypt/decrypt",
     [161] = "Unable to hash",
     [171] = "Unauthenticated user",
-    [172] = "Request timed out"
+    [172] = "Request timed out",
+    [173] = "Server refused request (Error %d)"
 }
 
 local function parse(int, ...)
