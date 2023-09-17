@@ -1,5 +1,8 @@
 local tac = require("/apis/tac-api")
 local vui = require("/apis/vintage-ui")
+local tpm = require("/apis/tpm")
+local req = require("/apis/tac-request")
+local com = require("/apis/tac-server-command")
 
 local present = false
 for _, side in pairs(rs.getSides()) do
@@ -36,24 +39,7 @@ local function commandLoop()
     userInput = true
 end
 
-state = vui.printConsoleStatus("Initialisation")
-
-vui.consoleLog("Initialisation...")
-
-status, message = tac.initialise()
-
-if status ~= 0 then
-    vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
-end
-
-vui.consoleLog("Done.")
-
-state = vui.printConsoleStatus("Idle")
-
-while active do
-    parallel.waitForAny(backendLoop, commandLoop)
-
-    state = vui.printConsoleStatus("Busy")
+local function process()
     if userInput then
         if command == "accept" then
             if not _G.tacServerTemp.undergoingCom then
@@ -69,9 +55,39 @@ while active do
                 end
             end
         elseif command == "exit" then
+            tac.saveDatabase()
             active = false
             term.clear()
             term.setCursorPos(1,1)
+        elseif command == "reboot" then
+            tac.saveDatabase()
+            active = false
+            os.reboot()
+        elseif command == "update" then
+            tac.saveDatabase()
+            active = false
+            term.clear()
+            term.setCursorPos(1,1)
+            tpm.updateDatabase()
+            local update = 0
+            local installed = 0
+            for k, v in pairs(tpm.getInstalledPackages()) do
+                if (tpm.get(k) == nil) then
+                    print(k .. " is no longer available, skipping.")
+                elseif v.version ~= tpm.get(k)["version"] then
+                    update = update + 1
+                    print("\nUpdating " .. k .. "...")
+                    tpm.remove(k, true)
+                    installed = installed + tpm.install(k, args[2] == "-force") - 1
+                end
+            end
+            if update == 0 then
+                print("All packages are up to date.")
+                return
+            end
+            print(update .. " upgraded, " .. installed .. " newly installed.")
+            sleep(5)
+            os.reboot()
         end
     else
         if dest ~= nil and dest ~= os.getComputerID() then
@@ -84,8 +100,93 @@ while active do
             _G.tacServerTemp.undergoingCom = true
         elseif status ~= 0 then
             vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
+            return
+        else
+            vui.consoleLog("Processing request from "..tostring(sender).." via "..tostring(id))
+            local e, userHash = tac.decryptFrom(message[1], sender)
+
+            if e ~= 0 then
+                vui.consoleLog("Error "..tostring(e)..": "..tostring(userHash))
+                local e, mess = tac.secureSend(id, {error=400}, sender)
+                if e == 0 then
+                    return
+                end
+                return
+            end
+
+            local e, code tac.decryptFrom(message[2], sender)
+
+            if e ~= 0 then
+                vui.consoleLog("Error "..tostring(e)..": "..tostring(code))
+                local e, mess = tac.secureSend(id, {error=400}, sender)
+                if e == 0 then
+                    return
+                end
+                return
+            end
+
+            if not _G.tacTemp.database.users[userHash] then
+                vui.consoleLog("Refused: Unregistered user")
+                local e, mess = tac.secureSend(id, {error=401}, sender)
+                if e == 0 then
+                    return
+                end
+                vui.consoleLog("Error "..tostring(e)..": "..tostring(mess))
+                return
+            end
+
+            local localUser = _G.tacTemp.database.users[userHash]
+
+            local e, h = tac.hash(code)
+
+            if e ~= 0 then
+                vui.consoleLog("Error "..tostring(e)..": "..tostring(h))
+                local e, mess = tac.secureSend(id, {error=400}, sender)
+                if e == 0 then
+                    return
+                end
+                return
+            end
+
+            if not localUser.passHash ~= h then
+                vui.consoleLog("Refused: Wrong credentials")
+                local e, mess = tac.secureSend(id, {error=401})
+                if e == 0 then
+                    return
+                end
+                vui.consoleLog("Error "..tostring(e)..": "..tostring(mess))
+                return
+            end
+
+            vui.console(tostring(message[3]))
         end
     end
+end
+
+state = vui.printConsoleStatus("Initialisation")
+
+vui.consoleLog("Initialisation...")
+
+status, message = tac.initialise()
+
+if not _G.tacTemp.database.users then
+    _G.tacTemp.database.users = {}
+end
+
+if status ~= 0 then
+    vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
+end
+
+vui.consoleLog("Done.")
+
+state = vui.printConsoleStatus("Idle")
+
+while active do
+    parallel.waitForAny(backendLoop, commandLoop)
+
+    state = vui.printConsoleStatus("Busy")
+
+    process()
 
     state = vui.printConsoleStatus("Idle")
     command, args, status, message, sender, dest, id = nil

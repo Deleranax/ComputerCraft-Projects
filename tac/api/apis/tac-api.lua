@@ -261,6 +261,10 @@ local function initiateCommunication(id, pass, dest)
     local eh
     status = pcall(function() eh = string.char(unpack(ecc.encrypt(h, ss)))  end)
 
+    if not status or type(eh) ~= "string" then
+        return err.parse(132)
+    end
+
     local e, msg = net.send(textutils.serialise({initCom = true, hash = eh}), os.getComputerID(), id)
 
     if e ~= 0 then
@@ -302,6 +306,10 @@ end
 local function confirmCommunication(id, pass, dest)
     dest = dest or id
     local e, publicKey = net.retrievePublicKey(id, 2)
+
+    if _G.tacTemp.database.verifiedHosts[id] then
+        return err.parse(136)
+    end
 
     if e ~= 0 then
         return e, publicKey
@@ -354,9 +362,67 @@ local function confirmCommunication(id, pass, dest)
     return 0
 end
 
+local function encryptFor(mess, dest)
+    local publicKey = _G.tacTemp.database.verifiedHosts[dest]
+
+    if type(publicKey) ~= "table" then
+        return err.parse(151)
+    end
+
+    local ss
+    local status = pcall(function()  ss = ecc.exchange(_G.tacTemp.privateKey, publicKey) end)
+
+    if not status or type(ss) ~= "table" then
+        return err.parse(152)
+    end
+
+    local eh
+    status = pcall(function() eh = string.char(unpack(ecc.encrypt(mess, ss)))  end)
+
+    if not status or type(eh) ~= "string" then
+        return err.parse(153)
+    end
+
+    return 0, eh
+end
+
+local function decryptFrom(mess, sender)
+    local publicKey = _G.tacTemp.database.verifiedHosts[sender]
+
+    if type(publicKey) ~= "table" then
+        return err.parse(151)
+    end
+
+    local ss
+    local status = pcall(function()  ss = ecc.exchange(_G.tacTemp.privateKey, publicKey) end)
+
+    if not status or type(ss) ~= "table" then
+        return err.parse(152)
+    end
+
+    local eh
+    status = pcall(function() eh = string.char(unpack(ecc.decrypt(mess, ss)))  end)
+
+    if not status or type(eh) ~= "string" then
+        return err.parse(153)
+    end
+
+    return 0, eh
+end
+
+local function hash(mess)
+    local h
+    status = pcall(function()  h = string.char(unpack(ecc.sha256.digest(pass))) end)
+
+    if not status or type(h) ~= "string" then
+        return err.parse(134)
+    end
+
+    return 0, h
+end
 
 -- TODO: Add Relays
 
-tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication}
+tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication, encryptFor = encryptFor, decryptFrom = decryptFrom, hash = hash}
 
 return tac

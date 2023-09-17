@@ -34,7 +34,11 @@ local errors = {
     [135] = "Unable to compute shared secret",
     [136] = "Already initiated",
     [141] = "Invalid ID",
-    [142] = "Host is not marked as trusted"
+    [142] = "Host is not marked as trusted",
+    [151] = "Host is not verified",
+    [152] = "Unable to compute shared secret",
+    [153] = "Unable to encrypt/decrypt",
+    [161] = "Unable to hash"
 }
 
 local function parse(int, ...)
