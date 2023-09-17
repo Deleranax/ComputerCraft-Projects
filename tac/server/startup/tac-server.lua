@@ -1,6 +1,18 @@
 local tac = require("/apis/tac-api")
 local vui = require("/apis/vintage-ui")
 
+local present = false
+for _, side in pairs(rs.getSides()) do
+    if peripheral.getType(side) == "modem" then
+        present = true
+        rednet.open(side)
+    end
+end
+
+if not present then
+    error("A modem was not found, please attach one and re-run this program")
+end
+
 _G["tacServerTemp"] = {undergoingCom = false, comID = nil, comDest = nil}
 
 vui.setVendor("TAC SERVER - © TEMVER INCORPORATED")
@@ -67,7 +79,7 @@ while active do
         end
         if status == 130 then
             vui.consoleLog("Incoming communication initiation request from "..tostring(sender).." via "..tostring(id))
-            _G.tacServerTemp.comID = sender
+            _G.tacServerTemp.comID = id
             _G.tacServerTemp.comDest = sender
             _G.tacServerTemp.undergoingCom = true
         elseif status ~= 0 then
