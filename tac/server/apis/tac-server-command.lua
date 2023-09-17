@@ -7,8 +7,10 @@ local function com(command, args)
         vui.console("Usage: ")
         vui.console("accept <passcode>")
         vui.console("action <create/remove> <name> [perm] [id] [dest]")
+        vui.console("actions")
         vui.console("perm <user> [level]")
         vui.console("user <create/remove> <username> <passcode>")
+        vui.console("users")
         vui.console("update")
         vui.console("reboot")
         vui.console("exit")
@@ -107,7 +109,11 @@ local function com(command, args)
                 return
             end
         end
-
+    elseif command == "users" then
+        vui.console("-- Users --")
+        textutils.tabulate(unpack(_G.tacTemp.database.users))
+        vui.console("-- Users --")
+        return
     elseif command == "action" then
         if args[1] == "create" then
             local name = args[2]
@@ -131,6 +137,11 @@ local function com(command, args)
                 return
             end
         end
+    elseif command == "actions" then
+        vui.console("-- Actions --")
+        textutils.tabulate(unpack(_G.tacTemp.database.actions))
+        vui.console("-- Actions --")
+        return
     elseif command == "perm" then
         local name = args[2]
         local perm = tonumber(args[3])

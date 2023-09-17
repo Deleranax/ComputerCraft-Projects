@@ -183,7 +183,7 @@ local function console(mess)
     clearLine(_G.vuiTemp.y)
     term.setCursorPos(1, _G.vuiTemp.y - 3)
 
-    local date = os.date("%T")
+    local date = os.date("%R")
     print("["..date.."] "..mess)
 
     local x, y = term.getCursorPos()
