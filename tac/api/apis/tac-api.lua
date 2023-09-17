@@ -421,8 +421,12 @@ local function hash(mess)
     return 0, h
 end
 
+local function formRequest()
+
+end
+
 -- TODO: Add Relays
 
-tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, sign = sign, verify = verify, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication, encryptFor = encryptFor, decryptFrom = decryptFrom, hash = hash}
+tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication, encryptFor = encryptFor, decryptFrom = decryptFrom, hash = hash}
 
 return tac

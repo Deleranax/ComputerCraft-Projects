@@ -45,9 +45,9 @@ local function com(command, args)
         end
         if update == 0 then
             print("All packages are up to date.")
-            return
+        else
+            print(update .. " upgraded, " .. installed .. " newly installed.")
         end
-        print(update .. " upgraded, " .. installed .. " newly installed.")
         sleep(5)
         os.reboot()
     end
