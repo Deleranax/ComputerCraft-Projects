@@ -1,6 +1,5 @@
 local tac = require("/apis/tac-api")
 local vui = require("/apis/vintage-ui")
-local tpm = require("/apis/tpm-api")
 local req = require("/apis/tac-request")
 local com = require("/apis/tac-server-command")
 
@@ -16,79 +15,29 @@ if not present then
     error("A modem was not found, please attach one and re-run this program")
 end
 
-_G["tacServerTemp"] = {undergoingCom = false, comID = nil, comDest = nil}
+_G["tacServerTemp"] = {undergoingCom = false, comID = nil, comDest = nil, active = true, state = "Idle", userInput = false}
 
 vui.setVendor("TAC SERVER - © TEMVER INCORPORATED")
 vui.setUpMessage("")
 
-local active = true
-local userInput = false
-local state
 local command, args, status, message, sender, dest, id
 
 local function backendLoop()
-    if state == "Idle" then
+    if _G.tacServerTemp.state == "Idle" then
         status, message, sender, dest, id = tac.secureReceive()
     end
 
-    userInput = false
+    _G.tacServerTemp.userInput = false
 end
 
 local function commandLoop()
     command, args = vui.consoleInput()
-    userInput = true
+    _G.tacServerTemp.userInput = true
 end
 
 local function process()
-    if userInput then
-        if command == "accept" then
-            if not _G.tacServerTemp.undergoingCom then
-                vui.console("There is no communication initiation waiting for approval.")
-            else
-                status, message =  tac.confirmCommunication(_G.tacServerTemp.comID, tostring(args[1]), _G.tacServerTemp.comDest)
-                if status == 0 then
-                    vui.consoleLog("Communication initiation successfully confirmed for "..tostring(_G.tacServerTemp.comDest).." via ".._G.tacServerTemp.comID)
-                    _G.tacServerTemp.undergoingCom = false
-                else
-                    vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
-                    _G.tacServerTemp.undergoingCom = false
-                end
-            end
-        elseif command == "exit" then
-            tac.saveDatabase()
-            active = false
-            term.clear()
-            term.setCursorPos(1,1)
-        elseif command == "reboot" then
-            tac.saveDatabase()
-            active = false
-            os.reboot()
-        elseif command == "update" then
-            tac.saveDatabase()
-            active = false
-            term.clear()
-            term.setCursorPos(1,1)
-            tpm.updateDatabase()
-            local update = 0
-            local installed = 0
-            for k, v in pairs(tpm.getInstalledPackages()) do
-                if (tpm.get(k) == nil) then
-                    print(k .. " is no longer available, skipping.")
-                elseif v.version ~= tpm.get(k)["version"] then
-                    update = update + 1
-                    print("\nUpdating " .. k .. "...")
-                    tpm.remove(k, true)
-                    installed = installed + tpm.install(k, args[2] == "-force") - 1
-                end
-            end
-            if update == 0 then
-                print("All packages are up to date.")
-                return
-            end
-            print(update .. " upgraded, " .. installed .. " newly installed.")
-            sleep(5)
-            os.reboot()
-        end
+    if _G.tacServerTemp.userInput then
+        com(command, args)
     else
         if dest ~= nil and dest ~= os.getComputerID() then
             vui.consoleLog("Ignored message from "..tostring(sender).." via "..tostring(sender).." for "..tostring(dest))
@@ -157,13 +106,14 @@ local function process()
                 vui.consoleLog("Error "..tostring(e)..": "..tostring(mess))
                 return
             end
-
-            vui.console(tostring(message[3]))
+            table.remove(message, 1)
+            table.remove(message, 1)
+            return req(message)
         end
     end
 end
 
-state = vui.printConsoleStatus("Initialisation")
+_G.tacServerTemp.state = vui.printConsoleStatus("Initialisation")
 
 vui.consoleLog("Initialisation...")
 
@@ -179,16 +129,16 @@ end
 
 vui.consoleLog("Done.")
 
-state = vui.printConsoleStatus("Idle")
+_G.tacServerTemp.state = vui.printConsoleStatus("Idle")
 
-while active do
+while _G.tacServerTemp.active do
     parallel.waitForAny(backendLoop, commandLoop)
 
-    state = vui.printConsoleStatus("Busy")
+    _G.tacServerTemp.state = vui.printConsoleStatus("Busy")
 
     process()
 
-    state = vui.printConsoleStatus("Idle")
+    _G.tacServerTemp.state = vui.printConsoleStatus("Idle")
     command, args, status, message, sender, dest, id = nil
 end
 
