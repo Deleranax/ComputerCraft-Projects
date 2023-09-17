@@ -364,7 +364,7 @@ end
 
 -- TODO: Add Relays
 
-local tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication}
+local tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, trust = trust, doubt = doubt, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication}
 _G.tac = tac
 tac["client"] = require("/apis/tac-client")
 _G.tac = nil
