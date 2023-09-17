@@ -118,7 +118,7 @@ local function process()
                 return
             end
 
-            if not localUser.passHash ~= h then
+            if localUser.code ~= h then
                 vui.consoleLog("Refused: Wrong credentials")
                 local e, mess = tac.secureSend(id, {code=401}, sender)
                 if e == 0 then
@@ -129,12 +129,12 @@ local function process()
             end
             table.remove(message, 1)
             table.remove(message, 1)
-            return req(message)
+            return req(userHash, message, id, sender)
         end
     end
 end
 
-_G.tacServerTemp.state = vui.printConsoleStatus("Initialisation")
+_G.tacServerTemp.state = vui.printConsoleStatus("Init")
 
 vui.consoleLog("Initialisation...")
 
