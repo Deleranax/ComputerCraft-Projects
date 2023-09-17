@@ -110,8 +110,13 @@ local function connect(host, id, userHash, userCode)
     end
 
     local function boundUser(newUserHash, newUserCode, newId)
-        sendRequest("bound_user", newUserHash, newUserCode, newId)
-        local e, data = waitRequest()
+        local e, data = sendRequest("bound_user", newUserHash, newUserCode, newId)
+
+        if e ~= 0 then
+            return e, data
+        end
+
+        e, data = waitRequest(2)
 
         if e ~= 0 then
             return e, data
@@ -121,8 +126,13 @@ local function connect(host, id, userHash, userCode)
     end
 
     local function requireAction(name, action)
-        sendRequest("require_action", name, action)
-        local e, data = waitRequest()
+        local e, data = sendRequest("require_action", name, action)
+
+        if e ~= 0 then
+            return e, data
+        end
+
+        e, data = waitRequest(2)
 
         if e ~= 0 then
             return e, data
@@ -132,8 +142,13 @@ local function connect(host, id, userHash, userCode)
     end
 
     local function confirmAction(name, action)
-        sendRequest("confirm_action", name, action)
-        local e, data = waitRequest()
+        local e, data = sendRequest("confirm_action", name, action)
+
+        if e ~= 0 then
+            return e, data
+        end
+
+        e, data = waitRequest(2)
 
         if e ~= 0 then
             return e, data
