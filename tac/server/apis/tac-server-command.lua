@@ -111,7 +111,9 @@ local function com(command, args)
         end
     elseif command == "users" then
         vui.console("-- Users --")
-        textutils.tabulate(unpack(_G.tacTemp.database.users))
+        for k, v in pairs(_G.tacTemp.database.users) do
+            vui.console(string.format("%20s %3d", v.name, v.perm))
+        end
         vui.console("-- Users --")
         return
     elseif command == "action" then
@@ -139,7 +141,9 @@ local function com(command, args)
         end
     elseif command == "actions" then
         vui.console("-- Actions --")
-        textutils.tabulate(unpack(_G.tacTemp.database.actions))
+        for k, v in pairs(_G.tacTemp.database.actions) do
+            vui.console(string.format("%20s %3d %3d %3d", k, v.perm, v.id, v.dest))
+        end
         vui.console("-- Actions --")
         return
     elseif command == "perm" then
@@ -155,6 +159,7 @@ local function com(command, args)
 
             if not _G.tacTemp.database.users[hashName] then
                 vui.console("User not found")
+                return
             end
 
             _G.tacTemp.database.users[hashName].perm = perm
