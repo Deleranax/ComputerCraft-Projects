@@ -1,6 +1,6 @@
 local tac = require("/apis/tac-api")
 local vui = require("/apis/vintage-ui")
-local tpm = require("/apis/tpm")
+local tpm = require("/apis/tpm-api")
 local req = require("/apis/tac-request")
 local com = require("/apis/tac-server-command")
 
