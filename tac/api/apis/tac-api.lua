@@ -152,6 +152,10 @@ local function doubt(id)
     return 0
 end
 
+local function isVerified(id)
+    return _G.tacTemp.database.verifiedHosts[id] ~= nil
+end
+
 local function secureSend(id, data, dest)
     dest = dest or id
     local e, packet = sign(data)
@@ -364,7 +368,7 @@ end
 
 -- TODO: Add Relays
 
-local tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, trust = trust, doubt = doubt, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication}
+local tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, isVerified = isVerified, trust = trust, doubt = doubt, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication}
 _G.tac = tac
 tac["client"] = require("/apis/tac-client")
 _G.tac = nil
