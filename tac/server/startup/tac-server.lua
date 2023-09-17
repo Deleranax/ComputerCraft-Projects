@@ -24,7 +24,17 @@ local command, args, status, message, sender, dest, id
 
 local function backendLoop()
     if _G.tacServerTemp.state == "Idle" then
-        status, message, sender, dest, id = tac.secureReceive()
+        status, message, sender, dest, id = tac.secureReceive(300)
+    end
+
+    if status == 91 then
+        status, message =  tac.saveDatabase()
+
+        if status ~= 0 then
+            vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
+        end
+
+        backendLoop()
     end
 
     _G.tacServerTemp.userInput = false
@@ -38,11 +48,19 @@ end
 local function process()
     if _G.tacServerTemp.userInput then
         com(command, args)
+
+        status, message =  tac.saveDatabase()
+
+        if status ~= 0 then
+            vui.consoleLog("Error "..tostring(status)..": "..tostring(message))
+        end
     else
         if dest ~= nil and dest ~= os.getComputerID() then
             vui.consoleLog("Ignored message from "..tostring(sender).." via "..tostring(sender).." for "..tostring(dest))
         end
-        if status == 130 then
+        if status == 42 then
+
+        elseif status == 130 then
             vui.consoleLog("Incoming communication initiation request from "..tostring(sender).." via "..tostring(id))
             _G.tacServerTemp.comID = id
             _G.tacServerTemp.comDest = sender
@@ -52,31 +70,33 @@ local function process()
             return
         else
             vui.consoleLog("Processing request from "..tostring(sender).." via "..tostring(id))
-            local e, userHash = tac.decryptFrom(message[1], sender)
+            local e, userHash = tac.client.decryptFrom(message[1], sender)
 
             if e ~= 0 then
                 vui.consoleLog("Error "..tostring(e)..": "..tostring(userHash))
-                local e, mess = tac.secureSend(id, {error=400}, sender)
+                local e, mess = tac.secureSend(id, {code=400}, sender)
                 if e == 0 then
                     return
                 end
+                vui.consoleLog("Error "..tostring(e)..": "..tostring(mess))
                 return
             end
 
-            local e, code tac.decryptFrom(message[2], sender)
+            local e, code = tac.client.decryptFrom(message[2], sender)
 
             if e ~= 0 then
                 vui.consoleLog("Error "..tostring(e)..": "..tostring(code))
-                local e, mess = tac.secureSend(id, {error=400}, sender)
+                local e, mess = tac.secureSend(id, {code=400}, sender)
                 if e == 0 then
                     return
                 end
+                vui.consoleLog("Error "..tostring(e)..": "..tostring(mess))
                 return
             end
 
             if not _G.tacTemp.database.users[userHash] then
                 vui.consoleLog("Refused: Unregistered user")
-                local e, mess = tac.secureSend(id, {error=401}, sender)
+                local e, mess = tac.secureSend(id, {code=401}, sender)
                 if e == 0 then
                     return
                 end
@@ -86,20 +106,21 @@ local function process()
 
             local localUser = _G.tacTemp.database.users[userHash]
 
-            local e, h = tac.hash(code)
+            local e, h = tac.client.hash(code)
 
             if e ~= 0 then
                 vui.consoleLog("Error "..tostring(e)..": "..tostring(h))
-                local e, mess = tac.secureSend(id, {error=400}, sender)
+                local e, mess = tac.secureSend(id, {code=400}, sender)
                 if e == 0 then
                     return
                 end
+                vui.consoleLog("Error "..tostring(e)..": "..tostring(mess))
                 return
             end
 
             if not localUser.passHash ~= h then
                 vui.consoleLog("Refused: Wrong credentials")
-                local e, mess = tac.secureSend(id, {error=401})
+                local e, mess = tac.secureSend(id, {code=401}, sender)
                 if e == 0 then
                     return
                 end
@@ -121,6 +142,10 @@ status, message = tac.initialise()
 
 if not _G.tacTemp.database.users then
     _G.tacTemp.database.users = {}
+end
+
+if not _G.tacTemp.database.actions then
+    _G.tacTemp.database.actions = {}
 end
 
 if status ~= 0 then

@@ -38,7 +38,9 @@ local errors = {
     [151] = "Host is not verified",
     [152] = "Unable to compute shared secret",
     [153] = "Unable to encrypt/decrypt",
-    [161] = "Unable to hash"
+    [161] = "Unable to hash",
+    [171] = "Unauthenticated user",
+    [172] = "Request timed out"
 }
 
 local function parse(int, ...)

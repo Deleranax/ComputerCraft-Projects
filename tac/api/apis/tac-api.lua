@@ -182,7 +182,7 @@ local function secureReceive(timeout)
         end
 
         if data.service then
-            local rtn = handleService(data, sender, dest)
+            local rtn = handleService(data, id, dest)
             if not rtn then
                 return secureReceive(timeout)
             else
@@ -362,71 +362,10 @@ local function confirmCommunication(id, pass, dest)
     return 0
 end
 
-local function encryptFor(mess, dest)
-    local publicKey = _G.tacTemp.database.verifiedHosts[dest]
-
-    if type(publicKey) ~= "table" then
-        return err.parse(151)
-    end
-
-    local ss
-    local status = pcall(function()  ss = ecc.exchange(_G.tacTemp.privateKey, publicKey) end)
-
-    if not status or type(ss) ~= "table" then
-        return err.parse(152)
-    end
-
-    local eh
-    status = pcall(function() eh = string.char(unpack(ecc.encrypt(mess, ss)))  end)
-
-    if not status or type(eh) ~= "string" then
-        return err.parse(153)
-    end
-
-    return 0, eh
-end
-
-local function decryptFrom(mess, sender)
-    local publicKey = _G.tacTemp.database.verifiedHosts[sender]
-
-    if type(publicKey) ~= "table" then
-        return err.parse(151)
-    end
-
-    local ss
-    local status = pcall(function()  ss = ecc.exchange(_G.tacTemp.privateKey, publicKey) end)
-
-    if not status or type(ss) ~= "table" then
-        return err.parse(152)
-    end
-
-    local eh
-    status = pcall(function() eh = string.char(unpack(ecc.decrypt(mess, ss)))  end)
-
-    if not status or type(eh) ~= "string" then
-        return err.parse(153)
-    end
-
-    return 0, eh
-end
-
-local function hash(mess)
-    local h
-    status = pcall(function()  h = string.char(unpack(ecc.sha256.digest(pass))) end)
-
-    if not status or type(h) ~= "string" then
-        return err.parse(134)
-    end
-
-    return 0, h
-end
-
-local function formRequest()
-
-end
-
 -- TODO: Add Relays
 
-tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication, encryptFor = encryptFor, decryptFrom = decryptFrom, hash = hash}
-
+local tac = {initialise = initialise, loadDatabase = loadDatabase, saveDatabase = saveDatabase, trust = trust, secureReceive = secureReceive, secureSend = secureSend, verifyCommunication, initiateCommunication = initiateCommunication, confirmCommunication = confirmCommunication}
+_G.tac = tac
+tac["client"] = require("/apis/tac-client")
+_G.tac = nil
 return tac
