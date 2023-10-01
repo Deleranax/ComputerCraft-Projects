@@ -7,7 +7,7 @@ end
 local function httpGet(url, verbose)
     if not http then
 		if verbose then
-			printError("HTTP is not available.")
+			error("HTTP is not available.")
 		end
         return nil
     end
@@ -183,7 +183,11 @@ local function updateDatabase()
 	reloadDatabase()
 
 	write("Connecting... ")
-	httpGet(BASE_URL.."CCINDEX")
+	local err = httpGet(BASE_URL.."CCINDEX")
+	if not err then
+		printError("Failed.")
+		return
+	end
 	print("Success.")
 
 	write("Updating package list... ")
