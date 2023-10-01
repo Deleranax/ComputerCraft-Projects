@@ -271,4 +271,4 @@ local function getStatus()
     return _G.vuiTemp.status
 end
 
-return { setVendor = setVendor, allowEscape = allowEscape, denyEscape = denyEscape, multipleChoice = multipleChoice, promptPassword = promptPassword, setUpMessage = setUpMessage, printMessage = printMessage, printNextMessage = printNextMessage, input = input, console = console, log = log, consoleLog = consoleLog, consoleInput = consoleInput, setStatus = setStatus, saveCursorPos = saveCursorPos, restoreCursorPos = restoreCursorPos, completeLine = completeLine}
+return { setVendor = setVendor, allowEscape = allowEscape, denyEscape = denyEscape, multipleChoice = multipleChoice, promptPassword = promptPassword, setUpMessage = setUpMessage, printMessage = printMessage, printNextMessage = printNextMessage, input = input, console = console, log = log, consoleLog = consoleLog, consoleInput = consoleInput, setStatus = setStatus, getStatus = getStatus, saveCursorPos = saveCursorPos, restoreCursorPos = restoreCursorPos, completeLine = completeLine}
