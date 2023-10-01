@@ -1,4 +1,5 @@
-1
+2
 Deleranax
 startup/tac-endpoint.lua
-programs/tac-endpoint.lua
+apis/tac-endpoint-admin.lua
+apis/tac-endpoint-client.lua

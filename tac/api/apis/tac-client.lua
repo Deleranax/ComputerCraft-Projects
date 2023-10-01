@@ -161,7 +161,23 @@ local function connect(host, id, userHash, userCode)
         end
     end
 
-    local connection = {host = host, id = id, userHash = sHash, userCode = sCode, boundUser = boundUser, requireAction = requireAction, getActionState = getActionState }
+    local function superUser()
+        local e, data = sendRequest("super_user")
+
+        if e ~= 0 then
+            return e, data
+        end
+
+        e, data = waitRequest(2)
+
+        if e ~= 0 then
+            return e, data
+        else
+            return 0, data.code == 200
+        end
+    end
+
+    local connection = {host = host, id = id, userHash = sHash, userCode = sCode, boundUser = boundUser, requireAction = requireAction, getActionState = getActionState, superUser = superUser }
 
     local e, mess = sendRequest("auth")
 

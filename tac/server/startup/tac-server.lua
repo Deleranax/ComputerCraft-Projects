@@ -15,7 +15,7 @@ if not present then
     error("A modem was not found, please attach one and re-run this program")
 end
 
-_G["tacServerTemp"] = {undergoingCom = false, comID = nil, comDest = nil, active = true, state = "Idle", userInput = false}
+_G["tacServerTemp"] = {undergoingCom = false, comID = nil, comDest = nil, active = true, userInput = false}
 
 vui.setVendor("TAC SERVER - © TEMVER INCORPORATED")
 vui.setUpMessage("")
@@ -23,7 +23,7 @@ vui.setUpMessage("")
 local command, args, status, message, sender, dest, id
 
 local function backendLoop()
-    if _G.tacServerTemp.state == "Idle" then
+    if vui.getStatus() == "Idle" then
         status, message, sender, dest, id = tac.secureReceive(300)
     end
 
@@ -134,7 +134,7 @@ local function process()
     end
 end
 
-_G.tacServerTemp.state = vui.printConsoleStatus("Init")
+vui.setStatus("Init")
 
 vui.consoleLog("Initialisation...")
 
@@ -154,16 +154,16 @@ end
 
 vui.consoleLog("Done.")
 
-_G.tacServerTemp.state = vui.printConsoleStatus("Idle")
+vui.setStatus("Idle")
 
 while _G.tacServerTemp.active do
     parallel.waitForAny(backendLoop, commandLoop)
 
-    _G.tacServerTemp.state = vui.printConsoleStatus("Busy")
+    vui.setStatus("Busy")
 
     process()
 
-    _G.tacServerTemp.state = vui.printConsoleStatus("Idle")
+    vui.setStatus("Idle")
     command, args, status, message, sender, dest, id = nil
 end
 

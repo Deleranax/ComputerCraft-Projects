@@ -1,5 +1,5 @@
 local x,y = term.getSize()
-_G["vuiTemp"] = {allowEscape = true, vendor = "Vintage UI Corp.", x = x, y = y, cx = 1, cy = 1}
+_G["vuiTemp"] = {allowEscape = true, vendor = "Vintage UI Corp.", x = x, y = y, cx = 1, cy = 1, status = "Init"}
 
 local function setVendor(v)
     _G.vuiTemp.vendor = v
@@ -35,6 +35,8 @@ local function printVendor()
     term.setCursorPos(1, _G.vuiTemp.y)
     term.write(completeLine(_G.vuiTemp.vendor, " "))
     term.setTextColor(colors.white)
+    term.setCursorPos(_G.vuiTemp.x - mess:len(), _G.vuiTemp.y)
+    term.write(mess)
 end
 
 local function clearLine(y)
@@ -45,6 +47,25 @@ end
 
 local function computeAlignment(message, line)
     term.setCursorPos(math.floor((_G.vuiTemp.x / 2) - (message:len() / 2)), line)
+end
+
+local function printMessage(mess, color)
+    if color then
+        term.setTextColor(color)
+    end
+    computeAlignment(mess, math.floor(3 * (_G.vuiTemp.y/4)))
+    textutils.slowWrite(mess)
+    term.setTextColor(colors.white)
+end
+
+local function printNextMessage(mess, color)
+    if color then
+        term.setTextColor(color)
+    end
+    local x, y = term.getCursorPos()
+    computeAlignment(mess, y+1)
+    textutils.slowWrite(mess)
+    term.setTextColor(colors.white)
 end
 
 local function printSelection(choices, places, old, new)
@@ -72,11 +93,15 @@ local function printPassword(current, size)
     end
 end
 
-local function setUpMessage(title)
+local function setUpMessage(title, color)
     term.clear()
     printVendor()
     computeAlignment(title, math.floor(_G.vuiTemp.y/4))
+    if color then
+        term.setTextColor(color)
+    end
     textutils.slowWrite(title)
+    term.setTextColor(colors.white)
     term.setCursorPos(1, _G.vuiTemp.y/2)
 end
 
@@ -226,12 +251,24 @@ local function consoleInput()
     return command, args
 end
 
-local function printConsoleStatus(mess)
-    saveCursorPos()
-    term.setCursorPos(1, _G.vuiTemp.x - mess:len())
-    term.write(mess)
-    restoreCursorPos()
+local function input(char)
+    term.setCursorPos(math.floor(_G.vuiTemp.x/5), math.floor(3 * (_G.vuiTemp.y/4)))
+    term.write("> ")
+    return read(char)
+end
+
+local function prompt(title, char)
+    setUpMessage(title)
+    return input(char)
+end
+
+local function setStatus(mess)
+    _G.vuiTemp.status = mess
     return mess
 end
 
-return { setVendor = setVendor, allowEscape = allowEscape, denyEscape = denyEscape, multipleChoice = multipleChoice, promptPassword = promptPassword, setUpMessage = setUpMessage, console = console, log = log, consoleLog = consoleLog, consoleInput = consoleInput, printConsoleStatus = printConsoleStatus, saveCursorPos = saveCursorPos, restoreCursorPos = restoreCursorPos, completeLine = completeLine}
+local function getStatus()
+    return _G.vuiTemp.status
+end
+
+return { setVendor = setVendor, allowEscape = allowEscape, denyEscape = denyEscape, multipleChoice = multipleChoice, promptPassword = promptPassword, setUpMessage = setUpMessage, printMessage = printMessage, printNextMessage = printNextMessage, input = input, console = console, log = log, consoleLog = consoleLog, consoleInput = consoleInput, setStatus = setStatus, saveCursorPos = saveCursorPos, restoreCursorPos = restoreCursorPos, completeLine = completeLine}

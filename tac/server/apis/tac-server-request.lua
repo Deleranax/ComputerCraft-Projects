@@ -20,6 +20,16 @@ local function request(userHash, args, id, sender)
         vui.consoleLog(userdata.name.." authenticated")
         returnCode(200)
         return
+    elseif args[1] == "super_user" then
+        if userdata.perm > 0 then
+            vui.consoleLog("Super user access allowed for "..userdata.name)
+            returnCode(200)
+            return
+        else
+            vui.consoleLog("Super user access denied for "..userdata.name)
+            returnCode(403)
+            return
+        end
     elseif args[1] == "require_action" then
         local name = args[2]
         local modification = args[3]
