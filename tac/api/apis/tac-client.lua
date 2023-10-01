@@ -98,8 +98,12 @@ local function connect(host, id, userHash, userCode)
             end
         end
 
-        if e == 91 or rSender ~= host or rDest ~= os.getComputerID() then
+        if e == 91 then
             return err.parse(172)
+        end
+
+        if rSender ~= host or rDest ~= os.getComputerID() then
+            return err.parse(174)
         end
 
         if e ~= 0 then
@@ -141,8 +145,8 @@ local function connect(host, id, userHash, userCode)
         end
     end
 
-    local function confirmAction(name, action)
-        local e, data = sendRequest("confirm_action", name, action)
+    local function getAction(name, action)
+        local e, data = sendRequest("confirm_action", name)
 
         if e ~= 0 then
             return e, data
@@ -153,11 +157,11 @@ local function connect(host, id, userHash, userCode)
         if e ~= 0 then
             return e, data
         else
-            return 0, data.code
+            return 0, data.code, data.state
         end
     end
 
-    local connection = {host = host, id = id, userHash = sHash, userCode = sCode, boundUser = boundUser, requireAction = requireAction, confirmAction = confirmAction}
+    local connection = {host = host, id = id, userHash = sHash, userCode = sCode, boundUser = boundUser, requireAction = requireAction, getAction = getAction}
 
     local e, mess = sendRequest("auth")
 
@@ -178,4 +182,43 @@ local function connect(host, id, userHash, userCode)
     return 0, connection
 end
 
-return {encryptFor = encryptFor, decryptFrom = decryptFrom, hash = hash, connect = connect}
+local function connectActionEndpoint(host, id, name)
+    local function waitTrigger(timeout)
+        local e, rData, rSender, rDest, rId
+        while true do
+            e, rData, rSender, rDest, rId = tac.secureReceive(timeout)
+
+            if rSender == host and rDest == os.getComputerID() then
+                break
+            end
+
+            if e ~= 0 then
+                return e, rData
+            end
+        end
+
+        local com, n, modification = unpack(rData)
+
+        if com ~= "trigger_action" or type(n) ~= "string" or type(modification) ~= "string" then
+            return err.parse(181)
+        end
+
+        if n ~= name then
+            return err.parse(182)
+        end
+
+        return 0, modification
+    end
+
+    local connection = {host = host, id = id, waitTrigger = waitTrigger}
+
+    local e, mess = tac.verifyCommunication(id, host)
+
+    if e ~= 0 then
+        return e, mess
+    end
+
+    return 0, connection
+end
+
+return { encryptFor = encryptFor, decryptFrom = decryptFrom, hash = hash, connect = connect, connectAction = connectActionEndpoint }

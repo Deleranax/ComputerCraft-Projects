@@ -227,7 +227,9 @@ local function verifyCommunication(id, dest)
     _G.tacTemp.busy = false
 
     if e ~= 0 then
-        return e, data
+        return err.parse(121)
+    else
+        return 0
     end
 end
 

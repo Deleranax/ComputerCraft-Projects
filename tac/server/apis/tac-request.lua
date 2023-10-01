@@ -11,11 +11,13 @@ local function request(userHash, args, id, sender)
         if e == 0 then
             return
         end
+        vui.consoleLog("Error while sending return code")
         vui.consoleLog("Error "..tostring(e)..": "..tostring(mess))
     end
 
 
     if args[1] == "auth" then
+        vui.consoleLog(userdata.name.." authenticated")
         returnCode(200)
         return
     elseif args[1] == "require_action" then
@@ -40,6 +42,7 @@ local function request(userHash, args, id, sender)
 
             local e, mess = tac.secureSend(action.id, {"trigger_action", name, modification}, action.dest)
             if e ~= 0 then
+                vui.consoleLog("Error while contacting action endpoint")
                 vui.consoleLog("Error "..tostring(e)..": "..tostring(mess))
                 returnCode(503)
                 return

@@ -25,8 +25,8 @@ local errors = {
     [92] = "Incorrect message",
     [101] = "No response after 5 retry",
     [111] = "Unable to generate keypair",
-    [121] = "",
-    [130] = "Communication Initiation",
+    [121] = "Unable to verify communication",
+    [130] = "Communication initiation",
     [131] = "Invalid passcode or ID",
     [132] = "Unable to encrypt/decrypt",
     [133] = "Wrong passcode",
@@ -41,7 +41,10 @@ local errors = {
     [161] = "Unable to hash",
     [171] = "Unauthenticated user",
     [172] = "Request timed out",
-    [173] = "Server refused request (Error %d)"
+    [173] = "Server refused request (Error %d)",
+    [174] = "Network is flooded",
+    [181] = "Received invalid command",
+    [182] = "Received command for wrong action"
 }
 
 local function parse(int, ...)
