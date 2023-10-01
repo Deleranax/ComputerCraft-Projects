@@ -40,7 +40,9 @@ if not _G.tacTemp.database.endPoint then
     _G.tacTemp.database.serverDest = tonumber(vui.prompt("Enter Server Destination"))
 
     if not tac.isVerified(_G.tacTemp.database.serverDest) then
-        local err, mess = tac.initiateCommunication(2, vui.prompt("Enter pairing Passcode"))
+        local code = vui.promptPassword("Enter pairing Passcode", 4)
+        vui.setUpMessage("Waiting for approval...")
+        local err, mess = tac.initiateCommunication(2, code)
 
         if err ~= 0 then
             error(err.. " / "..mess)
