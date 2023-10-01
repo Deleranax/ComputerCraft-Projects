@@ -131,8 +131,9 @@ local function com(command, args)
         end
     elseif command == "users" then
         vui.console("-- Users --")
+        vui.console(string.format("%20s | %4s", "Name", "Perm"))
         for k, v in pairs(_G.tacTemp.database.users) do
-            vui.console(string.format("%20s  %3d", v.name, v.perm))
+            vui.console(string.format("%20s | %4d", v.name, v.perm))
         end
         vui.console("-- Users --")
         return
@@ -161,8 +162,9 @@ local function com(command, args)
         end
     elseif command == "actions" then
         vui.console("-- Actions --")
+        vui.console(string.format("%20s | %4s | %4s | %4s", "Name", "Perm", "ID", "Dest"))
         for k, v in pairs(_G.tacTemp.database.actions) do
-            vui.console(string.format("%20s  %3d  %3d  %3d", k, v.perm, v.id, v.dest))
+            vui.console(string.format("%20s | %4d | %4d | %4d", k, v.perm, v.id, v.dest))
         end
         vui.console("-- Actions --")
         return

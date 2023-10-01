@@ -145,7 +145,7 @@ local function connect(host, id, userHash, userCode)
         end
     end
 
-    local function getAction(name, action)
+    local function getActionState(name, action)
         local e, data = sendRequest("confirm_action", name)
 
         if e ~= 0 then
@@ -161,7 +161,7 @@ local function connect(host, id, userHash, userCode)
         end
     end
 
-    local connection = {host = host, id = id, userHash = sHash, userCode = sCode, boundUser = boundUser, requireAction = requireAction, getAction = getAction}
+    local connection = {host = host, id = id, userHash = sHash, userCode = sCode, boundUser = boundUser, requireAction = requireAction, getActionState = getActionState }
 
     local e, mess = sendRequest("auth")
 
@@ -182,7 +182,7 @@ local function connect(host, id, userHash, userCode)
     return 0, connection
 end
 
-local function connectActionEndpoint(host, id, name)
+local function connectAction(host, id, name)
     local function waitTrigger(timeout)
         local e, rData, rSender, rDest, rId
         while true do
@@ -221,4 +221,4 @@ local function connectActionEndpoint(host, id, name)
     return 0, connection
 end
 
-return { encryptFor = encryptFor, decryptFrom = decryptFrom, hash = hash, connect = connect, connectAction = connectActionEndpoint }
+return { encryptFor = encryptFor, decryptFrom = decryptFrom, hash = hash, connect = connect, connectAction = connectAction }
