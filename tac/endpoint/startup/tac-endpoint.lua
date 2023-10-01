@@ -72,8 +72,8 @@ while not _G.tacEndpointTemp.exit do
         local ok, err = pcall(require("/apis/tac-endpoint-client"), tac, vui)
         if not ok then
             vui.setUpMessage("FATAL: "..tostring(err))
+            sleep(5)
         end
-        sleep(5)
     end
 
     if event == "terminate" then
@@ -81,8 +81,8 @@ while not _G.tacEndpointTemp.exit do
         local ok, err = pcall(require("/apis/tac-endpoint-admin"), tac, vui)
         if not ok then
             vui.setUpMessage("FATAL: "..tostring(err))
+            sleep(5)
         end
-        sleep(5)
     end
 end
 

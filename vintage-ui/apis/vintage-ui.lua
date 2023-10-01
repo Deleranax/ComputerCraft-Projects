@@ -50,20 +50,20 @@ local function computeAlignment(message, line)
 end
 
 local function printMessage(mess, color)
+    computeAlignment(mess, math.floor(_G.vuiTemp.y/2))
     if not (not color) then
         term.setTextColor(color)
     end
-    computeAlignment(mess, math.floor(_G.vuiTemp.y/2))
     textutils.slowWrite(mess)
     term.setTextColor(colors.white)
 end
 
 local function printNextMessage(mess, color)
+    computeAlignment(mess, y+1)
     if not (not color) then
         term.setTextColor(color)
     end
     local x, y = term.getCursorPos()
-    computeAlignment(mess, y+1)
     textutils.slowWrite(mess)
     term.setTextColor(colors.white)
 end
@@ -264,6 +264,7 @@ end
 
 local function setStatus(mess)
     _G.vuiTemp.status = mess
+    printVendor()
     return mess
 end
 
