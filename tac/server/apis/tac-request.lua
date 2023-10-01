@@ -17,6 +17,7 @@ local function request(userHash, args, id, sender)
 
     if args[1] == "auth" then
         returnCode(200)
+        return
     elseif args[1] == "require_action" then
         local name = args[2]
         local modification = args[3]
@@ -26,33 +27,37 @@ local function request(userHash, args, id, sender)
             local action = _G.tacTemp.database.actions[name]
 
             if not action then
-                returnCode(400)
+                vui.consoleLog("Can't find action '"..name.."'")
+                returnCode(404)
                 return
             end
 
             if userdata.perm < action.perm then
-                returnCode(403)
                 vui.consoleLog(userdata.name.." got not enough permission to trigger action "..name..":"..modification)
+                returnCode(403)
                 return
             end
 
             local e, mess = tac.secureSend(action.id, {"trigger_action", name, modification}, action.dest)
             if e ~= 0 then
-                returnCode(503)
                 vui.consoleLog("Error "..tostring(e)..": "..tostring(mess))
+                returnCode(503)
                 return
             end
 
-            returnCode(200)
             vui.consoleLog("Action "..name..":"..modification.." triggered by "..userdata.name)
+            returnCode(200)
             return
         else
+            vui.consoleLog("Malformed 'require_action' request")
+            vui.consoleLog(textutils.serialise(args))
             returnCode(400)
             return
         end
     end
 
     vui.consoleLog("Unimplemented request")
+    vui.consoleLog(textutils.serialise(args))
     returnCode(501)
 end
 

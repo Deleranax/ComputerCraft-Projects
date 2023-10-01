@@ -76,7 +76,7 @@ local function send(packet, sender, id, dest)
 
     for i = 1, 5, 1 do
         rednet.send(id, frame, "tac")
-        local id, msg = rednet.receive("service", 2)
+        local id, msg = rednet.receive("service", 1)
         if id == dest then
             return 0
         end
