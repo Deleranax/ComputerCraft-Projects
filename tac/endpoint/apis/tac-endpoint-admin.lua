@@ -53,8 +53,24 @@ local function import(t, v)
     end
 
     vui.allowEscape()
-    vui.setUpMessage("Access granted")
-    sleep(5)
+
+    local loop = true
+
+    while loop do
+        local c = vui.multipleChoice("Endpoint Administration Panel", "Update Software", "Access Shell")
+
+        if c == 1 then
+            term.clear()
+            term.setCursorPos(1,1)
+            shell.run("tpm update")
+            shell.run("tpm upgrade")
+        elseif c == 2 then
+            _G.tacEndpointTemp.exit = true
+            loop = false
+        else
+            loop = false
+        end
+    end
 end
 
 return import

@@ -252,7 +252,7 @@ local function consoleInput()
 end
 
 local function input(char)
-    term.setCursorPos(math.floor(_G.vuiTemp.x/5), math.floor(3 * (_G.vuiTemp.y/4)))
+    term.setCursorPos(math.floor(_G.vuiTemp.x/5), math.floor (_G.vuiTemp.y/2))
     term.write("> ")
     return read(char)
 end

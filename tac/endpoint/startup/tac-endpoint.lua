@@ -20,7 +20,7 @@ if not present then
     error("A modem was not found, please attach one and re-run this program")
 end
 
-_G["tacEndpointTemp"] = {diskSide = ""}
+_G["tacEndpointTemp"] = { diskSide = "", exit = false }
 
 vui.setVendor("TAC ENDPOINT - © TEMVER INCORPORATED")
 vui.setStatus("Init")
@@ -58,7 +58,7 @@ if not _G.tacTemp.database.endPoint then
     sleep(5)
 end
 
-while true do
+while not _G.tacEndpointTemp.exit do
     vui.denyEscape()
     vui.setStatus("Idle")
     vui.setUpMessage("Insert PDA to login")
@@ -83,3 +83,6 @@ while true do
         sleep(5)
     end
 end
+
+term.clear()
+term.setCursorPos(1,1)
