@@ -24,6 +24,8 @@ local function import(t, v)
 
     local pass = vui.promptPassword("Enter Password", 6)
 
+    vui.setUpMessage("Connecting...")
+
     local err, co = tac.client.connect(_G.tacTemp.database.serverDest, _G.tacTemp.database.serverID, h, pass)
 
     if err == 173 then
