@@ -22,7 +22,6 @@ end
 
 _G["tacEndpointTemp"] = {diskSide = ""}
 
-vui.denyEscape()
 vui.setVendor("TAC ENDPOINT - © TEMVER INCORPORATED")
 vui.setStatus("Init")
 vui.setUpMessage("Initialising...")
@@ -60,6 +59,7 @@ if not _G.tacTemp.database.endPoint then
 end
 
 while true do
+    vui.denyEscape()
     vui.setStatus("Idle")
     vui.setUpMessage("Insert PDA to login")
     vui.printMessage("Or press CTRL+T to administrate", colors.lightgray)

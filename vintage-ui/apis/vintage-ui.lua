@@ -34,9 +34,9 @@ local function printVendor()
     term.setTextColor(colors.lightGray)
     term.setCursorPos(1, _G.vuiTemp.y)
     term.write(completeLine(_G.vuiTemp.vendor, " "))
-    term.setTextColor(colors.white)
     term.setCursorPos(_G.vuiTemp.x - _G.vuiTemp.status:len() + 1, _G.vuiTemp.y)
     term.write(_G.vuiTemp.status)
+    term.setTextColor(colors.white)
 end
 
 local function clearLine(y)
@@ -50,16 +50,16 @@ local function computeAlignment(message, line)
 end
 
 local function printMessage(mess, color)
-    if color then
+    if not (not color) then
         term.setTextColor(color)
     end
-    computeAlignment(mess, math.floor(3 * (_G.vuiTemp.y/4)))
+    computeAlignment(mess, math.floor(_G.vuiTemp.y/2))
     textutils.slowWrite(mess)
     term.setTextColor(colors.white)
 end
 
 local function printNextMessage(mess, color)
-    if color then
+    if not (not color) then
         term.setTextColor(color)
     end
     local x, y = term.getCursorPos()
@@ -97,7 +97,7 @@ local function setUpMessage(title, color)
     term.clear()
     printVendor()
     computeAlignment(title, math.floor(_G.vuiTemp.y/4))
-    if color then
+    if not (not color) then
         term.setTextColor(color)
     end
     textutils.slowWrite(title)
@@ -155,7 +155,7 @@ local function multipleChoice(title, ...)
             rtn = math.max(rtn - 1, 1)
         elseif key == keys.down then
             rtn = math.min(rtn + 1, nb + escape)
-        elseif key == keys.enter then
+        elseif key == keys.enter or key == keys.numPadEnter then
             if rtn > nb then
                 return 0
             end
@@ -189,7 +189,7 @@ local function promptPassword(title, size)
 
             if (key == keys.leftCtrl or key == keys.rightCtrl) and _G.vuiTemp.allowEscape then
                 return nil
-            elseif key == keys.enter and pass:len() == size then
+            elseif (key == keys.enter or key == keys.numPadEnter) and pass:len() == size then
                 return pass
             elseif key == keys.backspace and pass:len() > 1 then
                 pass = string.sub(pass, 1, pass:len() - 1)

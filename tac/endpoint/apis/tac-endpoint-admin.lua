@@ -50,6 +50,7 @@ local function import(t, v)
         return
     end
 
+    vui.allowEscape()
     vui.setUpMessage("Access granted")
     sleep(5)
 end

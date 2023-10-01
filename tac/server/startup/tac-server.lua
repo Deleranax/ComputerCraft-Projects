@@ -157,6 +157,8 @@ vui.consoleLog("Done.")
 vui.setStatus("Idle")
 
 while _G.tacServerTemp.active do
+    vui.setStatus("Idle")
+
     parallel.waitForAny(backendLoop, commandLoop)
 
     vui.setStatus("Busy")
