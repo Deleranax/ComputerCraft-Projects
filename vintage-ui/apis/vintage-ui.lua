@@ -35,7 +35,7 @@ local function printVendor()
     term.setCursorPos(1, _G.vuiTemp.y)
     term.write(completeLine(_G.vuiTemp.vendor, " "))
     term.setTextColor(colors.white)
-    term.setCursorPos(_G.vuiTemp.x - _G.vuiTemp.status:len(), _G.vuiTemp.y)
+    term.setCursorPos(_G.vuiTemp.x - _G.vuiTemp.status:len() + 1, _G.vuiTemp.y)
     term.write(_G.vuiTemp.status)
 end
 
